@@ -1,0 +1,5 @@
+# LF en el repo y en disco: los mismos ficheros se usan desde Windows y desde WSL2.
+* text=auto eol=lf
+*.png binary
+# Datos crudos: git no toca sus bytes (el CSV de AHR tiene \r dentro de campos entrecomillados).
+data/raw/** -text

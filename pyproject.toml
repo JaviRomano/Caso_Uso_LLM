@@ -1,0 +1,55 @@
+[project]
+name = "caso-uso-llm"
+version = "0.2.0"
+description = "Clasificación de sentimiento y respuesta automática a reseñas de hotel con LLMs locales."
+readme = "CLAUDE.md"
+requires-python = ">=3.12,<3.13"
+# Dependencias mínimas: cada fase añade las suyas con `uv add` cuando las necesite.
+dependencies = [
+    "numpy>=2.1",
+    "pandas>=2.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+    "rust-just>=1.36",
+]
+# Solo en WSL2 (Linux): PyTorch compilado para ROCm. En Windows se ignora.
+train = [
+    "torch>=2.13 ; sys_platform == 'linux'",
+    # Dependencia de torch; se declara para que también venga del índice de ROCm.
+    "triton-rocm ; sys_platform == 'linux'",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+# Windows (datos, inferencia con Ollama, evals) y Linux (WSL2, entrenamiento con ROCm).
+environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-rocm", marker = "sys_platform == 'linux'" }]
+triton-rocm = [{ index = "pytorch-rocm", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+# Debe coincidir con la versión de ROCm instalada en WSL2 (ver scripts/check_gpu.py).
+url = "https://download.pytorch.org/whl/rocm7.2"
+explicit = true
+
+[build-system]
+requires = ["uv_build>=0.8,<0.13"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
