@@ -24,7 +24,9 @@ train = [
 ]
 
 [tool.uv]
-default-groups = ["dev"]
+# "train" va incluido: si no, `uv run` desinstala torch en WSL2. En Windows sus paquetes
+# están marcados solo para Linux, así que no se instala nada.
+default-groups = ["dev", "train"]
 # Windows (datos, inferencia con Ollama, evals) y Linux (WSL2, entrenamiento con ROCm).
 environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
 

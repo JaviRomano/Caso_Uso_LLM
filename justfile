@@ -4,13 +4,9 @@ set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
 default:
     @just --list
 
-# Instala el entorno (Windows)
+# Instala el entorno (en WSL2 incluye torch ROCm)
 setup:
     uv sync
-
-# Instala el entorno de entrenamiento con torch ROCm (solo en WSL2)
-setup-train:
-    uv sync --group train
 
 # Tests
 test:

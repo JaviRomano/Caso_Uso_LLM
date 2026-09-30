@@ -5,7 +5,7 @@ import sys
 try:
     import torch
 except ImportError:
-    sys.exit("torch no está instalado: en WSL2 ejecuta `uv sync --group train`.")
+    sys.exit("torch no está instalado: en WSL2 ejecuta `uv run just setup`.")
 
 hip = torch.version.hip
 print(f"torch        {torch.__version__}")
