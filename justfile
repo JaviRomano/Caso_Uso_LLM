@@ -29,3 +29,7 @@ gpu:
 # Descarga los datasets de terceros (requiere `hf auth login` y aceptar sus términos en HF)
 data-download:
     python -m caso_uso_llm.data.download
+
+# Pipeline de datos: crudo -> data/processed + reports/data_report.md
+data:
+    python -m caso_uso_llm.data.build
