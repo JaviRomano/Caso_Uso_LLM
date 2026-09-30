@@ -1,4 +1,4 @@
-"""Fine-tuning de RoBERTa-BNE para las opciones A, A_sin_trad, B y C (solo en WSL2 + ROCm).
+"""Fine-tuning de mRoBERTa (BSC) para las opciones A, A_sin_trad, B y C (solo en WSL2 + ROCm).
 
 - Selección: parada temprana con el F1 macro de la validación (`coah_val`; en la primera
   etapa de C, `coar_val`). El test no interviene en ninguna decisión.
@@ -43,8 +43,10 @@ from caso_uso_llm.log import log
 from caso_uso_llm.paths import RESULTS, ROOT, ensure_dirs
 from caso_uso_llm.seed import set_seed
 
-MODEL_ID = "PlanTL-GOB-ES/roberta-base-bne"
-MODEL_REVISION = "90aa6e695a9a092187bbe57fbd298b9af09dc31b"
+# RoBERTa-BNE (PlanTL) se retiró en julio de 2025 y su repo ya no tiene pesos. mRoBERTa es su
+# sucesor en BSC: misma arquitectura, multilingüe con mucho español, catalán, gallego y euskera.
+MODEL_ID = "BSC-LT/mRoBERTa"
+MODEL_REVISION = "0bede83320adb31f196fc6a99b23a2ce2b3367fe"
 RUNS_DIR = RESULTS / "phase3_roberta"
 SEEDS = (42, 43, 44)
 LABEL2ID = {lab: i for i, lab in enumerate(LABELS)}
@@ -268,7 +270,7 @@ def summarize(runs: list[dict], sets, seed: int) -> dict:
 def write_report(s: dict, sets, cfg: Config) -> None:
     n = {k: len(v) for k, v in sets.items()}
     L = [
-        "# Fase 3 · Fine-tuning de RoBERTa-BNE",
+        "# Fase 3 · Fine-tuning de mRoBERTa (BSC)",
         "",
         f"Generado por `uv run just train` · modelo `{MODEL_ID}@{MODEL_REVISION[:7]}` · "
         f"config {asdict(cfg)}. No editar a mano.",

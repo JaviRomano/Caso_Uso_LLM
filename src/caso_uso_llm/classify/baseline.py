@@ -2,7 +2,7 @@
 
 La opción C (secuencial: COAR y luego COAH) no se evalúa aquí: la regresión logística es
 convexa y converge al mismo óptimo empiece donde empiece, así que C sería idéntica a B.
-C se mide con el fine-tuning de RoBERTa, donde el punto de partida sí importa.
+C se mide con el fine-tuning de mRoBERTa, donde el punto de partida sí importa.
 
 Uso: uv run just baseline
 """
@@ -153,7 +153,7 @@ def write_report(p: dict, sets) -> None:
         "No editar a mano.",
         "",
         "Selección de `C` con `coah_val`; `coah_test` es la métrica principal (hoteles). "
-        "La opción C (secuencial) no aplica a un modelo convexo: se evalúa con RoBERTa.",
+        "La opción C (secuencial) no aplica a un modelo convexo: se evalúa con mRoBERTa.",
         "",
         "| Opción | Filas de train | C | CV COAH (media ± sd) "
         f"| F1 macro `coah_test` (n={n['coah_test']}) "

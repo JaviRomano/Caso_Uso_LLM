@@ -4,7 +4,7 @@ Cada regla sale de una inspección de los datos crudos; las cifras de cuántos t
 una están en reports/data_report.md. Lo que NO se hace es tan deliberado como lo que sí:
 no se pasa a minúsculas, ni se quitan tildes, signos, mayúsculas sostenidas ("PÉSIMO"),
 exclamaciones repetidas ni emojis, porque llevan señal de sentimiento y los modelos
-(RoBERTa-BNE es *cased*) la aprovechan. Cada modelo aplica después su propio preprocesado.
+(mRoBERTa distingue mayúsculas) la aprovechan. Cada modelo aplica después su propio preprocesado.
 """
 
 import re
