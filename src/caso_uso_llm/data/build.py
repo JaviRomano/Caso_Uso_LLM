@@ -17,6 +17,7 @@ from caso_uso_llm.data.dedup import NEAR_DUP_THRESHOLD, find_duplicates, resolve
 from caso_uso_llm.data.download import SOURCES
 from caso_uso_llm.data.sources import load_coah, load_coar
 from caso_uso_llm.data.split import split_grouped, split_stratified
+from caso_uso_llm.log import log
 from caso_uso_llm.paths import DATA_INTERIM, DATA_PROCESSED, DATA_RAW, ROOT, ensure_dirs
 from caso_uso_llm.seed import DEFAULT_SEED, set_seed
 
@@ -29,21 +30,21 @@ LANGS = [Language.SPANISH, Language.ENGLISH, Language.FRENCH, Language.GERMAN,
 _MOJIBAKE = re.compile(r"Ã[\x80-\xbf]|Â|â€")
 
 
-def clean_text(df: pd.DataFrame, log: list) -> pd.DataFrame:
+def clean_text(df: pd.DataFrame, rules: list) -> pd.DataFrame:
     """Aplica R1–R7 y R14 y apunta cuántos textos toca cada regla."""
     df = df.copy()
     for col in ("title", "text"):
         raw = df[f"{col}_raw"]
         unq = raw.map(N.unquote_csv)
-        log.append(("R5 comillas CSV", col, (unq != raw).groupby(df["source"]).sum()))
-        log.append(
+        rules.append(("R5 comillas CSV", col, (unq != raw).groupby(df["source"]).sum()))
+        rules.append(
             ("R2 mojibake detectado", col, raw.str.contains(_MOJIBAKE).groupby(df["source"]).sum())
         )
         norm = unq.map(N.normalize_text)
-        log.append(("R1–R6 texto modificado", col, (norm != unq).groupby(df["source"]).sum()))
+        rules.append(("R1–R6 texto modificado", col, (norm != unq).groupby(df["source"]).sum()))
         df[col] = norm
     stripped = df["title"].map(N.strip_wrapping_quotes)
-    log.append(
+    rules.append(
         ("R7 comillas del título", "title", (stripped != df["title"]).groupby(df["source"]).sum())
     )
     df["title"] = stripped
@@ -57,7 +58,7 @@ def clean_text(df: pd.DataFrame, log: list) -> pd.DataFrame:
                 pii_counts[(src, k)] += v
     df["pii_masked"] = pii_counts.total()
     for (src, kind), n in sorted(pii_counts.items()):
-        log.append((f"R14 PII: {kind}", "title+text", pd.Series({src: n})))
+        rules.append((f"R14 PII: {kind}", "title+text", pd.Series({src: n})))
     return df.drop(columns=["title_raw", "text_raw", "pii_masked"])
 
 
@@ -101,13 +102,16 @@ def leak_reproduction() -> dict:
 def build(seed: int = DEFAULT_SEED) -> None:
     set_seed(seed)
     ensure_dirs()
-    log: list = []
+    rules: list = []
 
+    log("Leyendo COAH (XML) y COAR (TSV clave/valor)")
     raw = pd.concat([load_coah(), load_coar()], ignore_index=True)
+    log(f"   {raw['source'].value_counts().to_dict()}")
+    log("Normalizando texto (R1–R7) y enmascarando datos personales (R14)")
     raw["label3"] = raw["rating"].map(N.label3)
     funnel = [("Crudo", raw["source"].value_counts())]
 
-    df = clean_text(raw, log)
+    df = clean_text(raw, rules)
     df["is_synthetic"] = False
     df["n_words"] = df["text"].str.split().str.len()
     df["drop_reason"] = None
@@ -118,11 +122,13 @@ def build(seed: int = DEFAULT_SEED) -> None:
         ("Sin texto vacío ni ilegible", df[df["drop_reason"].isna()]["source"].value_counts())
     )
 
+    log("Detectando idioma (lingua, 7 idiomas)")
     df = detect_language(df)
     not_es = (df["lang"] != "es") & (df["lang_conf"] < MIN_ES_CONF)
     df.loc[df["drop_reason"].isna() & not_es, "drop_reason"] = "idioma_no_es"
     funnel.append(("Solo español", df[df["drop_reason"].isna()]["source"].value_counts()))
 
+    log("Buscando duplicados exactos y casi duplicados (MinHash)")
     # Los duplicados se buscan solo entre las filas que siguen vivas; las ya descartadas
     # conservan su motivo.
     dups = resolve_duplicates(find_duplicates(df[df["drop_reason"].isna()], seed=seed))
@@ -134,6 +140,8 @@ def build(seed: int = DEFAULT_SEED) -> None:
     df = df.reset_index()
     funnel.append(("Sin duplicados", df[df["drop_reason"].isna()]["source"].value_counts()))
 
+    log(f"   descartes: {df['drop_reason'].value_counts().to_dict()}")
+    log("Particiones: COAH estratificado, COAR agrupado por restaurante")
     final = df[df["drop_reason"].isna()].copy()
     long_cut = final.groupby("source")["n_words"].transform(lambda s: s.quantile(0.99))
     final["flag_short"] = final["n_words"] < SHORT_WORDS
@@ -147,9 +155,10 @@ def build(seed: int = DEFAULT_SEED) -> None:
     for src in ("coah", "coar"):
         final[final["source"] == src].to_parquet(DATA_PROCESSED / f"{src}.parquet", index=False)
 
+    log("Reproduciendo la fuga del proyecto original")
     leak = leak_reproduction()
-    write_report(raw, df, final, funnel, log, leak, seed)
-    print(f"OK: {len(final)} reseñas -> data/processed/, informe en {REPORT.relative_to(ROOT)}")
+    write_report(raw, df, final, funnel, rules, leak, seed)
+    log(f"OK: {len(final)} reseñas -> data/processed/, informe en {REPORT.relative_to(ROOT)}")
 
 
 # --- Informe ----------------------------------------------------------------------------------
@@ -165,7 +174,7 @@ def _dist(df: pd.DataFrame, by: list[str], col: str) -> pd.DataFrame:
     return t
 
 
-def write_report(raw, df, final, funnel, log, leak, seed) -> None:
+def write_report(raw, df, final, funnel, rules, leak, seed) -> None:
     REPORT.parent.mkdir(exist_ok=True)
     rev = {s.dest.split("/")[-1]: s.revision[:7] for s in SOURCES}
     L = [
@@ -188,7 +197,7 @@ def write_report(raw, df, final, funnel, log, leak, seed) -> None:
         "| Regla | Campo | COAH | COAR |",
         "|---|---|---|---|",
     ]
-    for rule, col, counts in log:
+    for rule, col, counts in rules:
         L.append(
             f"| {rule} | {col} | {int(counts.get('coah', 0))} | {int(counts.get('coar', 0))} |"
         )
@@ -291,7 +300,7 @@ def write_report(raw, df, final, funnel, log, leak, seed) -> None:
         "- Etiquetas ruidosas con `cleanlab`: necesita las probabilidades del baseline (Fase 3).",
         "- Traducción automática: `reviewer_origin` es un proxy; validar a mano una muestra.",
     ]
-    REPORT.write_text("\n".join(L) + "\n", encoding="utf-8")
+    REPORT.write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")  # LF también en Windows
 
 
 if __name__ == "__main__":

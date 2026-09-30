@@ -33,3 +33,7 @@ data-download:
 # Pipeline de datos: crudo -> data/processed + reports/data_report.md
 data:
     python -m caso_uso_llm.data.build
+
+# Fase 3: baseline TF-IDF + LR (opciones A, A_sin_trad, B) -> results/ + reports/
+baseline:
+    python -m caso_uso_llm.classify.baseline

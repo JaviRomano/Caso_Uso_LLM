@@ -20,3 +20,6 @@ data/processed/
 # Datos de terceros: se descargan con `just data-download`; en git solo quedan sus hashes
 data/raw/sinai/
 data/raw/**/.cache/
+
+# Progreso de cada ejecución (se sobrescribe)
+logs/
