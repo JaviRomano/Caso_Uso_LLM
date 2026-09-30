@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.ipynb_checkpoints/
+
+# Pesos de modelos (van a HF Hub, no a git)
+*.safetensors
+*.bin
+*.pt
+*.gguf
+models/
+
+# Datos generados por scripts
+data/interim/
+data/processed/
