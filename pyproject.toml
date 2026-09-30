@@ -25,8 +25,10 @@ dev = [
 ]
 # Solo en WSL2 (Linux): PyTorch compilado para ROCm. En Windows se ignora.
 train = [
+    "accelerate>=1.10 ; sys_platform == 'linux'",
     "torch>=2.13 ; sys_platform == 'linux'",
     # Dependencia de torch; se declara para que también venga del índice de ROCm.
+    "transformers>=5.0 ; sys_platform == 'linux'",
     "triton-rocm ; sys_platform == 'linux'",
 ]
 

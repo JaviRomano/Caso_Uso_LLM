@@ -37,3 +37,7 @@ data:
 # Fase 3: baseline TF-IDF + LR (opciones A, A_sin_trad, B) -> results/ + reports/
 baseline:
     python -m caso_uso_llm.classify.baseline
+
+# Fase 3: fine-tuning de RoBERTa-BNE (solo WSL2). Ej.: just train --options B,C --seeds 42
+train *ARGS:
+    python -m caso_uso_llm.classify.finetune {{ARGS}}

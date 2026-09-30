@@ -30,6 +30,7 @@ class Option:
     description: str
     use_coar: bool
     drop_translated: bool = False
+    sequential: bool = False  # C: primero COAR, después COAH (solo tiene sentido en redes)
 
 
 OPTIONS = (
@@ -42,6 +43,8 @@ OPTIONS = (
         drop_translated=True,
     ),
 )
+OPTION_C = Option("C", "Secuencial: primero COAR, después COAH", use_coar=True, sequential=True)
+FINETUNE_OPTIONS = (*OPTIONS, OPTION_C)
 
 
 def train_set(df: pd.DataFrame, option: Option, coah_part: pd.DataFrame | None = None):
@@ -60,6 +63,13 @@ def train_set(df: pd.DataFrame, option: Option, coah_part: pd.DataFrame | None =
         parts.append(coar)
     train = pd.concat(parts)
     return train, _weights(train)
+
+
+def coar_stage(df: pd.DataFrame) -> tuple[pd.DataFrame, np.ndarray, pd.DataFrame]:
+    """Primera etapa de C: train y val de COAR (la val de COAR decide cuándo parar)."""
+    train = df[(df.source == "coar") & (df.split == "train")]
+    val = df[(df.source == "coar") & (df.split == "val")]
+    return train, _weights(train), val
 
 
 def _weights(train: pd.DataFrame) -> np.ndarray:
