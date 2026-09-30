@@ -6,6 +6,7 @@ readme = "CLAUDE.md"
 requires-python = ">=3.12,<3.13"
 # Dependencias mínimas: cada fase añade las suyas con `uv add` cuando las necesite.
 dependencies = [
+    "huggingface-hub>=0.34",
     "numpy>=2.1",
     "pandas>=2.2",
 ]

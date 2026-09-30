@@ -18,7 +18,12 @@ def sha256(path: Path) -> str:
 
 
 def raw_files() -> list[Path]:
-    return sorted(p for p in DATA_RAW.rglob("*") if p.is_file() and p != CHECKSUMS)
+    # .cache/ la crea huggingface_hub al descargar; no forma parte de los datos.
+    return sorted(
+        p
+        for p in DATA_RAW.rglob("*")
+        if p.is_file() and p != CHECKSUMS and ".cache" not in p.relative_to(DATA_RAW).parts
+    )
 
 
 def write_checksums() -> None:
