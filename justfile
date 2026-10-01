@@ -57,3 +57,7 @@ generar *ARGS:
 # Fase 6 (adelantada): valida el juez (canaries, controles, gold) y evalúa las respuestas de la Fase 4
 juez:
     python -m caso_uso_llm.evals.run_judge
+
+# Calibración del juez: kappa por criterio cuando se rellenan las columnas humano_* del CSV
+calibrar:
+    python -m caso_uso_llm.evals.calibrate

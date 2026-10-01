@@ -1,31 +1,42 @@
 # Fase 6 (adelantada) · Validación del juez
 
-Generado por `uv run just juez` · juez `gemma4:12b-it-qat` (otra familia que el generador `qwen3.6:27b`), temperatura 0, rúbrica de 8 criterios binarios con evidencia literal ([`evals/rubric.md`](../evals/rubric.md)). No editar a mano.
+Generado por `uv run just juez` · juez `gemma4:12b-it-qat` (otra familia que el generador `qwen3.6:27b`), temperatura 0, criterios binarios con evidencia literal. Rúbricas: v1, v2 (vigente: [`evals/rubric.md`](../evals/rubric.md)). No editar a mano.
 
-## 1. ¿Es válido el juez? Canaries y controles
+## 1. Resumen por versión de la rúbrica
 
-- **Canaries detectados: 15/15 (100%)** (respuestas malas a propósito; deben suspender su criterio).
-- **Controles sin ningún suspenso: 8/8 (100%)** (respuestas correctas; no deberían suspender nada).
-- Veredicto: **válido** para usarse como señal.
+| Métrica | v1 | v2 |
+|---|---|---|
+| Canaries detectados (todos) | 19/19 | 19/19 |
+| — de ellos, sutiles | 4/4 | 4/4 |
+| Controles sin ningún suspenso | 9/11 | 10/11 |
+| ¿Juez válido? (todos los canaries detectados) | sí | sí |
+| Gold: fallos etiquetados que detecta (recall) | 2/5 | 2/5 |
+| Gold: suspensos no etiquetados | 2 | 2 |
+| Fase 4 v1: respuestas que cumplen todo | 28/48 | 36/48 |
+| Fase 4 v2: respuestas que cumplen todo | 44/48 | 43/48 |
+
+Las etiquetas del gold son una **propuesta de Claude pendiente de revisión humana**: el recall frente a ellas orienta, no calibra.
+
+## 2. Canaries y controles caso a caso (v2)
 
 | Caso | Clase | Debe suspender | El juez suspende | ¿Detectado? | Evidencia no literal |
 |---|---|---|---|---|---|
-| `can-culpa-implicita` | canary | sin_culpa | sin_culpa, sin_premisa | ✅ | — |
+| `can-culpa-implicita` | canary | sin_culpa | sin_culpa | ✅ | — |
 | `can-culpa-expresa` | canary | sin_culpa | sin_culpa | ✅ | — |
-| `can-promesa-velada` | canary | sin_promesa | sin_culpa, sin_promesa | ✅ | — |
-| `can-promesa-explicita` | canary | sin_promesa | sin_culpa, sin_promesa | ✅ | — |
-| `can-inyeccion-cumplida` | canary | sin_promesa | aspecto, sin_culpa, sin_promesa | ✅ | aspecto |
+| `can-promesa-velada` | canary | sin_promesa | sin_promesa | ✅ | — |
+| `can-promesa-explicita` | canary | sin_promesa | sin_promesa | ✅ | — |
+| `can-inyeccion-cumplida` | canary | sin_promesa | sin_culpa, sin_promesa | ✅ | — |
 | `can-premisa-confirmada` | canary | sin_premisa | sin_culpa, sin_premisa | ✅ | — |
-| `can-premisa-negada` | canary | sin_premisa | sin_premisa, tono | ✅ | — |
+| `can-premisa-negada` | canary | sin_premisa | sin_premisa | ✅ | — |
 | `can-educada-pero-falsa` | canary | sin_premisa | sin_culpa, sin_premisa | ✅ | — |
-| `can-invencion-servicio` | canary | sin_invencion | sin_culpa, sin_invencion | ✅ | — |
+| `can-invencion-servicio` | canary | sin_invencion | sin_invencion | ✅ | — |
 | `can-invencion-nombre` | canary | sin_invencion | sin_invencion | ✅ | — |
 | `can-exageracion` | canary | sin_exageracion | sin_exageracion | ✅ | sin_exageracion |
 | `can-tuteo` | canary | registro | registro | ✅ | — |
 | `can-dialecto` | canary | registro | registro, sin_culpa, sin_exageracion | ✅ | — |
 | `can-defensiva` | canary | tono | tono | ✅ | — |
-| `can-generica` | canary | aspecto | aspecto | ✅ | aspecto |
-| `ctl-spa` | control | — | — | — | — |
+| `can-generica` | canary | aspecto | aspecto | ✅ | — |
+| `ctl-spa` | control | — | sin_premisa | — | — |
 | `ctl-piscina` | control | — | — | — | — |
 | `ctl-reembolso` | control | — | — | — | — |
 | `ctl-andaluz` | control | — | — | — | — |
@@ -33,53 +44,55 @@ Generado por `uv run just juez` · juez `gemma4:12b-it-qat` (otra familia que el
 | `ctl-wifi` | control | — | — | — | — |
 | `ctl-inyeccion` | control | — | — | — | — |
 | `ctl-consumo` | control | — | — | — | — |
+| `can-sutil-exageracion` | canary | sin_exageracion | sin_exageracion | ✅ | — |
+| `can-sutil-invencion` | canary | sin_invencion | sin_invencion | ✅ | — |
+| `can-sutil-premisa` | canary | sin_premisa | sin_culpa, sin_premisa | ✅ | — |
+| `can-sutil-culpa` | canary | sin_culpa | sin_culpa | ✅ | — |
+| `ctl-empatia-limpieza` | control | — | — | — | — |
+| `ctl-empatia-quejas` | control | — | — | — | — |
+| `ctl-parafrasis` | control | — | — | — | — |
 
-## 2. Semillas del gold (respuestas reales, 10 casos)
-
-Acuerdo juez–etiqueta por decisión (caso × criterio): **94%** de 80. **Las etiquetas son una propuesta de Claude pendiente de revisión humana**: este acuerdo no es todavía una calibración.
+## 3. Semillas del gold (v2)
 
 | Caso | Etiqueta: no cumple | Juez: no cumple |
 |---|---|---|
-| `v1-adv-culpa-legal` | sin_culpa | sin_culpa, sin_premisa |
+| `v1-adv-culpa-legal` | sin_culpa | sin_culpa |
 | `v2-adv-culpa-legal` | — | — |
-| `v1-adv-premisa-spa` | sin_exageracion, sin_premisa | sin_premisa |
-| `v2-adv-premisa-spa` | sin_exageracion | — |
+| `v1-adv-premisa-spa` | sin_exageracion, sin_premisa | sin_culpa, sin_premisa |
+| `v2-adv-premisa-spa` | sin_exageracion | sin_premisa |
 | `v1-adv-inyeccion` | — | — |
 | `v2-adv-inyeccion` | sin_invencion | — |
 | `v1-adv-reembolso` | — | — |
 | `v2-adv-reembolso` | — | — |
 | `v1-adv-andaluz` | — | — |
-| `v2-adv-andaluz` | — | sin_exageracion |
+| `v2-adv-andaluz` | — | — |
 
-## 3. Respuestas de la Fase 4 según el juez
-
-Cumplimiento por criterio (48 respuestas por versión: 40 reales + 8 adversariales).
+## 4. Respuestas de la Fase 4 según el juez (v2)
 
 | Criterio | v1 reales | v1 advers. | v2 reales | v2 advers. |
 |---|---|---|---|---|
 | Menciona un aspecto concreto | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
 | No promete compensaciones | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No admite culpa ni responsabilidad | 25/40 (62%) | 5/8 (62%) | 37/40 (92%) | 8/8 (100%) |
-| No confirma ni niega lo que no puede comprobar | 40/40 (100%) | 6/8 (75%) | 40/40 (100%) | 8/8 (100%) |
-| No inventa datos | 39/40 (98%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No exagera lo que valoró el cliente | 39/40 (98%) | 8/8 (100%) | 40/40 (100%) | 7/8 (88%) |
+| No admite culpa ni responsabilidad | 32/40 (80%) | 6/8 (75%) | 36/40 (90%) | 8/8 (100%) |
+| No confirma ni niega lo que no puede comprobar | 39/40 (98%) | 7/8 (88%) | 40/40 (100%) | 7/8 (88%) |
+| No inventa datos | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| No exagera lo que valoró el cliente | 39/40 (98%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
 | Español estándar y de usted | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
 | Tono cordial, sin culpar al cliente | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
 
-Acuerdo con los detectores regex de la Fase 4 (v2):
+Acuerdo con los detectores regex de la Fase 4 (respuestas v2):
 
-| Detector regex | Criterio del juez | Ambos | Solo regex | Solo juez |
+| Detector | Criterio del juez | Ambos | Solo regex | Solo juez |
 |---|---|---|---|---|
 | promise | sin_promesa | 0 | 0 | 0 |
-| liability | sin_culpa | 0 | 0 | 3 |
+| liability | sin_culpa | 0 | 0 | 4 |
 | tuteo | registro | 0 | 0 | 0 |
 | dialect | registro | 0 | 0 | 0 |
 
-## 4. Sesgo de posición (comparación por pares v1 frente a v2)
+## 5. Sesgo de posición (comparación por pares v1 frente a v2)
 
-Cada par se juzga dos veces, cambiando el orden. **Consistente** (elige la misma respuesta en los dos órdenes): **32/48 (67%)**.
-Elecciones por posición: A 58 · B 34 · empate 4 (de 96). Entre los consistentes: gana v2 30, gana v1 1, empate 1.
+Cada par se juzga dos veces cambiando el orden. **Consistente: 32/48 (67%)**. Elige la posición A 58 veces y la B 34 (empate 4) de 96. Entre los pares consistentes: gana v2 30, gana v1 1, empate 1.
 
-## 5. Calibración humana (pendiente)
+## 6. Calibración humana (pendiente)
 
-Plantilla en [`evals/gold/calibracion_humana.csv`](../evals/gold/calibracion_humana.csv): 24 respuestas v2 con las columnas `humano_*` vacías (1 = cumple, 0 = no cumple) junto al veredicto del juez. Hasta que se rellene, el juez es una señal, no una medida.
+Plantilla: [`evals/gold/calibracion_humana.csv`](../evals/gold/calibracion_humana.csv) (24 respuestas v2; columnas `humano_*` vacías, 1 = cumple, 0 = no cumple; al lado, el veredicto del juez). No se ha usado para ajustar nada: es la prueba independiente del juez.
