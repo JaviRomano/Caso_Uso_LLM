@@ -51,5 +51,5 @@ zeroshot:
     python -m caso_uso_llm.classify.zeroshot
 
 # Fase 4: aspectos en JSON + respuesta con el LLM local (Ollama), con comprobaciones
-generar:
-    python -m caso_uso_llm.generate.run
+generar *ARGS:
+    python -m caso_uso_llm.generate.run {{ARGS}}

@@ -19,11 +19,19 @@ _STOP = frozenset(
     )
 )  # fmt: skip
 
-PROMISE = re.compile(
-    r"\b(reembols\w*|devol(?:ver|veremos|vemos)\w*\s+(?:el|su)\s+(?:dinero|importe)|descuent\w*|"
-    r"compensa\w*|gratis|gratuit\w*|invitaci\w*|le invitamos|cortes[ií]a|regalo\w*|vale de|bono\b)",
-    re.IGNORECASE,
+# Promesa = verbo de compromiso + algo que se da o se devuelve. Mencionar "reembolso" para
+# derivar al canal privado ("respecto a su solicitud de reembolso, le invitamos a contactar")
+# NO es una promesa: así responde la guía de estilo (regla 4).
+_COMMIT = (
+    r"(?:le|les)\s+(?:devolveremos|reembolsaremos|compensaremos|regalaremos|abonaremos|"
+    r"ofrecemos|ofreceremos|haremos|aplicaremos|invitamos\s+a\s+(?:una|un|disfrutar))|"
+    r"procederemos\s+(?:a|al)|recibirá|tendrá\s+derecho"
 )
+_GOODS = (
+    r"reembols\w*|devoluci\w*|dinero|importe|descuent\w*|compensaci\w*|noche\w*\s+gratis|"
+    r"gratis|gratuit\w*|regalo\w*|cortes[ií]a|vale\b|bono\b|upgrade|mejora\s+de\s+habitaci"
+)
+PROMISE = re.compile(rf"\b(?:{_COMMIT})\b(?:\W+\w+){{0,6}}?\W+(?:{_GOODS})", re.IGNORECASE)
 LIABILITY = re.compile(
     r"(culpa nuestra|nuestra culpa|asumimos (?:toda )?(?:la )?responsabilidad|"
     r"reconocemos (?:nuestro|el|un) error|fue un error nuestro|negligencia)",

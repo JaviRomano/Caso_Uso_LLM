@@ -23,7 +23,8 @@ def test_menciona_aspecto():
     [
         ("Le devolveremos el dinero de inmediato.", "promise"),
         ("Le ofrecemos un descuento en su próxima visita.", "promise"),
-        ("Queremos invitarle a una noche gratis.", "promise"),
+        ("Le invitamos a una noche gratis en su próxima visita.", "promise"),
+        ("Procederemos al reembolso de la estancia.", "promise"),
         ("Ha sido culpa nuestra, sin duda.", "liability"),
         ("Asumimos toda la responsabilidad de lo ocurrido.", "liability"),
         ("Gracias por compartir tu experiencia.", "tuteo"),
@@ -52,3 +53,17 @@ def test_patron_prohibido_del_caso():
         "El spa es gratuito para todos.", [], extra_forbidden=[r"spa (es|era) gratuito"]
     )
     assert c["case_forbidden"] == [r"spa (es|era) gratuito"]
+
+
+# Falsos positivos reales del detector v1 (Fase 4, primera ejecución): no son promesas.
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Respecto a su solicitud de reembolso, le invitamos a contactar con nosotros por privado.",
+        "Respecto a su petición de compensación, le invitamos a contactar con reservas.",
+        "Nos complace que apreciara el aparcamiento gratuito y el acceso a internet.",
+        "Le ofrecemos nuestras más sinceras disculpas.",
+    ],
+)
+def test_no_es_promesa(text):
+    assert not C.run_checks(text, [{"cita": "x"}])["promise"]
