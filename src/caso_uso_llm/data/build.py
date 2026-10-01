@@ -14,14 +14,15 @@ from sklearn.model_selection import train_test_split
 
 from caso_uso_llm.data import normalize as N
 from caso_uso_llm.data.dedup import NEAR_DUP_THRESHOLD, find_duplicates, resolve_duplicates
-from caso_uso_llm.data.download import SOURCES
-from caso_uso_llm.data.sources import load_coah, load_coar
+from caso_uso_llm.data.download import AHR_FILE, SOURCES
+from caso_uso_llm.data.sources import load_ahr, load_coah, load_coar
 from caso_uso_llm.data.split import split_grouped, split_stratified
 from caso_uso_llm.log import log
 from caso_uso_llm.paths import DATA_INTERIM, DATA_PROCESSED, DATA_RAW, ROOT, ensure_dirs
 from caso_uso_llm.seed import DEFAULT_SEED, set_seed
 
 REPORT = ROOT / "reports" / "data_report.md"
+AHR_PAGE = "https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbalanced"
 SHORT_WORDS = 5
 MIN_ES_CONF = 0.10  # R17: el texto no español tenía <= 0,01; el español mal detectado, >= 0,14
 MAX_QMARK_FRAC = 0.30  # R16: texto en otro alfabeto que se perdió al extraerlo ("??????")
@@ -99,6 +100,48 @@ def leak_reproduction() -> dict:
     }
 
 
+def build_ahr(core: pd.DataFrame, seed: int) -> dict:
+    """AHR como test fuera de distribución: mismas reglas que COAH/COAR y, además, fuera
+    cualquier reseña que coincida (exacta o casi) con una de COAH o COAR, de cualquier partición.
+    """
+    raw = load_ahr()
+    raw["label3"] = raw["rating"].map(N.label3)
+    rules: list = []
+    df = clean_text(raw, rules)
+    df["is_synthetic"] = False
+    df["n_words"] = df["text"].str.split().str.len()
+    df["drop_reason"] = None
+    funnel = [("Crudo (sin las filas de COAH)", len(df))]
+    df.loc[df["text"].str.len() == 0, "drop_reason"] = "texto_vacio"
+    qmarks = df["text"].str.count(r"\?") / df["text"].str.len().clip(lower=1)
+    df.loc[df["drop_reason"].isna() & (qmarks > MAX_QMARK_FRAC), "drop_reason"] = "texto_ilegible"
+    log("   AHR: idioma")
+    df = detect_language(df)
+    not_es = (df["lang"] != "es") & (df["lang_conf"] < MIN_ES_CONF)
+    df.loc[df["drop_reason"].isna() & not_es, "drop_reason"] = "idioma_no_es"
+    funnel.append(("Solo español", int(df["drop_reason"].isna().sum())))
+
+    log("   AHR: solape con COAH/COAR (MinHash)")
+    cols = ["id", "source", "title", "text", "label3"]
+    combo = pd.concat([core[cols], df.loc[df["drop_reason"].isna(), cols]], ignore_index=True)
+    cl = find_duplicates(combo, seed=seed)
+    core_clusters = set(cl.loc[cl["source"] != "ahr", "dup_cluster"])
+    overlap = cl.loc[(cl["source"] == "ahr") & cl["dup_cluster"].isin(core_clusters), "id"]
+    df.loc[df["id"].isin(overlap), "drop_reason"] = "solapa_coah_coar"
+    funnel.append(("Sin solape con COAH/COAR", int(df["drop_reason"].isna().sum())))
+
+    log("   AHR: duplicados internos")
+    dups = resolve_duplicates(find_duplicates(df[df["drop_reason"].isna()], seed=seed))
+    dups = dups.set_index("id")
+    df = df.set_index("id")
+    df.loc[dups.index, "drop_reason"] = dups["drop_reason"]
+    df = df.reset_index()
+    funnel.append(("Sin duplicados", int(df["drop_reason"].isna().sum())))
+    final = df[df["drop_reason"].isna()].copy()
+    final["split"] = "ood_test"
+    return {"all": df, "final": final, "rules": rules, "funnel": funnel}
+
+
 def build(seed: int = DEFAULT_SEED) -> None:
     set_seed(seed)
     ensure_dirs()
@@ -155,9 +198,18 @@ def build(seed: int = DEFAULT_SEED) -> None:
     for src in ("coah", "coar"):
         final[final["source"] == src].to_parquet(DATA_PROCESSED / f"{src}.parquet", index=False)
 
+    ahr = None
+    if AHR_FILE.exists():
+        log("AHR completo: test fuera de distribución")
+        ahr = build_ahr(df, seed)
+        ahr["final"].to_parquet(DATA_PROCESSED / "ahr_ood.parquet", index=False)
+        log(f"   AHR: {len(ahr['final'])} reseñas -> data/processed/ahr_ood.parquet")
+    else:
+        log("AHR no descargado: se omite (`uv run just data-download`)")
+
     log("Reproduciendo la fuga del proyecto original")
     leak = leak_reproduction()
-    write_report(raw, df, final, funnel, rules, leak, seed)
+    write_report(raw, df, final, funnel, rules, leak, seed, ahr)
     log(f"OK: {len(final)} reseñas -> data/processed/, informe en {REPORT.relative_to(ROOT)}")
 
 
@@ -174,7 +226,7 @@ def _dist(df: pd.DataFrame, by: list[str], col: str) -> pd.DataFrame:
     return t
 
 
-def write_report(raw, df, final, funnel, rules, leak, seed) -> None:
+def write_report(raw, df, final, funnel, rules, leak, seed, ahr=None) -> None:
     REPORT.parent.mkdir(exist_ok=True)
     rev = {s.dest.split("/")[-1]: s.revision[:7] for s in SOURCES}
     L = [
@@ -293,8 +345,32 @@ def write_report(raw, df, final, funnel, rules, leak, seed) -> None:
         "Si alguna vez se combina con AHR, hay que deduplicar contra COAH.",
         "",
     ]
+    if ahr is not None:
+        a = ahr["final"]
+        L += [
+            "## 6. AHR como test fuera de distribución",
+            "",
+            f"AHR completo ([Kaggle]({AHR_PAGE}), v3, CC BY-NC 4.0): reseñas de TripAdvisor de "
+            "2021, con nombre de hotel. Solo se evalúa con él; nunca se entrena. Se quitan sus "
+            "filas sin hotel (son COAH) y cualquier reseña que coincida, exacta o casi, con COAH "
+            "o COAR.",
+            "",
+            "| Paso | Reseñas |",
+            "|---|---|",
+        ]
+        L += [f"| {step} | {n} |" for step, n in ahr["funnel"]]
+        reasons = ahr["all"]["drop_reason"].fillna("conservada").value_counts()
+        by_rating = (
+            a.groupby("rating")["label3"]
+            .agg(["first", "size"])
+            .rename(columns={"first": "etiqueta", "size": "reseñas"})
+        )
+        provinces = ", ".join(f"{k} {v}" for k, v in a["province"].value_counts().items())
+        L += ["", "Motivos de descarte:", "", _md(reasons.to_frame("reseñas")), ""]
+        L += [f"Resultado: {len(a)} reseñas de {a['establishment_id'].nunique()} hoteles.", ""]
+        L += [_md(by_rating), "", f"Provincias: {provinces}.", ""]
     L += [
-        "## 6. Pendiente",
+        "## 7. Pendiente",
         "",
         '- Nombres sin tratamiento ni cargo ("gracias a Emilio"): NER con Presidio.',
         "- Etiquetas ruidosas con `cleanlab`: necesita las probabilidades del baseline (Fase 3).",

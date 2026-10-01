@@ -58,7 +58,30 @@ def download(source: Source) -> None:
     )
 
 
+# AHR completo (Kaggle, versión 3, CC BY-NC 4.0): solo se usa como test fuera de distribución.
+# Es público: se descarga sin cuenta. Contiene COAH entero (las filas sin hotel).
+AHR_URL = (
+    "https://www.kaggle.com/api/v1/datasets/download/"
+    "chizhikchi/andalusian-hotels-reviews-unbalanced?datasetVersionNumber=3"
+)
+AHR_FILE = DATA_RAW / "ahr" / "Big_AHR.csv"
+
+
+def download_ahr() -> None:
+    import io
+    import urllib.request
+    import zipfile
+
+    with urllib.request.urlopen(AHR_URL, timeout=120) as r:
+        data = r.read()
+    AHR_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        AHR_FILE.write_bytes(z.read("Big_AHR.csv"))
+
+
 if __name__ == "__main__":
     for s in SOURCES:
         print(f"{s.repo_id}@{s.revision[:7]} -> data/raw/{s.dest} ({s.license})")
         download(s)
+    print(f"Kaggle AHR v3 -> {AHR_FILE.relative_to(DATA_RAW.parent.parent)} (CC BY-NC 4.0)")
+    download_ahr()

@@ -104,6 +104,11 @@ _PROVINCE_SPECIAL = {
     "province_of_ma": "Málaga",  # truncado; la única provincia andaluza que empieza por "Ma"
     "sierra_de_aracena_and_picos_de_aroche_nat": "Huelva",  # parque natural, en Huelva
 }
+# Fragmentos que identifican la zona aunque el nombre venga truncado (AHR).
+_PROVINCE_FRAGMENTS = (
+    ("sierra_de_aracena", "Huelva"),  # Alájar y la sierra de Aracena
+    ("algarve", "Faro (Portugal)"),  # AHR incluye un hotel de Tavira: no es andaluz
+)
 
 
 def strip_accents(s: str) -> str:
@@ -118,6 +123,9 @@ def canonical_province(raw: str) -> str:
     key = strip_accents(raw.strip()).lower()
     if key in _PROVINCE_SPECIAL:
         return _PROVINCE_SPECIAL[key]
+    for fragment, province in _PROVINCE_FRAGMENTS:
+        if fragment in key:
+            return province
     for token in re.split(r"[_\s]+", key):
         if token in _PROVINCES:
             return _PROVINCES[token]

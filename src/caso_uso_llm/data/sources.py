@@ -81,3 +81,28 @@ def load_coar(path: Path = COAR_TSV) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(rows)
+
+
+def load_ahr(path: Path | None = None) -> pd.DataFrame:
+    """AHR completo (Kaggle): hoteles andaluces de TripAdvisor (2021), con nombre de hotel.
+
+    Las filas sin hotel son COAH entero y se descartan aquí: ya están en el entrenamiento.
+    """
+    from caso_uso_llm.data.download import AHR_FILE
+
+    df = pd.read_csv(path or AHR_FILE)
+    df = df[df["hotel"].notna()]
+    return pd.DataFrame(
+        {
+            "id": "ahr-" + df.iloc[:, 0].astype(str),
+            "source": "ahr",
+            "domain": "hotel",
+            "establishment_id": df["hotel"].to_numpy(),
+            "province": df["location"].map(N.canonical_province).to_numpy(),
+            "date": None,
+            "rating": df["rating"].astype(int).to_numpy(),
+            "title_raw": df["title"].fillna("").astype(str).to_numpy(),
+            "text_raw": df["review_text"].fillna("").astype(str).to_numpy(),
+            "reviewer_origin": "unknown",
+        }
+    )

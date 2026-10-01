@@ -119,7 +119,39 @@ Por etiqueta: {0: 0.368, 1: 0.835, 3: 0.319}.
 
 Textos de COAH presentes en `Balanced_AHR.csv`: 785 de 1792. Si alguna vez se combina con AHR, hay que deduplicar contra COAH.
 
-## 6. Pendiente
+## 6. AHR como test fuera de distribución
+
+AHR completo ([Kaggle](https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbalanced), v3, CC BY-NC 4.0): reseñas de TripAdvisor de 2021, con nombre de hotel. Solo se evalúa con él; nunca se entrena. Se quitan sus filas sin hotel (son COAH) y cualquier reseña que coincida, exacta o casi, con COAH o COAR.
+
+| Paso | Reseñas |
+|---|---|
+| Crudo (sin las filas de COAH) | 16356 |
+| Solo español | 16019 |
+| Sin solape con COAH/COAR | 16019 |
+| Sin duplicados | 11414 |
+
+Motivos de descarte:
+
+| drop_reason    |   reseñas |
+|:---------------|----------:|
+| conservada     |     11414 |
+| duplicado      |      4605 |
+| idioma_no_es   |       336 |
+| texto_ilegible |         1 |
+
+Resultado: 11414 reseñas de 703 hoteles.
+
+|   rating | etiqueta   |   reseñas |
+|---------:|:-----------|----------:|
+|        1 | negativo   |       954 |
+|        2 | negativo   |       582 |
+|        3 | neutral    |      1444 |
+|        4 | positivo   |      2767 |
+|        5 | positivo   |      5667 |
+
+Provincias: Sevilla 3242, Granada 2301, Córdoba 2084, Málaga 1965, Almería 901, Huelva 512, Jaén 369, Cádiz 20, Faro (Portugal) 20.
+
+## 7. Pendiente
 
 - Nombres sin tratamiento ni cargo ("gracias a Emilio"): NER con Presidio.
 - Etiquetas ruidosas con `cleanlab`: necesita las probabilidades del baseline (Fase 3).

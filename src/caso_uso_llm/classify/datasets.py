@@ -90,3 +90,23 @@ def eval_sets(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         "coah_test": df[(df.source == "coah") & (df.split == "test")],
         "coar_test": df[(df.source == "coar") & (df.split == "test")],
     }
+
+
+AHR_SAMPLE_N = 2000
+
+
+def load_ahr_ood() -> pd.DataFrame:
+    """AHR (TripAdvisor 2021) limpio y sin solape con COAH/COAR: solo para evaluar."""
+    df = pd.read_parquet(DATA_PROCESSED / "ahr_ood.parquet")
+    df["input"] = df["title"].str.strip() + ". " + df["text"]
+    return df
+
+
+def ahr_sample(df: pd.DataFrame, n: int = AHR_SAMPLE_N, seed: int = 42) -> pd.DataFrame:
+    """Muestra estratificada por rating (misma para todos los modelos: se compara pareado)."""
+    frac = n / len(df)
+    return (
+        df.groupby("rating", group_keys=False)
+        .sample(frac=frac, random_state=seed)
+        .sort_values("id")
+    )

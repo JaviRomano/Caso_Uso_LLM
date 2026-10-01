@@ -61,6 +61,11 @@ def test_parse_coar_rating_y_fecha():
         ("Province_of_Huelva_Andalucia", "Huelva"), ("Jaén", "Jaén"),
         ("Province_of_Jaen_Andalucia", "Jaén"),
         ("Sierra_de_Aracena_and_Picos_de_Aroche_Nat", "Huelva"),
+        # AHR
+        ("znajar_Province_of_Cordoba_Andalucia", "Córdoba"),
+        ("Malaga_Costa_del_Sol_Province_of_Malag", "Málaga"),
+        ("Alajar_Sierra_de_Aracena_and_Picos_de_Aroche_Natural_Park_Pro", "Huelva"),
+        ("Tavira_Faro_District_Algarve", "Faro (Portugal)"),
     ],
 )  # fmt: skip
 def test_canonical_province(raw, expected):

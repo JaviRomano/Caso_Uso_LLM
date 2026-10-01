@@ -8,7 +8,11 @@ from caso_uso_llm.data.normalize import dedup_key
 NEAR_DUP_THRESHOLD = 0.8  # Jaccard estimada sobre 5-gramas de caracteres de la clave
 NUM_PERM = 128
 SHINGLE = 5
-SOURCE_PRIORITY = {"coah": 0, "coar": 1}  # ante un duplicado entre fuentes se queda el hotel
+SOURCE_PRIORITY = {
+    "coah": 0,
+    "coar": 1,
+    "ahr": 2,
+}  # ante un duplicado entre fuentes se queda el hotel
 
 
 def _minhash(key: str, seed: int) -> MinHash:

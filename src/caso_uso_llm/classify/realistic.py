@@ -19,7 +19,7 @@ import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from caso_uso_llm.classify import metrics as M
-from caso_uso_llm.classify.datasets import LABELS, eval_sets, load
+from caso_uso_llm.classify.datasets import LABELS, ahr_sample, eval_sets, load, load_ahr_ood
 from caso_uso_llm.classify.finetune import SEEDS, Config, device, encode, model_dir, predict_proba
 from caso_uso_llm.classify.stress import load_sfu_hoteles, perturbations
 from caso_uso_llm.log import log
@@ -100,7 +100,9 @@ def main(seed: int = DEFAULT_SEED) -> None:
     sets = eval_sets(df)
     variants = perturbations(sets["coah_test"], seed)
     sfu = load_sfu_hoteles()
+    ahr = load_ahr_ood()
     frames = {
+        "ahr_ood": ahr,
         "coah_val": sets["coah_val"],
         **{f"test_{k}": v for k, v in variants.items()},
         "sfu_hoteles": sfu,
@@ -180,6 +182,34 @@ def main(seed: int = DEFAULT_SEED) -> None:
             trunc[f"{name}|{strategy}"] = r
             log(f"   {name} · {strategy}: acierto {r['accuracy']:.1%}")
     out["truncation"] = trunc
+
+    # 5) AHR: test grande y sucio (TripAdvisor 2021, 703 hoteles), nunca visto al entrenar
+    pa, ya = probs["ahr_ood"], ahr["label3"]
+    pred_a = labels_of(pa)
+    sample_ids = set(ahr_sample(ahr)["id"])
+    in_sample = ahr["id"].isin(sample_ids).to_numpy()
+    out["ahr_ood"] = {
+        "n": len(ahr),
+        "f1_macro": round(M.f1_macro(ya, pred_a), 4),
+        "ci95": M.bootstrap_ci(ya, pred_a, seed),
+        "f1_per_class": M.per_class_f1(ya, pred_a),
+        "confusion": M.confusion(ya, pred_a),
+        "sample_f1_macro": round(M.f1_macro(ya[in_sample], pred_a[in_sample]), 4),
+        "coverage": {
+            policy: next(
+                r for r in coverage_table(ya, pa, neg) if r["threshold"] == cov[policy]["threshold"]
+            )
+            for policy, neg in (("solo_confianza", False), ("negativas_a_revision", True))
+        },
+    }  # fmt: skip
+    r = out["ahr_ood"]
+    log(f"   AHR (n={r['n']}): F1 {r['f1_macro']:.3f} · neutral {r['f1_per_class']['neutral']:.3f}")
+    # Probabilidades por reseña, para combinarlas con el LLM (zeroshot.py, en Windows)
+    (RESULTS / "phase3b_ahr_mroberta_probs.json").write_text(
+        json.dumps({i: np.round(p, 5).tolist() for i, p in zip(ahr["id"], pa, strict=True)}),
+        encoding="utf-8",
+        newline="\n",
+    )
 
     (RESULTS / "phase3b_realista.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
@@ -268,6 +298,32 @@ def write_report(o: dict, n: dict) -> None:
     for key, r in o["truncation"].items():
         name, strategy = key.split("|")
         L.append(f"| {name} | {strategy} | {r['accuracy']:.1%} | {r['f1_macro']:.3f} |")
+    a = o["ahr_ood"]
+    L += [
+        "",
+        f"## 5. AHR: test grande y sucio (TripAdvisor 2021, n={a['n']})",
+        "",
+        "Reseñas de 703 hoteles que el modelo no ha visto, sin solape con COAH/COAR "
+        "(`reports/data_report.md` §6). Con 1.444 neutrales, la clase difícil por fin se "
+        "mide bien.",
+        "",
+        f"F1 macro **{a['f1_macro']:.3f}** (IC 95 % {a['ci95'][0]:.3f}–{a['ci95'][1]:.3f}) · "
+        + " · ".join(f"{lab} {a['f1_per_class'][lab]:.3f}" for lab in LABELS)
+        + f". En la muestra de 2.000 usada para el LLM: {a['sample_f1_macro']:.3f}.",
+        "",
+        "| real \\ pred | " + " | ".join(LABELS) + " |",
+        "|---|---|---|---|",
+    ]
+    L += [
+        f"| {lab} | " + " | ".join(map(str, row)) + " |"
+        for lab, row in zip(LABELS, a["confusion"], strict=True)
+    ]
+    L += ["", "Cobertura con el umbral elegido en `coah_val`:", ""]
+    for policy, c in a["coverage"].items():
+        L.append(
+            f"- {policy}: umbral {c['threshold']} → se responde el {c['auto_frac']:.0%} con un "
+            f"error del {c['auto_error']:.1%} ({c['errors_n']} de {c['auto_n']})."
+        )
     (ROOT / "reports" / "phase3b_realista.md").write_text(
         "\n".join(L) + "\n", encoding="utf-8", newline="\n"
     )
