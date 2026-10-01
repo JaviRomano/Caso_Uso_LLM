@@ -15,6 +15,7 @@ Generado por `uv run just juez` · juez `gemma4:12b-it-qat` (otra familia que el
 | Fase 4, prompt v1: respuestas que cumplen todo | 28/48 | 36/48 | 40/48 |
 | Fase 4, prompt v2: respuestas que cumplen todo | 44/48 | 43/48 | 46/48 |
 | Fase 4, prompt v3: respuestas que cumplen todo | 38/48 | 42/48 | 45/48 |
+| Fase 4, prompt v4: respuestas que cumplen todo | 33/48 | 37/48 | 44/48 |
 
 Las etiquetas del gold son una **propuesta de Claude pendiente de revisión humana**: el recall frente a ellas orienta, no calibra.
 
@@ -70,16 +71,16 @@ Las etiquetas del gold son una **propuesta de Claude pendiente de revisión huma
 
 ## 4. Respuestas de la Fase 4 según el juez (v3)
 
-| Criterio | v1 reales | v1 advers. | v2 reales | v2 advers. | v3 reales | v3 advers. |
-|---|---|---|---|---|---|---|
-| Menciona un aspecto concreto | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No promete compensaciones | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No admite culpa ni responsabilidad | 33/40 (82%) | 7/8 (88%) | 38/40 (95%) | 8/8 (100%) | 37/40 (92%) | 8/8 (100%) |
-| No confirma ni niega lo que no puede comprobar | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No inventa datos | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| No exagera lo que valoró el cliente | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| Español estándar y de usted | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
-| Tono cordial, sin culpar al cliente | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| Criterio | v1 reales | v1 advers. | v2 reales | v2 advers. | v3 reales | v3 advers. | v4 reales | v4 advers. |
+|---|---|---|---|---|---|---|---|---|
+| Menciona un aspecto concreto | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| No promete compensaciones | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| No admite culpa ni responsabilidad | 33/40 (82%) | 7/8 (88%) | 38/40 (95%) | 8/8 (100%) | 37/40 (92%) | 8/8 (100%) | 36/40 (90%) | 8/8 (100%) |
+| No confirma ni niega lo que no puede comprobar | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| No inventa datos | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| No exagera lo que valoró el cliente | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| Español estándar y de usted | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
+| Tono cordial, sin culpar al cliente | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) | 40/40 (100%) | 8/8 (100%) |
 
 Acuerdo con los detectores regex de la Fase 4 (respuestas v2):
 
@@ -98,6 +99,9 @@ Cada par se juzga dos veces cambiando el orden; solo cuenta como victoria si coi
 |---|---|---|---|
 | v1 frente a v2 | 32/48 (67%) | 58 / 34 / 4 | v2 30 · v1 1 · empate 1 |
 | v2 frente a v3 | 30/48 (62%) | 60 / 31 / 5 | v3 4 · v2 25 · empate 1 |
+| v3 frente a v4 | 29/48 (60%) | 58 / 29 / 9 | v4 19 · v3 6 · empate 4 |
+| v1 frente a v4 | 30/48 (62%) | 61 / 32 / 3 | v4 22 · v1 7 · empate 1 |
+| v2 frente a v4 | 28/48 (58%) | 59 / 30 / 7 | v4 7 · v2 19 · empate 2 |
 
 ## 6. Calibración humana (pendiente)
 
