@@ -73,8 +73,28 @@ class Config:
 # --- Datos --------------------------------------------------------------------------------------
 
 
-def encode(tokenizer, df: pd.DataFrame, cfg: Config, weights=None) -> list[dict]:
-    enc = tokenizer(df["input"].tolist(), truncation=True, max_length=cfg.max_len)
+HEAD_TOKENS = 128  # en "head_tail": tokens del principio; el resto del cupo, del final
+
+
+def _head_tail(ids: list[int], max_len: int) -> list[int]:
+    """Principio y final de un texto largo: en las reseñas, el veredicto suele ir al final."""
+    if len(ids) <= max_len:
+        return ids
+    return ids[:HEAD_TOKENS] + ids[-(max_len - HEAD_TOKENS) :]
+
+
+def encode(tokenizer, df: pd.DataFrame, cfg: Config, weights=None, strategy="head") -> list[dict]:
+    """Tokeniza. `strategy`: 'head' corta por el final; 'head_tail' conserva principio y final."""
+    if strategy == "head":
+        enc = tokenizer(df["input"].tolist(), truncation=True, max_length=cfg.max_len)
+    elif strategy == "head_tail":
+        enc = tokenizer(df["input"].tolist(), truncation=False, verbose=False)
+        enc = {
+            "input_ids": [_head_tail(x, cfg.max_len) for x in enc["input_ids"]],
+            "attention_mask": [_head_tail(x, cfg.max_len) for x in enc["attention_mask"]],
+        }
+    else:
+        raise ValueError(strategy)
     labels = df["label3"].map(LABEL2ID).tolist()
     w = np.ones(len(df)) if weights is None else weights
     return [

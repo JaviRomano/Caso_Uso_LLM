@@ -26,3 +26,14 @@ def test_sfu_hoteles():
     assert set(df["rating"]) == {1, 2, 4, 5}
     assert df["label3"].value_counts().to_dict() == {"negativo": 25, "positivo": 25}
     assert " ." not in df["input"].iloc[0]  # puntuación pegada a la palabra
+
+
+def test_head_tail_conserva_principio_y_final():
+    pytest.importorskip("torch")  # finetune.py importa torch: solo en WSL2
+    from caso_uso_llm.classify.finetune import HEAD_TOKENS, _head_tail
+
+    ids = list(range(1000))
+    out = _head_tail(ids, 384)
+    assert len(out) == 384
+    assert out[:HEAD_TOKENS] == ids[:HEAD_TOKENS] and out[-1] == ids[-1]
+    assert _head_tail(ids[:100], 384) == ids[:100]  # los cortos no se tocan

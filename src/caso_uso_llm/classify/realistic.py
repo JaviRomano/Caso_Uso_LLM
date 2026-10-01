@@ -33,7 +33,10 @@ INVARIANT = ("sin_titulo", "informal", "erratas", "andaluz")  # no deberían cam
 
 
 def ensemble_proba(frames: dict[str, pd.DataFrame], cfg: Config, dev) -> dict[str, np.ndarray]:
-    """Media de probabilidades de las 3 semillas para cada conjunto (`input` es el texto)."""
+    """Media de probabilidades de las 3 semillas para cada conjunto (`input` es el texto).
+
+    Los conjuntos cuyo nombre acaba en `@head_tail` se truncan conservando principio y final.
+    """
     sums: dict[str, np.ndarray] = {}
     for seed in SEEDS:
         path = model_dir(cfg, OPTION, seed)
@@ -45,7 +48,8 @@ def ensemble_proba(frames: dict[str, pd.DataFrame], cfg: Config, dev) -> dict[st
         tok = AutoTokenizer.from_pretrained(path)
         model = AutoModelForSequenceClassification.from_pretrained(path).to(dev)
         for name, df in frames.items():
-            p = predict_proba(model, encode(tok, df, cfg), tok, cfg, dev)
+            strategy = "head_tail" if name.endswith("@head_tail") else "head"
+            p = predict_proba(model, encode(tok, df, cfg, strategy=strategy), tok, cfg, dev)
             sums[name] = sums.get(name, 0) + p
         del model
         torch.cuda.empty_cache()
@@ -100,6 +104,8 @@ def main(seed: int = DEFAULT_SEED) -> None:
         "coah_val": sets["coah_val"],
         **{f"test_{k}": v for k, v in variants.items()},
         "sfu_hoteles": sfu,
+        "test_original@head_tail": variants["original"],
+        "sfu_hoteles@head_tail": sfu,
     }
     log(f"Conjuntos: { {k: len(v) for k, v in frames.items()} }")
     probs = ensemble_proba(frames, cfg, dev)
@@ -162,6 +168,18 @@ def main(seed: int = DEFAULT_SEED) -> None:
             f"con error {chosen['auto_error']:.1%}"
         )
     out["coverage"] = cov
+
+    # 4) Truncado: solo el principio (como en el entrenamiento) frente a principio + final
+    trunc = {}
+    for name, ref in (("test_original", y), ("sfu_hoteles", sfu["label3"])):
+        for strategy in ("head", "head_tail"):
+            key = name if strategy == "head" else f"{name}@head_tail"
+            pred = labels_of(probs[key])
+            r = {"f1_macro": round(M.f1_macro(ref, pred), 4),
+                 "accuracy": round(float((pred == ref.to_numpy()).mean()), 4)}  # fmt: skip
+            trunc[f"{name}|{strategy}"] = r
+            log(f"   {name} · {strategy}: acierto {r['accuracy']:.1%}")
+    out["truncation"] = trunc
 
     (RESULTS / "phase3b_realista.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
@@ -237,6 +255,19 @@ def write_report(o: dict, n: dict) -> None:
             L.append(f"| {v['threshold']} | {v['auto_frac']:.0%} | {v['auto_error']:.1%} "
                      f"| {t['auto_frac']:.0%} | {t['auto_error']:.1%} |")  # fmt: skip
         L.append("")
+    L += [
+        "## 4. Truncado de reseñas largas",
+        "",
+        "El modelo lee como máximo 384 tokens. `head` corta por el final (como en el "
+        "entrenamiento); `head_tail` conserva los 128 primeros y los últimos, donde suele ir el "
+        "veredicto. Solo cambia la inferencia: el modelo no se ha reentrenado.",
+        "",
+        "| Conjunto | Truncado | Acierto | F1 macro |",
+        "|---|---|---|---|",
+    ]
+    for key, r in o["truncation"].items():
+        name, strategy = key.split("|")
+        L.append(f"| {name} | {strategy} | {r['accuracy']:.1%} | {r['f1_macro']:.3f} |")
     (ROOT / "reports" / "phase3b_realista.md").write_text(
         "\n".join(L) + "\n", encoding="utf-8", newline="\n"
     )

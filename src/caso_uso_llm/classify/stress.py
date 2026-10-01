@@ -103,6 +103,9 @@ def load_sfu_hoteles(path=SFU_HOTELES) -> pd.DataFrame:
     rows = []
     for doc, sents in docs.items():
         text = " ".join(" ".join(s[1:]) for s in sents)
+        # El corpus une las expresiones multipalabra con "_" (ya_que) y separa las contracciones.
+        text = text.replace("_", " ")
+        text = re.sub(r"\b([dD]e|[aA]) el\b", lambda m: m.group(1) + "l", text)
         text = _NO_SPACE_AFTER.sub(r"\1", _NO_SPACE_BEFORE.sub(r"\1", text))
         rating = int(doc.split("_")[2])
         rows.append({"id": doc, "input": text, "rating": rating, "label3": label3(rating),

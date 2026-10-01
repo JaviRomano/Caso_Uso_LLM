@@ -1,0 +1,518 @@
+{
+ "option": "A",
+ "seeds": [
+  42,
+  43,
+  44
+ ],
+ "config_id": "bc2b14b1",
+ "max_error": 0.05,
+ "stress": {
+  "original": {
+   "f1_macro": 0.7969,
+   "ci95": [
+    0.7322,
+    0.8534
+   ],
+   "flip_rate": 0.0,
+   "f1_per_class": {
+    "negativo": 0.9231,
+    "neutral": 0.5352,
+    "positivo": 0.9325
+   }
+  },
+  "sin_titulo": {
+   "f1_macro": 0.7809,
+   "ci95": [
+    0.7178,
+    0.8378
+   ],
+   "flip_rate": 0.0446,
+   "f1_per_class": {
+    "negativo": 0.9007,
+    "neutral": 0.5195,
+    "positivo": 0.9226
+   }
+  },
+  "solo_titulo": {
+   "f1_macro": 0.7304,
+   "ci95": [
+    0.6687,
+    0.7908
+   ],
+   "flip_rate": 0.171,
+   "f1_per_class": {
+    "negativo": 0.8166,
+    "neutral": 0.4865,
+    "positivo": 0.8881
+   }
+  },
+  "informal": {
+   "f1_macro": 0.8096,
+   "ci95": [
+    0.7462,
+    0.863
+   ],
+   "flip_rate": 0.0149,
+   "f1_per_class": {
+    "negativo": 0.9299,
+    "neutral": 0.5634,
+    "positivo": 0.9355
+   }
+  },
+  "erratas": {
+   "f1_macro": 0.7909,
+   "ci95": [
+    0.7298,
+    0.848
+   ],
+   "flip_rate": 0.0372,
+   "f1_per_class": {
+    "negativo": 0.9125,
+    "neutral": 0.5217,
+    "positivo": 0.9385
+   }
+  },
+  "andaluz": {
+   "f1_macro": 0.7834,
+   "ci95": [
+    0.7224,
+    0.8405
+   ],
+   "flip_rate": 0.0446,
+   "f1_per_class": {
+    "negativo": 0.9193,
+    "neutral": 0.5135,
+    "positivo": 0.9175
+   }
+  }
+ },
+ "sfu_hoteles": {
+  "n": 50,
+  "accuracy": 0.78,
+  "predicted_neutral": 8,
+  "confusion": [
+   [
+    21,
+    4,
+    0
+   ],
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    3,
+    4,
+    18
+   ]
+  ],
+  "errors": [
+   {
+    "id": "hoteles_yes_5_25",
+    "real": "positivo",
+    "pred": "negativo",
+    "input": "Soy cliente de este hostal desde hace mucho tiempo y me da pena ver opiniones de gente que ni_tan_siquiera han pasado unan noche estado: es totalmente injusto. La localizacion es inmejorable, justo detras de el Congreso_de_los_Diputados, que yo sepa es uno de los edificios mas importantes de Madrid "
+   },
+   {
+    "id": "hoteles_yes_4_9",
+    "real": "positivo",
+    "pred": "neutral",
+    "input": "Bueno, mi opinión sólo es referente a la terraza de este hotel, donde puedes tomar unas copas en un ambiente veraniego bajo el cielo de Madrid. Viendo el edificio de Telefónica, y ese caballo que aparecía en la película \" La Comunidad \", no sé cómo se llama el edificio... La terraaza es una pasada, "
+   },
+   {
+    "id": "hoteles_no_2_19",
+    "real": "negativo",
+    "pred": "neutral",
+    "input": "He estado hospedado en este establecimiento y como mayor ventaja tiene su precio asequible y su localización en el centro de Madrid, situado en_la_zona_de el barrio de Salamanca estos apartamentos estan rodeados de comercios y restaurantes, además, es muy comodo el desplazamiento desde él, con parad"
+   },
+   {
+    "id": "hoteles_yes_4_6",
+    "real": "positivo",
+    "pred": "neutral",
+    "input": "Para ser franca este hotel no es nada del_otro_mundo, la entrada es un tanto cutre y vieja, pero el resto de el hotel mas o menos esta bien, el personal tampoco es que este muy atento, si vas a recepcion puedes tirar te unos 15 min esperando que salgan atender te, pero para pasar unos dias en pleno "
+   },
+   {
+    "id": "hoteles_yes_4_10",
+    "real": "positivo",
+    "pred": "negativo",
+    "input": "La semana pasada, por trabajo tuve que estar tres días en Madrid, y nos alojaron en este hotel, ya_que era el más cercano a las oficinas de la empresa. Una vez pagado el taxi desde el aeropuerto hasta el hotel que nos costó 25.94 Euros, entramos en la recepción el domingo_por_la_noche, nos asignaron"
+   },
+   {
+    "id": "hoteles_yes_5_2",
+    "real": "positivo",
+    "pred": "negativo",
+    "input": "Debido_a mis asiduos viajes a mi tierra y a que Vueling sólo tiene un vuelo de regreso a Madrid a las 12_de_la_noche, y como siempre llega tarde, tenemos que ver nos obligados a dormir en Madrid. Somos de Álcala_de_Henares. Podríamos volver a casa pero no hay ni metro ni autobuses, sólo un nocturno "
+   },
+   {
+    "id": "hoteles_yes_4_11",
+    "real": "positivo",
+    "pred": "neutral",
+    "input": "La semana santa la decidimos pasar en la capital ya_que ya teniamos ganas de conocer esta bella ciudad. Donde nos alojamos? unos amigos nuestros que estuvieron en Madrid nos aconsejaron este hotel, el porque? bueno te trataban bien y el servicio y las habitaciones estaban bastante bien. Por lo que b"
+   },
+   {
+    "id": "hoteles_no_1_5",
+    "real": "negativo",
+    "pred": "neutral",
+    "input": "Reservé una habitación doble con desayuno para que negar lo atraído por el precio, 155 € por 3 noches en un cuatro estrellas a muy pocos metros de Plaza_España. Se trata de una edificación muy antigua, que pese_a los años de la misma dice ser un cuatro estrellas. Aquí es donde radica su principal de"
+   },
+   {
+    "id": "hoteles_yes_5_12",
+    "real": "positivo",
+    "pred": "neutral",
+    "input": "Hotel situado en pleno centro de Madrid. Os explico. Este diciembre pasado fui a Madrid (en el puente de la immaculada) y estube mirando hotelitos por el centro. El que resultó más económico (y no es preciosamente que sea económico) fue este. Lo queriamos por el centro para movernospor ahí o tener c"
+   },
+   {
+    "id": "hoteles_no_2_24",
+    "real": "negativo",
+    "pred": "neutral",
+    "input": "Hace tres años fui a Madrid con mis padres de vacaciones en agosto. No tenían pensado salir ese año ya_que normalmente solemos pasar las vacaciones en casaen mi casa no estamos acostumbrados a salir de vacaciones y como_mucho algún que otro día vamos de excursión por los pueblos o ciudades de alrede"
+   },
+   {
+    "id": "hoteles_no_2_9",
+    "real": "negativo",
+    "pred": "neutral",
+    "input": "Soy de Córdoba y en uno de mis viajes a Madrid pasé por la puerta de el hotel y su diseño me encantó, así que en mi siguiente viaje me alojé allí. La habitación me costó 280 € pillando una oferta. Recepción y decoración impresionantes, magnífico diseño. Cuando me llevaron a la habitación fue decepci"
+   }
+  ]
+ },
+ "coverage": {
+  "solo_confianza": {
+   "val": [
+    {
+     "threshold": 0.5,
+     "auto_frac": 0.985,
+     "auto_error": 0.132,
+     "auto_n": 265,
+     "errors_n": 35
+    },
+    {
+     "threshold": 0.6,
+     "auto_frac": 0.944,
+     "auto_error": 0.114,
+     "auto_n": 254,
+     "errors_n": 29
+    },
+    {
+     "threshold": 0.7,
+     "auto_frac": 0.87,
+     "auto_error": 0.085,
+     "auto_n": 234,
+     "errors_n": 20
+    },
+    {
+     "threshold": 0.75,
+     "auto_frac": 0.829,
+     "auto_error": 0.076,
+     "auto_n": 223,
+     "errors_n": 17
+    },
+    {
+     "threshold": 0.8,
+     "auto_frac": 0.777,
+     "auto_error": 0.062,
+     "auto_n": 209,
+     "errors_n": 13
+    },
+    {
+     "threshold": 0.85,
+     "auto_frac": 0.68,
+     "auto_error": 0.027,
+     "auto_n": 183,
+     "errors_n": 5
+    },
+    {
+     "threshold": 0.9,
+     "auto_frac": 0.591,
+     "auto_error": 0.013,
+     "auto_n": 159,
+     "errors_n": 2
+    },
+    {
+     "threshold": 0.93,
+     "auto_frac": 0.138,
+     "auto_error": 0.0,
+     "auto_n": 37,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.95,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.97,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.99,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    }
+   ],
+   "test": [
+    {
+     "threshold": 0.5,
+     "auto_frac": 0.993,
+     "auto_error": 0.116,
+     "auto_n": 267,
+     "errors_n": 31
+    },
+    {
+     "threshold": 0.6,
+     "auto_frac": 0.941,
+     "auto_error": 0.091,
+     "auto_n": 253,
+     "errors_n": 23
+    },
+    {
+     "threshold": 0.7,
+     "auto_frac": 0.885,
+     "auto_error": 0.071,
+     "auto_n": 238,
+     "errors_n": 17
+    },
+    {
+     "threshold": 0.75,
+     "auto_frac": 0.84,
+     "auto_error": 0.053,
+     "auto_n": 226,
+     "errors_n": 12
+    },
+    {
+     "threshold": 0.8,
+     "auto_frac": 0.792,
+     "auto_error": 0.028,
+     "auto_n": 213,
+     "errors_n": 6
+    },
+    {
+     "threshold": 0.85,
+     "auto_frac": 0.71,
+     "auto_error": 0.01,
+     "auto_n": 191,
+     "errors_n": 2
+    },
+    {
+     "threshold": 0.9,
+     "auto_frac": 0.613,
+     "auto_error": 0.012,
+     "auto_n": 165,
+     "errors_n": 2
+    },
+    {
+     "threshold": 0.93,
+     "auto_frac": 0.126,
+     "auto_error": 0.0,
+     "auto_n": 34,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.95,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.97,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.99,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    }
+   ],
+   "threshold": 0.85,
+   "test_at_threshold": {
+    "threshold": 0.85,
+    "auto_frac": 0.71,
+    "auto_error": 0.01,
+    "auto_n": 191,
+    "errors_n": 2
+   }
+  },
+  "negativas_a_revision": {
+   "val": [
+    {
+     "threshold": 0.5,
+     "auto_frac": 0.68,
+     "auto_error": 0.131,
+     "auto_n": 183,
+     "errors_n": 24
+    },
+    {
+     "threshold": 0.6,
+     "auto_frac": 0.651,
+     "auto_error": 0.114,
+     "auto_n": 175,
+     "errors_n": 20
+    },
+    {
+     "threshold": 0.7,
+     "auto_frac": 0.61,
+     "auto_error": 0.098,
+     "auto_n": 164,
+     "errors_n": 16
+    },
+    {
+     "threshold": 0.75,
+     "auto_frac": 0.58,
+     "auto_error": 0.083,
+     "auto_n": 156,
+     "errors_n": 13
+    },
+    {
+     "threshold": 0.8,
+     "auto_frac": 0.55,
+     "auto_error": 0.074,
+     "auto_n": 148,
+     "errors_n": 11
+    },
+    {
+     "threshold": 0.85,
+     "auto_frac": 0.465,
+     "auto_error": 0.032,
+     "auto_n": 125,
+     "errors_n": 4
+    },
+    {
+     "threshold": 0.9,
+     "auto_frac": 0.394,
+     "auto_error": 0.019,
+     "auto_n": 106,
+     "errors_n": 2
+    },
+    {
+     "threshold": 0.93,
+     "auto_frac": 0.138,
+     "auto_error": 0.0,
+     "auto_n": 37,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.95,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.97,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.99,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    }
+   ],
+   "test": [
+    {
+     "threshold": 0.5,
+     "auto_frac": 0.695,
+     "auto_error": 0.123,
+     "auto_n": 187,
+     "errors_n": 23
+    },
+    {
+     "threshold": 0.6,
+     "auto_frac": 0.651,
+     "auto_error": 0.097,
+     "auto_n": 175,
+     "errors_n": 17
+    },
+    {
+     "threshold": 0.7,
+     "auto_frac": 0.621,
+     "auto_error": 0.078,
+     "auto_n": 167,
+     "errors_n": 13
+    },
+    {
+     "threshold": 0.75,
+     "auto_frac": 0.58,
+     "auto_error": 0.051,
+     "auto_n": 156,
+     "errors_n": 8
+    },
+    {
+     "threshold": 0.8,
+     "auto_frac": 0.546,
+     "auto_error": 0.034,
+     "auto_n": 147,
+     "errors_n": 5
+    },
+    {
+     "threshold": 0.85,
+     "auto_frac": 0.468,
+     "auto_error": 0.008,
+     "auto_n": 126,
+     "errors_n": 1
+    },
+    {
+     "threshold": 0.9,
+     "auto_frac": 0.401,
+     "auto_error": 0.009,
+     "auto_n": 108,
+     "errors_n": 1
+    },
+    {
+     "threshold": 0.93,
+     "auto_frac": 0.126,
+     "auto_error": 0.0,
+     "auto_n": 34,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.95,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.97,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    },
+    {
+     "threshold": 0.99,
+     "auto_frac": 0.0,
+     "auto_error": 0.0,
+     "auto_n": 0,
+     "errors_n": 0
+    }
+   ],
+   "threshold": 0.85,
+   "test_at_threshold": {
+    "threshold": 0.85,
+    "auto_frac": 0.468,
+    "auto_error": 0.008,
+    "auto_n": 126,
+    "errors_n": 1
+   }
+  }
+ }
+}
