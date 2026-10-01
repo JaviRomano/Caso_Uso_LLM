@@ -90,7 +90,7 @@
  "sfu_hoteles": {
   "n": 50,
   "accuracy": 0.78,
-  "predicted_neutral": 8,
+  "predicted_neutral": 10,
   "confusion": [
    [
     21,
@@ -103,8 +103,8 @@
     0
    ],
    [
-    3,
-    4,
+    1,
+    6,
     18
    ]
   ],
@@ -113,7 +113,7 @@
     "id": "hoteles_yes_5_25",
     "real": "positivo",
     "pred": "negativo",
-    "input": "Soy cliente de este hostal desde hace mucho tiempo y me da pena ver opiniones de gente que ni_tan_siquiera han pasado unan noche estado: es totalmente injusto. La localizacion es inmejorable, justo detras de el Congreso_de_los_Diputados, que yo sepa es uno de los edificios mas importantes de Madrid "
+    "input": "Soy cliente de este hostal desde hace mucho tiempo y me da pena ver opiniones de gente que ni tan siquiera han pasado unan noche estado: es totalmente injusto. La localizacion es inmejorable, justo detras del Congreso de los Diputados, que yo sepa es uno de los edificios mas importantes de Madrid (y"
    },
    {
     "id": "hoteles_yes_4_9",
@@ -125,37 +125,37 @@
     "id": "hoteles_no_2_19",
     "real": "negativo",
     "pred": "neutral",
-    "input": "He estado hospedado en este establecimiento y como mayor ventaja tiene su precio asequible y su localización en el centro de Madrid, situado en_la_zona_de el barrio de Salamanca estos apartamentos estan rodeados de comercios y restaurantes, además, es muy comodo el desplazamiento desde él, con parad"
+    "input": "He estado hospedado en este establecimiento y como mayor ventaja tiene su precio asequible y su localización en el centro de Madrid, situado en la zona del barrio de Salamanca estos apartamentos estan rodeados de comercios y restaurantes, además, es muy comodo el desplazamiento desde él, con paradas"
    },
    {
     "id": "hoteles_yes_4_6",
     "real": "positivo",
     "pred": "neutral",
-    "input": "Para ser franca este hotel no es nada del_otro_mundo, la entrada es un tanto cutre y vieja, pero el resto de el hotel mas o menos esta bien, el personal tampoco es que este muy atento, si vas a recepcion puedes tirar te unos 15 min esperando que salgan atender te, pero para pasar unos dias en pleno "
+    "input": "Para ser franca este hotel no es nada del otro mundo, la entrada es un tanto cutre y vieja, pero el resto del hotel mas o menos esta bien, el personal tampoco es que este muy atento, si vas a recepcion puedes tirar te unos 15 min esperando que salgan atender te, pero para pasar unos dias en pleno ce"
    },
    {
     "id": "hoteles_yes_4_10",
     "real": "positivo",
-    "pred": "negativo",
-    "input": "La semana pasada, por trabajo tuve que estar tres días en Madrid, y nos alojaron en este hotel, ya_que era el más cercano a las oficinas de la empresa. Una vez pagado el taxi desde el aeropuerto hasta el hotel que nos costó 25.94 Euros, entramos en la recepción el domingo_por_la_noche, nos asignaron"
+    "pred": "neutral",
+    "input": "La semana pasada, por trabajo tuve que estar tres días en Madrid, y nos alojaron en este hotel, ya que era el más cercano a las oficinas de la empresa. Una vez pagado el taxi desde el aeropuerto hasta el hotel que nos costó 25.94 Euros, entramos en la recepción el domingo por la noche, nos asignaron"
    },
    {
     "id": "hoteles_yes_5_2",
     "real": "positivo",
-    "pred": "negativo",
-    "input": "Debido_a mis asiduos viajes a mi tierra y a que Vueling sólo tiene un vuelo de regreso a Madrid a las 12_de_la_noche, y como siempre llega tarde, tenemos que ver nos obligados a dormir en Madrid. Somos de Álcala_de_Henares. Podríamos volver a casa pero no hay ni metro ni autobuses, sólo un nocturno "
+    "pred": "neutral",
+    "input": "Debido a mis asiduos viajes a mi tierra y a que Vueling sólo tiene un vuelo de regreso a Madrid a las 12 de la noche, y como siempre llega tarde, tenemos que ver nos obligados a dormir en Madrid. Somos de Álcala de Henares. Podríamos volver a casa pero no hay ni metro ni autobuses, sólo un nocturno "
    },
    {
     "id": "hoteles_yes_4_11",
     "real": "positivo",
     "pred": "neutral",
-    "input": "La semana santa la decidimos pasar en la capital ya_que ya teniamos ganas de conocer esta bella ciudad. Donde nos alojamos? unos amigos nuestros que estuvieron en Madrid nos aconsejaron este hotel, el porque? bueno te trataban bien y el servicio y las habitaciones estaban bastante bien. Por lo que b"
+    "input": "La semana santa la decidimos pasar en la capital ya que ya teniamos ganas de conocer esta bella ciudad. Donde nos alojamos? unos amigos nuestros que estuvieron en Madrid nos aconsejaron este hotel, el porque? bueno te trataban bien y el servicio y las habitaciones estaban bastante bien. Por lo que b"
    },
    {
     "id": "hoteles_no_1_5",
     "real": "negativo",
     "pred": "neutral",
-    "input": "Reservé una habitación doble con desayuno para que negar lo atraído por el precio, 155 € por 3 noches en un cuatro estrellas a muy pocos metros de Plaza_España. Se trata de una edificación muy antigua, que pese_a los años de la misma dice ser un cuatro estrellas. Aquí es donde radica su principal de"
+    "input": "Reservé una habitación doble con desayuno para que negar lo atraído por el precio, 155 € por 3 noches en un cuatro estrellas a muy pocos metros de Plaza España. Se trata de una edificación muy antigua, que pese a los años de la misma dice ser un cuatro estrellas. Aquí es donde radica su principal de"
    },
    {
     "id": "hoteles_yes_5_12",
@@ -167,13 +167,13 @@
     "id": "hoteles_no_2_24",
     "real": "negativo",
     "pred": "neutral",
-    "input": "Hace tres años fui a Madrid con mis padres de vacaciones en agosto. No tenían pensado salir ese año ya_que normalmente solemos pasar las vacaciones en casaen mi casa no estamos acostumbrados a salir de vacaciones y como_mucho algún que otro día vamos de excursión por los pueblos o ciudades de alrede"
+    "input": "Hace tres años fui a Madrid con mis padres de vacaciones en agosto. No tenían pensado salir ese año ya que normalmente solemos pasar las vacaciones en casaen mi casa no estamos acostumbrados a salir de vacaciones y como mucho algún que otro día vamos de excursión por los pueblos o ciudades de alrede"
    },
    {
     "id": "hoteles_no_2_9",
     "real": "negativo",
     "pred": "neutral",
-    "input": "Soy de Córdoba y en uno de mis viajes a Madrid pasé por la puerta de el hotel y su diseño me encantó, así que en mi siguiente viaje me alojé allí. La habitación me costó 280 € pillando una oferta. Recepción y decoración impresionantes, magnífico diseño. Cuando me llevaron a la habitación fue decepci"
+    "input": "Soy de Córdoba y en uno de mis viajes a Madrid pasé por la puerta del hotel y su diseño me encantó, así que en mi siguiente viaje me alojé allí. La habitación me costó 280 € pillando una oferta. Recepción y decoración impresionantes, magnífico diseño. Cuando me llevaron a la habitación fue decepcion"
    }
   ]
  },
@@ -513,6 +513,24 @@
     "auto_n": 126,
     "errors_n": 1
    }
+  }
+ },
+ "truncation": {
+  "test_original|head": {
+   "f1_macro": 0.7969,
+   "accuracy": 0.8773
+  },
+  "test_original|head_tail": {
+   "f1_macro": 0.7921,
+   "accuracy": 0.8736
+  },
+  "sfu_hoteles|head": {
+   "f1_macro": 0.5769,
+   "accuracy": 0.78
+  },
+  "sfu_hoteles|head_tail": {
+   "f1_macro": 0.5777,
+   "accuracy": 0.78
   }
  }
 }

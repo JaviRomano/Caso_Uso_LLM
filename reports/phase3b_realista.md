@@ -17,27 +17,27 @@ Las variantes son sintéticas y no deberían cambiar la etiqueta (salvo `solo_ti
 
 ## 2. Reseñas reales de otra web: SFU hoteles (ciao.es, n=50)
 
-Solo hay 1–2★ y 4–5★. Acierto: **78.0%**; 8 reseñas predichas como neutral (cuentan como error).
+Solo hay 1–2★ y 4–5★. Acierto: **78.0%**; 10 reseñas predichas como neutral (cuentan como error).
 
 | real \ pred | negativo | neutral | positivo |
 |---|---|---|---|
 | negativo | 21 | 4 | 0 |
 | neutral | 0 | 0 | 0 |
-| positivo | 3 | 4 | 18 |
+| positivo | 1 | 6 | 18 |
 
 Errores:
 
-- `hoteles_yes_5_25` real positivo → negativo: «Soy cliente de este hostal desde hace mucho tiempo y me da pena ver opiniones de gente que ni_tan_siquiera han pasado unan noche estado: es totalmente injusto. La localizacion es inmejorable, justo de…»
+- `hoteles_yes_5_25` real positivo → negativo: «Soy cliente de este hostal desde hace mucho tiempo y me da pena ver opiniones de gente que ni tan siquiera han pasado unan noche estado: es totalmente injusto. La localizacion es inmejorable, justo de…»
 - `hoteles_yes_4_9` real positivo → neutral: «Bueno, mi opinión sólo es referente a la terraza de este hotel, donde puedes tomar unas copas en un ambiente veraniego bajo el cielo de Madrid. Viendo el edificio de Telefónica, y ese caballo que apar…»
-- `hoteles_no_2_19` real negativo → neutral: «He estado hospedado en este establecimiento y como mayor ventaja tiene su precio asequible y su localización en el centro de Madrid, situado en_la_zona_de el barrio de Salamanca estos apartamentos est…»
-- `hoteles_yes_4_6` real positivo → neutral: «Para ser franca este hotel no es nada del_otro_mundo, la entrada es un tanto cutre y vieja, pero el resto de el hotel mas o menos esta bien, el personal tampoco es que este muy atento, si vas a recepc…»
-- `hoteles_yes_4_10` real positivo → negativo: «La semana pasada, por trabajo tuve que estar tres días en Madrid, y nos alojaron en este hotel, ya_que era el más cercano a las oficinas de la empresa. Una vez pagado el taxi desde el aeropuerto hasta…»
-- `hoteles_yes_5_2` real positivo → negativo: «Debido_a mis asiduos viajes a mi tierra y a que Vueling sólo tiene un vuelo de regreso a Madrid a las 12_de_la_noche, y como siempre llega tarde, tenemos que ver nos obligados a dormir en Madrid. Somo…»
-- `hoteles_yes_4_11` real positivo → neutral: «La semana santa la decidimos pasar en la capital ya_que ya teniamos ganas de conocer esta bella ciudad. Donde nos alojamos? unos amigos nuestros que estuvieron en Madrid nos aconsejaron este hotel, el…»
-- `hoteles_no_1_5` real negativo → neutral: «Reservé una habitación doble con desayuno para que negar lo atraído por el precio, 155 € por 3 noches en un cuatro estrellas a muy pocos metros de Plaza_España. Se trata de una edificación muy antigua…»
+- `hoteles_no_2_19` real negativo → neutral: «He estado hospedado en este establecimiento y como mayor ventaja tiene su precio asequible y su localización en el centro de Madrid, situado en la zona del barrio de Salamanca estos apartamentos estan…»
+- `hoteles_yes_4_6` real positivo → neutral: «Para ser franca este hotel no es nada del otro mundo, la entrada es un tanto cutre y vieja, pero el resto del hotel mas o menos esta bien, el personal tampoco es que este muy atento, si vas a recepcio…»
+- `hoteles_yes_4_10` real positivo → neutral: «La semana pasada, por trabajo tuve que estar tres días en Madrid, y nos alojaron en este hotel, ya que era el más cercano a las oficinas de la empresa. Una vez pagado el taxi desde el aeropuerto hasta…»
+- `hoteles_yes_5_2` real positivo → neutral: «Debido a mis asiduos viajes a mi tierra y a que Vueling sólo tiene un vuelo de regreso a Madrid a las 12 de la noche, y como siempre llega tarde, tenemos que ver nos obligados a dormir en Madrid. Somo…»
+- `hoteles_yes_4_11` real positivo → neutral: «La semana santa la decidimos pasar en la capital ya que ya teniamos ganas de conocer esta bella ciudad. Donde nos alojamos? unos amigos nuestros que estuvieron en Madrid nos aconsejaron este hotel, el…»
+- `hoteles_no_1_5` real negativo → neutral: «Reservé una habitación doble con desayuno para que negar lo atraído por el precio, 155 € por 3 noches en un cuatro estrellas a muy pocos metros de Plaza España. Se trata de una edificación muy antigua…»
 - `hoteles_yes_5_12` real positivo → neutral: «Hotel situado en pleno centro de Madrid. Os explico. Este diciembre pasado fui a Madrid (en el puente de la immaculada) y estube mirando hotelitos por el centro. El que resultó más económico (y no es …»
-- `hoteles_no_2_24` real negativo → neutral: «Hace tres años fui a Madrid con mis padres de vacaciones en agosto. No tenían pensado salir ese año ya_que normalmente solemos pasar las vacaciones en casaen mi casa no estamos acostumbrados a salir d…»
-- `hoteles_no_2_9` real negativo → neutral: «Soy de Córdoba y en uno de mis viajes a Madrid pasé por la puerta de el hotel y su diseño me encantó, así que en mi siguiente viaje me alojé allí. La habitación me costó 280 € pillando una oferta. Rec…»
+- `hoteles_no_2_24` real negativo → neutral: «Hace tres años fui a Madrid con mis padres de vacaciones en agosto. No tenían pensado salir ese año ya que normalmente solemos pasar las vacaciones en casaen mi casa no estamos acostumbrados a salir d…»
+- `hoteles_no_2_9` real negativo → neutral: «Soy de Córdoba y en uno de mis viajes a Madrid pasé por la puerta del hotel y su diseño me encantó, así que en mi siguiente viaje me alojé allí. La habitación me costó 280 € pillando una oferta. Recep…»
 
 ## 3. Cobertura frente a error
 
@@ -75,3 +75,13 @@ Se responde sin revisión humana solo si la confianza supera un umbral. El umbra
 | 0.97 | 0% | 0.0% | 0% | 0.0% |
 | 0.99 | 0% | 0.0% | 0% | 0.0% |
 
+## 4. Truncado de reseñas largas
+
+El modelo lee como máximo 384 tokens. `head` corta por el final (como en el entrenamiento); `head_tail` conserva los 128 primeros y los últimos, donde suele ir el veredicto. Solo cambia la inferencia: el modelo no se ha reentrenado.
+
+| Conjunto | Truncado | Acierto | F1 macro |
+|---|---|---|---|
+| test_original | head | 87.7% | 0.797 |
+| test_original | head_tail | 87.4% | 0.792 |
+| sfu_hoteles | head | 78.0% | 0.577 |
+| sfu_hoteles | head_tail | 78.0% | 0.578 |
