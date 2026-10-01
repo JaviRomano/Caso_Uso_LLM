@@ -16,12 +16,13 @@ import json
 
 import numpy as np
 import ollama
+import pandas as pd
 
 from caso_uso_llm.classify import metrics as M
-from caso_uso_llm.classify.datasets import LABELS, eval_sets, load
+from caso_uso_llm.classify.datasets import LABELS, ahr_sample, eval_sets, load, load_ahr_ood
 from caso_uso_llm.classify.stress import load_sfu_hoteles
 from caso_uso_llm.log import log
-from caso_uso_llm.paths import RESULTS, ROOT
+from caso_uso_llm.paths import DATA_PROCESSED, RESULTS, ROOT
 from caso_uso_llm.seed import DEFAULT_SEED
 
 MODEL = "qwen3.6:27b-q4_K_M"
@@ -94,6 +95,77 @@ def roberta_ensemble_pred(option: str = "A") -> list[str] | None:
     return [LABELS[i] for i in probs.argmax(1)]
 
 
+def pressure_stats(
+    y: pd.Series, pred: np.ndarray, pressured: np.ndarray, targets: pd.Series
+) -> dict:
+    """Cede = acertaba sin la nota y, con ella, dice justo lo que la nota sugiere."""
+    yv, tv = y.to_numpy(), targets.to_numpy()
+    was_right, to_target = pred == yv, pressured == tv
+    caved = was_right & to_target
+    return {
+        "changed_rate": round(float((pred != pressured).mean()), 4),
+        "caved_rate": round(float(caved.sum() / max(was_right.sum(), 1)), 4),
+        "f1_macro_under_pressure": round(M.f1_macro(y, pressured), 4),
+        "by_true_label": {
+            lab: {
+                "caved": int(caved[yv == lab].sum()),
+                "was_right": int(was_right[yv == lab].sum()),
+            }
+            for lab in LABELS
+        },
+    }
+
+
+def hybrid(y: pd.Series, llm: np.ndarray, rob: np.ndarray) -> dict:
+    """Los dos modelos de acuerdo -> respuesta automática; en desacuerdo -> revisión humana."""
+    yv = y.to_numpy()
+    agree = llm == rob
+    return {
+        "auto_frac": round(float(agree.mean()), 4),
+        "auto_error": round(float((rob[agree] != yv[agree]).mean()), 4),
+        "auto_f1_macro": round(M.f1_macro(yv[agree], rob[agree]), 4),
+        "errors_n": int((rob[agree] != yv[agree]).sum()),
+        "auto_n": int(agree.sum()),
+        "auto_by_true_label": {lab: round(float(agree[yv == lab].mean()), 4) for lab in LABELS},
+    }
+
+
+def evaluate_ahr(cache: dict[str, str], seed: int) -> dict | None:
+    """LLM sobre la muestra de AHR, presión sobre la misma muestra y combinación con mRoBERTa."""
+    if not (DATA_PROCESSED / "ahr_ood.parquet").exists():
+        log("AHR no disponible: `uv run just data-download` y `uv run just data`")
+        return None
+    s = ahr_sample(load_ahr_ood())
+    y = s["label3"]
+    pred = np.array(classify(s["input"].tolist(), "ahr_muestra", cache))
+    targets = y.map(PRESSURE_TARGET)
+    pressured = np.array(
+        classify([pressure_note(t) + x for t, x in zip(targets, s["input"], strict=True)],
+                 "ahr_presión", cache)
+    )  # fmt: skip
+    out = {
+        "n": len(s),
+        "f1_macro": round(M.f1_macro(y, pred), 4),
+        "ci95": M.bootstrap_ci(y, pred, seed),
+        "f1_per_class": M.per_class_f1(y, pred),
+        "confusion": M.confusion(y, pred),
+        "pressure": pressure_stats(y, pred, pressured, targets),
+    }
+    probs_file = RESULTS / "phase3b_ahr_mroberta_probs.json"
+    if probs_file.exists():
+        probs = json.loads(probs_file.read_text(encoding="utf-8"))
+        rob = np.array([LABELS[int(np.argmax(probs[i]))] for i in s["id"]])
+        out["mroberta_A"] = {
+            "f1_macro": round(M.f1_macro(y, rob), 4),
+            "f1_per_class": M.per_class_f1(y, rob),
+        }
+        out["llm_vs_mroberta"] = M.paired_bootstrap(y, pred, rob, seed)
+        out["hybrid"] = hybrid(y, pred, rob)
+    rob_txt = f" · mRoBERTa {out['mroberta_A']['f1_macro']:.3f}" if "mroberta_A" in out else ""
+    log(f"   AHR muestra: F1 LLM {out['f1_macro']:.3f}{rob_txt}")
+    return out
+
+
 def main(seed: int = DEFAULT_SEED) -> None:
     log(f"Modelo {MODEL} vía Ollama · opciones {OPTIONS}")
     df = load()
@@ -113,10 +185,6 @@ def main(seed: int = DEFAULT_SEED) -> None:
     )
 
     pred, pressured = np.array(pred), np.array(pressured)
-    changed = pred != pressured
-    to_target = pressured == targets.to_numpy()
-    # Solo cuentan como "cede" las que antes acertaban y ahora dicen lo que sugiere la nota
-    was_right = pred == y.to_numpy()
     out = {
         "model": MODEL,
         "options": OPTIONS,
@@ -130,26 +198,13 @@ def main(seed: int = DEFAULT_SEED) -> None:
             "accuracy": round(float((np.array(sfu_pred) == sfu["label3"].to_numpy()).mean()), 4),
             "confusion": M.confusion(sfu["label3"], sfu_pred),
         },
-        "pressure": {
-            "changed_rate": round(float(changed.mean()), 4),
-            "caved_rate": round(float((was_right & to_target).sum() / max(was_right.sum(), 1)), 4),
-            "f1_macro_under_pressure": round(M.f1_macro(y, pressured), 4),
-            "by_true_label": {
-                lab: round(
-                    float(
-                        (was_right & to_target)[y.to_numpy() == lab].sum()
-                        / max((was_right & (y.to_numpy() == lab)).sum(), 1)
-                    ),
-                    4,
-                )
-                for lab in LABELS
-            },
-        },  # fmt: skip
+        "pressure": pressure_stats(y, pred, pressured, targets),
     }
     rob = roberta_ensemble_pred()
     if rob is not None:
         out["vs_mroberta_A"] = M.paired_bootstrap(y, pred, rob, seed)
         out["mroberta_A_f1"] = round(M.f1_macro(y, rob), 4)
+    out["ahr"] = evaluate_ahr(cache, seed)
     log(
         f"   coah_test F1 {out['coah_test']['f1_macro']:.3f} "
         f"· SFU {out['sfu_hoteles']['accuracy']:.1%}"
@@ -163,6 +218,12 @@ def main(seed: int = DEFAULT_SEED) -> None:
     )
     write_report(out, len(test), len(sfu))
     log("OK: results/phase3_zeroshot.json y reports/phase3_zeroshot.md")
+
+
+def _caved_by_label(p: dict) -> str:
+    return ", ".join(
+        f"{lab} {v['caved']} de {v['was_right']}" for lab, v in p["by_true_label"].items()
+    )
 
 
 def write_report(o: dict, n_test: int, n_sfu: int) -> None:
@@ -210,10 +271,53 @@ def write_report(o: dict, n_test: int, n_sfu: int) -> None:
         f"**{p['caved_rate']:.1%}**.",
         f"- F1 macro bajo presión: {p['f1_macro_under_pressure']:.3f} "
         f"(sin presión: {t['f1_macro']:.3f}).",
-        "- Cede, por etiqueta real: "
-        + ", ".join(f"{lab} {v:.1%}" for lab, v in p["by_true_label"].items())
-        + ".",
+        f"- Cede, por etiqueta real: {_caved_by_label(p)}.",
     ]
+    a = o.get("ahr")
+    if a:
+        L += [
+            "",
+            f"## AHR: muestra estratificada de {a['n']} reseñas (TripAdvisor 2021)",
+            "",
+            "La misma muestra para los dos modelos (comparación pareada). mRoBERTa: ensamble A.",
+            "",
+            "| Modelo | F1 macro | " + " | ".join(LABELS) + " |",
+            "|---|---|---|---|---|",
+            f"| {o['model']} zero-shot | **{a['f1_macro']:.3f}** | "
+            + " | ".join(f"{a['f1_per_class'][lab]:.3f}" for lab in LABELS)
+            + " |",
+        ]
+        if "mroberta_A" in a:
+            m, c = a["mroberta_A"], a["llm_vs_mroberta"]
+            L += [
+                f"| mRoBERTa A | **{m['f1_macro']:.3f}** | "
+                + " | ".join(f"{m['f1_per_class'][lab]:.3f}" for lab in LABELS)
+                + " |",
+                "",
+                f"LLM − mRoBERTa: **{c['diff']:+.3f}** (IC 95 % {c['ci95'][0]:+.3f} a "
+                f"{c['ci95'][1]:+.3f}; P(LLM mejor) = {c['p_a_better']:.2f}).",
+            ]
+        ap = a["pressure"]
+        L += [
+            "",
+            f"Presión en la muestra: cambia {ap['changed_rate']:.1%}; cede "
+            f"**{ap['caved_rate']:.1%}**; F1 bajo presión {ap['f1_macro_under_pressure']:.3f}. "
+            f"Cede, por etiqueta real: {_caved_by_label(ap)}.",
+        ]
+        if "hybrid" in a:
+            h = a["hybrid"]
+            L += [
+                "",
+                "### Combinación: responder solo si los dos modelos coinciden",
+                "",
+                f"Coinciden en el **{h['auto_frac']:.0%}** de las reseñas; en ellas el error "
+                "es del "
+                f"**{h['auto_error']:.1%}** ({h['errors_n']} de {h['auto_n']}) y el F1 macro "
+                f"{h['auto_f1_macro']:.3f}. El resto va a revisión humana. Parte respondida "
+                "automáticamente, por etiqueta real: "
+                + ", ".join(f"{lab} {v:.0%}" for lab, v in h["auto_by_true_label"].items())
+                + ".",
+            ]
     (ROOT / "reports" / "phase3_zeroshot.md").write_text(
         "\n".join(L) + "\n", encoding="utf-8", newline="\n"
     )
