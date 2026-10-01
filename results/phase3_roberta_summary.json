@@ -1,0 +1,441 @@
+{
+ "summary": {
+  "A": {
+   "seeds": [
+    42,
+    43,
+    44
+   ],
+   "coah_val": {
+    "f1_mean": 0.7964,
+    "f1_sd": 0.007,
+    "ensemble_f1": 0.8035,
+    "ensemble_ci95": [
+     0.743,
+     0.8561
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.8974,
+     "neutral": 0.5823,
+     "positivo": 0.9307
+    },
+    "ensemble_confusion": [
+     [
+      70,
+      4,
+      1
+     ],
+     [
+      10,
+      23,
+      10
+     ],
+     [
+      1,
+      9,
+      141
+     ]
+    ]
+   },
+   "coah_test": {
+    "f1_mean": 0.8222,
+    "f1_sd": 0.0159,
+    "ensemble_f1": 0.8224,
+    "ensemble_ci95": [
+     0.7641,
+     0.8759
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9351,
+     "neutral": 0.6076,
+     "positivo": 0.9246
+    },
+    "ensemble_confusion": [
+     [
+      72,
+      3,
+      0
+     ],
+     [
+      6,
+      24,
+      13
+     ],
+     [
+      1,
+      9,
+      141
+     ]
+    ]
+   },
+   "coar_test": {
+    "f1_mean": 0.8196,
+    "f1_sd": 0.0121,
+    "ensemble_f1": 0.8356,
+    "ensemble_ci95": [
+     0.7878,
+     0.8774
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9169,
+     "neutral": 0.6078,
+     "positivo": 0.9819
+    },
+    "ensemble_confusion": [
+     [
+      138,
+      15,
+      0
+     ],
+     [
+      9,
+      31,
+      9
+     ],
+     [
+      1,
+      7,
+      461
+     ]
+    ]
+   }
+  },
+  "A_sin_trad": {
+   "seeds": [
+    42,
+    43,
+    44
+   ],
+   "coah_val": {
+    "f1_mean": 0.7948,
+    "f1_sd": 0.0023,
+    "ensemble_f1": 0.8021,
+    "ensemble_ci95": [
+     0.7458,
+     0.8551
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9114,
+     "neutral": 0.575,
+     "positivo": 0.92
+    },
+    "ensemble_confusion": [
+     [
+      72,
+      2,
+      1
+     ],
+     [
+      10,
+      23,
+      10
+     ],
+     [
+      1,
+      12,
+      138
+     ]
+    ]
+   },
+   "coah_test": {
+    "f1_mean": 0.8134,
+    "f1_sd": 0.0234,
+    "ensemble_f1": 0.8019,
+    "ensemble_ci95": [
+     0.7404,
+     0.857
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9308,
+     "neutral": 0.5429,
+     "positivo": 0.932
+    },
+    "ensemble_confusion": [
+     [
+      74,
+      1,
+      0
+     ],
+     [
+      10,
+      19,
+      14
+     ],
+     [
+      0,
+      7,
+      144
+     ]
+    ]
+   },
+   "coar_test": {
+    "f1_mean": 0.806,
+    "f1_sd": 0.0122,
+    "ensemble_f1": 0.8218,
+    "ensemble_ci95": [
+     0.7723,
+     0.865
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9115,
+     "neutral": 0.5773,
+     "positivo": 0.9766
+    },
+    "ensemble_confusion": [
+     [
+      139,
+      12,
+      2
+     ],
+     [
+      11,
+      28,
+      10
+     ],
+     [
+      2,
+      8,
+      459
+     ]
+    ]
+   }
+  },
+  "B": {
+   "seeds": [
+    42,
+    43,
+    44
+   ],
+   "coah_val": {
+    "f1_mean": 0.8065,
+    "f1_sd": 0.0143,
+    "ensemble_f1": 0.7989,
+    "ensemble_ci95": [
+     0.7384,
+     0.8531
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9125,
+     "neutral": 0.56,
+     "positivo": 0.9241
+    },
+    "ensemble_confusion": [
+     [
+      73,
+      1,
+      1
+     ],
+     [
+      11,
+      21,
+      11
+     ],
+     [
+      1,
+      10,
+      140
+     ]
+    ]
+   },
+   "coah_test": {
+    "f1_mean": 0.8005,
+    "f1_sd": 0.0227,
+    "ensemble_f1": 0.7974,
+    "ensemble_ci95": [
+     0.7371,
+     0.8566
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9,
+     "neutral": 0.5479,
+     "positivo": 0.9443
+    },
+    "ensemble_confusion": [
+     [
+      72,
+      3,
+      0
+     ],
+     [
+      13,
+      20,
+      10
+     ],
+     [
+      0,
+      7,
+      144
+     ]
+    ]
+   },
+   "coar_test": {
+    "f1_mean": 0.7767,
+    "f1_sd": 0.0168,
+    "ensemble_f1": 0.7811,
+    "ensemble_ci95": [
+     0.7286,
+     0.8315
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9085,
+     "neutral": 0.4634,
+     "positivo": 0.9714
+    },
+    "ensemble_confusion": [
+     [
+      144,
+      7,
+      2
+     ],
+     [
+      16,
+      19,
+      14
+     ],
+     [
+      4,
+      7,
+      458
+     ]
+    ]
+   }
+  },
+  "C": {
+   "seeds": [
+    42,
+    43,
+    44
+   ],
+   "coah_val": {
+    "f1_mean": 0.7857,
+    "f1_sd": 0.0111,
+    "ensemble_f1": 0.7751,
+    "ensemble_ci95": [
+     0.7155,
+     0.831
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.8758,
+     "neutral": 0.525,
+     "positivo": 0.9246
+    },
+    "ensemble_confusion": [
+     [
+      67,
+      7,
+      1
+     ],
+     [
+      10,
+      21,
+      12
+     ],
+     [
+      1,
+      9,
+      141
+     ]
+    ]
+   },
+   "coah_test": {
+    "f1_mean": 0.814,
+    "f1_sd": 0.0081,
+    "ensemble_f1": 0.8391,
+    "ensemble_ci95": [
+     0.7814,
+     0.8914
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9351,
+     "neutral": 0.641,
+     "positivo": 0.9412
+    },
+    "ensemble_confusion": [
+     [
+      72,
+      3,
+      0
+     ],
+     [
+      7,
+      25,
+      11
+     ],
+     [
+      0,
+      7,
+      144
+     ]
+    ]
+   },
+   "coar_test": {
+    "f1_mean": 0.8106,
+    "f1_sd": 0.0124,
+    "ensemble_f1": 0.8269,
+    "ensemble_ci95": [
+     0.7773,
+     0.8712
+    ],
+    "ensemble_f1_per_class": {
+     "negativo": 0.9122,
+     "neutral": 0.5918,
+     "positivo": 0.9768
+    },
+    "ensemble_confusion": [
+     [
+      135,
+      14,
+      4
+     ],
+     [
+      8,
+      29,
+      12
+     ],
+     [
+      0,
+      6,
+      463
+     ]
+    ]
+   }
+  }
+ },
+ "comparisons_coah_test": {
+  "A_vs_B": {
+   "diff": 0.025,
+   "ci95": [
+    -0.0329,
+    0.0823
+   ],
+   "p_a_better": 0.786
+  },
+  "A_sin_trad_vs_B": {
+   "diff": 0.0045,
+   "ci95": [
+    -0.0447,
+    0.0495
+   ],
+   "p_a_better": 0.556
+  },
+  "C_vs_B": {
+   "diff": 0.0417,
+   "ci95": [
+    -0.0188,
+    0.1018
+   ],
+   "p_a_better": 0.908
+  }
+ },
+ "config": {
+  "max_len": 384,
+  "batch_size": 16,
+  "lr": 2e-05,
+  "weight_decay": 0.01,
+  "warmup_frac": 0.1,
+  "max_epochs": 8,
+  "patience": 2,
+  "grad_clip": 1.0
+ },
+ "config_id": "bc2b14b1"
+}
