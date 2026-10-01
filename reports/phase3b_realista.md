@@ -85,3 +85,20 @@ El modelo lee como máximo 384 tokens. `head` corta por el final (como en el ent
 | test_original | head_tail | 87.4% | 0.792 |
 | sfu_hoteles | head | 78.0% | 0.577 |
 | sfu_hoteles | head_tail | 78.0% | 0.578 |
+
+## 5. AHR: test grande y sucio (TripAdvisor 2021, n=11414)
+
+Reseñas de 703 hoteles que el modelo no ha visto, sin solape con COAH/COAR (`reports/data_report.md` §6). Con 1.444 neutrales, la clase difícil por fin se mide bien.
+
+F1 macro **0.781** (IC 95 % 0.770–0.791) · negativo 0.845 · neutral 0.549 · positivo 0.949. En la muestra de 2.000 usada para el LLM: 0.750.
+
+| real \ pred | negativo | neutral | positivo |
+|---|---|---|---|
+| negativo | 1355 | 149 | 32 |
+| neutral | 286 | 754 | 404 |
+| positivo | 30 | 398 | 8006 |
+
+Cobertura con el umbral elegido en `coah_val`:
+
+- solo_confianza: umbral 0.85 → se responde el 74% con un error del 3.1% (264 de 8487).
+- negativas_a_revision: umbral 0.85 → se responde el 64% con un error del 2.0% (145 de 7264).

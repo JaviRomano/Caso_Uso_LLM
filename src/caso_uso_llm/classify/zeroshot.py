@@ -116,17 +116,29 @@ def pressure_stats(
     }
 
 
-def hybrid(y: pd.Series, llm: np.ndarray, rob: np.ndarray) -> dict:
-    """Los dos modelos de acuerdo -> respuesta automática; en desacuerdo -> revisión humana."""
-    yv = y.to_numpy()
-    agree = llm == rob
+def _policy(yv: np.ndarray, pred: np.ndarray, auto: np.ndarray) -> dict:
     return {
-        "auto_frac": round(float(agree.mean()), 4),
-        "auto_error": round(float((rob[agree] != yv[agree]).mean()), 4),
-        "auto_f1_macro": round(M.f1_macro(yv[agree], rob[agree]), 4),
-        "errors_n": int((rob[agree] != yv[agree]).sum()),
-        "auto_n": int(agree.sum()),
-        "auto_by_true_label": {lab: round(float(agree[yv == lab].mean()), 4) for lab in LABELS},
+        "auto_frac": round(float(auto.mean()), 4),
+        "auto_error": round(float((pred[auto] != yv[auto]).mean()), 4) if auto.any() else 0.0,
+        "errors_n": int((pred[auto] != yv[auto]).sum()),
+        "auto_n": int(auto.sum()),
+        "auto_by_true_label": {lab: round(float(auto[yv == lab].mean()), 4) for lab in LABELS},
+    }
+
+
+def hybrid(y: pd.Series, llm: np.ndarray, rob: np.ndarray, conf: np.ndarray, t: float) -> dict:
+    """Qué se responde sin revisión humana según tres políticas (la etiqueta es la de mRoBERTa).
+
+    - umbral: confianza de mRoBERTa >= t (el umbral elegido en coah_val).
+    - coinciden: el LLM y mRoBERTa dan la misma etiqueta.
+    - coinciden_y_umbral: las dos condiciones.
+    """
+    yv = y.to_numpy()
+    return {
+        "threshold": t,
+        "umbral": _policy(yv, rob, conf >= t),
+        "coinciden": _policy(yv, rob, llm == rob),
+        "coinciden_y_umbral": _policy(yv, rob, (llm == rob) & (conf >= t)),
     }
 
 
@@ -154,13 +166,17 @@ def evaluate_ahr(cache: dict[str, str], seed: int) -> dict | None:
     probs_file = RESULTS / "phase3b_ahr_mroberta_probs.json"
     if probs_file.exists():
         probs = json.loads(probs_file.read_text(encoding="utf-8"))
-        rob = np.array([LABELS[int(np.argmax(probs[i]))] for i in s["id"]])
+        p_rob = np.array([probs[i] for i in s["id"]])
+        rob = np.array(LABELS)[p_rob.argmax(1)]
         out["mroberta_A"] = {
             "f1_macro": round(M.f1_macro(y, rob), 4),
             "f1_per_class": M.per_class_f1(y, rob),
         }
         out["llm_vs_mroberta"] = M.paired_bootstrap(y, pred, rob, seed)
-        out["hybrid"] = hybrid(y, pred, rob)
+        # Umbral elegido en coah_val por la evaluación realista (no se ajusta con el AHR)
+        realista = json.loads((RESULTS / "phase3b_realista.json").read_text(encoding="utf-8"))
+        t = realista["coverage"]["solo_confianza"]["threshold"]
+        out["hybrid"] = hybrid(y, pred, rob, p_rob.max(1), t)
     rob_txt = f" · mRoBERTa {out['mroberta_A']['f1_macro']:.3f}" if "mroberta_A" in out else ""
     log(f"   AHR muestra: F1 LLM {out['f1_macro']:.3f}{rob_txt}")
     return out
@@ -306,18 +322,29 @@ def write_report(o: dict, n_test: int, n_sfu: int) -> None:
         ]
         if "hybrid" in a:
             h = a["hybrid"]
+            names = {
+                "umbral": f"Confianza de mRoBERTa ≥ {h['threshold']}",
+                "coinciden": "LLM y mRoBERTa coinciden",
+                "coinciden_y_umbral": f"Coinciden y confianza ≥ {h['threshold']}",
+            }
             L += [
                 "",
-                "### Combinación: responder solo si los dos modelos coinciden",
+                "### ¿Qué se responde sin revisión humana?",
                 "",
-                f"Coinciden en el **{h['auto_frac']:.0%}** de las reseñas; en ellas el error "
-                "es del "
-                f"**{h['auto_error']:.1%}** ({h['errors_n']} de {h['auto_n']}) y el F1 macro "
-                f"{h['auto_f1_macro']:.3f}. El resto va a revisión humana. Parte respondida "
-                "automáticamente, por etiqueta real: "
-                + ", ".join(f"{lab} {v:.0%}" for lab, v in h["auto_by_true_label"].items())
-                + ".",
+                "Misma muestra; la etiqueta respondida es la de mRoBERTa. El umbral es el "
+                "elegido en "
+                "`coah_val` (no se ajusta con el AHR).",
+                "",
+                "| Política | Se responde | Error | Neutrales respondidas |",
+                "|---|---|---|---|",
             ]
+            for key, label in names.items():
+                r = h[key]
+                L.append(
+                    f"| {label} | {r['auto_frac']:.0%} | {r['auto_error']:.1%} "
+                    f"({r['errors_n']} de {r['auto_n']}) "
+                    f"| {r['auto_by_true_label']['neutral']:.0%} |"
+                )
     (ROOT / "reports" / "phase3_zeroshot.md").write_text(
         "\n".join(L) + "\n", encoding="utf-8", newline="\n"
     )

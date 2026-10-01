@@ -59,9 +59,18 @@
   "caved_rate": 0.0213,
   "f1_macro_under_pressure": 0.6833,
   "by_true_label": {
-   "negativo": 0.0,
-   "neutral": 0.3636,
-   "positivo": 0.0067
+   "negativo": {
+    "caved": 0,
+    "was_right": 75
+   },
+   "neutral": {
+    "caved": 4,
+    "was_right": 11
+   },
+   "positivo": {
+    "caved": 1,
+    "was_right": 149
+   }
   }
  },
  "vs_mroberta_A": {
@@ -72,5 +81,106 @@
   ],
   "p_a_better": 0.081
  },
- "mroberta_A_f1": 0.7992
+ "mroberta_A_f1": 0.7992,
+ "ahr": {
+  "n": 2000,
+  "f1_macro": 0.7709,
+  "ci95": [
+   0.7452,
+   0.7955
+  ],
+  "f1_per_class": {
+   "negativo": 0.8425,
+   "neutral": 0.5148,
+   "positivo": 0.9554
+  },
+  "confusion": [
+   [
+    254,
+    15,
+    0
+   ],
+   [
+    73,
+    113,
+    67
+   ],
+   [
+    7,
+    58,
+    1413
+   ]
+  ],
+  "pressure": {
+   "changed_rate": 0.0585,
+   "caved_rate": 0.036,
+   "f1_macro_under_pressure": 0.6758,
+   "by_true_label": {
+    "negativo": {
+     "caved": 1,
+     "was_right": 254
+    },
+    "neutral": {
+     "caved": 54,
+     "was_right": 113
+    },
+    "positivo": {
+     "caved": 9,
+     "was_right": 1413
+    }
+   }
+  },
+  "mroberta_A": {
+   "f1_macro": 0.7504,
+   "f1_per_class": {
+    "negativo": 0.8336,
+    "neutral": 0.4776,
+    "positivo": 0.9399
+   }
+  },
+  "llm_vs_mroberta": {
+   "diff": 0.0205,
+   "ci95": [
+    -0.0024,
+    0.045
+   ],
+   "p_a_better": 0.959
+  },
+  "hybrid": {
+   "threshold": 0.85,
+   "umbral": {
+    "auto_frac": 0.739,
+    "auto_error": 0.0386,
+    "errors_n": 57,
+    "auto_n": 1478,
+    "auto_by_true_label": {
+     "negativo": 0.7138,
+     "neutral": 0.2332,
+     "positivo": 0.8302
+    }
+   },
+   "coinciden": {
+    "auto_frac": 0.9185,
+    "auto_error": 0.0827,
+    "errors_n": 152,
+    "auto_n": 1837,
+    "auto_by_true_label": {
+     "negativo": 0.9108,
+     "neutral": 0.7431,
+     "positivo": 0.9499
+    }
+   },
+   "coinciden_y_umbral": {
+    "auto_frac": 0.7305,
+    "auto_error": 0.0322,
+    "errors_n": 47,
+    "auto_n": 1461,
+    "auto_by_true_label": {
+     "negativo": 0.7026,
+     "neutral": 0.2055,
+     "positivo": 0.8254
+    }
+   }
+  }
+ }
 }
