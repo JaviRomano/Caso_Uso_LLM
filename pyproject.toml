@@ -11,6 +11,7 @@ dependencies = [
     "huggingface-hub>=0.34",
     "lingua-language-detector>=2.0",
     "numpy>=2.1",
+    "ollama>=0.5",
     "pandas>=2.2",
     "pyarrow>=17",
     "scikit-learn>=1.5",

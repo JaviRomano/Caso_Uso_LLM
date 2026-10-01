@@ -45,3 +45,7 @@ train *ARGS:
 # Fase 3b: evaluación realista (estrés, SFU, cobertura vs error) del ensamble A (solo WSL2)
 realista:
     python -m caso_uso_llm.classify.realistic
+
+# Fase 3: referencia zero-shot con el LLM local (Ollama) + prueba de presión (sycophancy)
+zeroshot:
+    python -m caso_uso_llm.classify.zeroshot
