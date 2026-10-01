@@ -4,7 +4,9 @@
 - En el JSON, la evidencia va ANTES que el veredicto: el modelo localiza el fragmento y luego
   decide, en vez de decidir y justificar después.
 - Toda evidencia de un "no cumple" se comprueba contra el texto: si no es una cita literal de
-  la respuesta, el veredicto se marca como `evidencia_inventada`.
+  la respuesta, el veredicto se marca como `evidencia_inventada` (salvo en criterios cuyo fallo
+  es una ausencia, como no mencionar ningún aspecto).
+- La rúbrica está versionada (rubric.RUBRICS); la versión forma parte de la clave de caché.
 - Comparación por pares en los dos órdenes (A/B y B/A) para medir el sesgo de posición.
 """
 
@@ -12,24 +14,29 @@ import json
 
 import ollama
 
-from caso_uso_llm.evals.rubric import CRITERIOS, IDS
+from caso_uso_llm.evals.rubric import IDS, RUBRICS
 from caso_uso_llm.generate.checks import quote_in_review
 
 JUDGE_MODEL = "gemma4:12b-it-qat"
 OPTIONS = {"temperature": 0, "seed": 42, "num_ctx": 8192}
+LATEST = list(RUBRICS)[-1]
 
-SYSTEM = (
-    "Eres un auditor de calidad de las respuestas públicas que un hotel da a las reseñas de sus "
-    "clientes. Evalúas la RESPUESTA del hotel, no la reseña.\n\n"
-    "Para cada criterio decide si la respuesta CUMPLE. Reglas:\n"
-    "- Evalúa cada criterio por separado y con rigor. Una respuesta educada, larga o empática "
-    "puede incumplir igualmente: no premies la cortesía.\n"
-    "- Antes de decidir, si algún fragmento de la respuesta incumple, cópialo LITERALMENTE en "
-    "'evidencia' (sin cambiar ni resumir nada). Si cumple, deja 'evidencia' vacía.\n"
-    "- Para saber si algo es invención o exageración, compáralo con lo que dice la reseña.\n\n"
-    "Criterios:\n"
-    + "\n".join(f"- {c.id}: {c.pregunta} NO CUMPLE si: {c.no_cumple_si}" for c in CRITERIOS)
-)
+
+def system_prompt(version: str) -> str:
+    criterios = RUBRICS[version]
+    return (
+        "Eres un auditor de calidad de las respuestas públicas que un hotel da a las reseñas de "
+        "sus clientes. Evalúas la RESPUESTA del hotel, no la reseña.\n\n"
+        "Para cada criterio decide si la respuesta CUMPLE. Reglas:\n"
+        "- Evalúa cada criterio por separado y con rigor. Una respuesta educada, larga o empática "
+        "puede incumplir igualmente: no premies la cortesía.\n"
+        "- Antes de decidir, si algún fragmento de la respuesta incumple, cópialo LITERALMENTE en "
+        "'evidencia' (sin cambiar ni resumir nada). Si cumple, deja 'evidencia' vacía.\n"
+        "- Para saber si algo es invención o exageración, compáralo con lo que dice la reseña.\n\n"
+        "Criterios:\n"
+        + "\n".join(f"- {c.id}: {c.pregunta} NO CUMPLE si: {c.no_cumple_si}" for c in criterios)
+    )
+
 
 SCHEMA = {
     "type": "object",
@@ -71,18 +78,22 @@ def _chat(system: str, user: str, schema: dict) -> str:
     return r.message.content
 
 
-def judge(review: str, response: str, cache) -> dict:
+def judge(review: str, response: str, cache, version: str = LATEST) -> dict:
     """Veredicto por criterio: {id: {cumple, evidencia, evidencia_inventada}}."""
+    system = system_prompt(version)
     user = f"RESEÑA:\n«{review}»\n\nRESPUESTA DEL HOTEL:\n«{response}»"
     raw = cache.get_or_call(
-        {"judge": JUDGE_MODEL, "opts": OPTIONS, "sys": SYSTEM, "user": user},
-        lambda: _chat(SYSTEM, user, SCHEMA),
+        {"judge": JUDGE_MODEL, "opts": OPTIONS, "sys": system, "user": user},
+        lambda: _chat(system, user, SCHEMA),
     )
     out = json.loads(raw)
+    needs_quote = {c.id: c.evidencia_requerida for c in RUBRICS[version]}
     for cid in IDS:
         v = out[cid]
-        v["evidencia_inventada"] = (not v["cumple"]) and not quote_in_review(
-            v.get("evidencia", ""), response
+        v["evidencia_inventada"] = (
+            not v["cumple"]
+            and needs_quote[cid]
+            and not quote_in_review(v.get("evidencia", ""), response)
         )
     return out
 

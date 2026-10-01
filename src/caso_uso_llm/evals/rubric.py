@@ -5,7 +5,7 @@ humanos; un "cumple / no cumple" con evidencia se puede auditar caso a caso.
 Fuente única: evals/rubric.md se genera a partir de aquí (`uv run just juez`).
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 
 @dataclass(frozen=True)
@@ -15,6 +15,7 @@ class Criterio:
     pregunta: str  # se formula de modo que "sí" = cumple
     no_cumple_si: str
     ejemplo_falla: str
+    evidencia_requerida: bool = True  # False si el fallo es una ausencia (no hay nada que citar)
 
 
 CRITERIOS = (
@@ -92,10 +93,45 @@ CRITERIOS = (
 
 IDS = tuple(c.id for c in CRITERIOS)
 
+# v2: correcciones de definición tras validar v1 (reports/phase6_juez.md). No se ajusta caso a
+# caso a las semillas del gold: se corrigen definiciones que estaban mal planteadas.
+# - sin_culpa: v1 suspendía cualquier frase empática ("lamentamos los problemas de limpieza").
+#   El riesgo legal es admitir la CAUSA de un daño o incumplimiento, no reconocer la queja.
+# - sin_exageracion: v1 suspendía paráfrasis de igual intensidad ("de categoría" -> "de gran
+#   calidad"); se compara la intensidad, no las palabras.
+# - sin_invencion: incluye atribuir al cliente comentarios que no hizo.
+# - aspecto: su fallo es una ausencia; no se exige cita.
+_V2 = {
+    "aspecto": dict(evidencia_requerida=False),
+    "sin_culpa": dict(
+        pregunta="¿La respuesta evita admitir culpa, responsabilidad o la causa de un daño o de "
+        "un incumplimiento?",
+        no_cumple_si="Atribuye al hotel la causa de un daño, accidente o incumplimiento (que algo "
+        "ocurrió «por» o «debido a» una carencia del hotel, que algo «no debió» pasar), califica "
+        "sus propios fallos («es inaceptable», «fallamos») o asume responsabilidad. Lamentar o "
+        "reconocer la experiencia y las quejas del cliente («lamentamos que la limpieza no "
+        "estuviera a la altura», «sentimos los problemas con el wifi») SÍ cumple.",
+    ),
+    "sin_exageracion": dict(
+        no_cumple_si="Convierte una valoración tibia en entusiasta («correcto» → «excelente», "
+        "«bien» → «de gran calidad»). Compara la INTENSIDAD con lo que dijo el cliente, no las "
+        "palabras: una paráfrasis de intensidad equivalente («de categoría» → «de gran calidad») "
+        "SÍ cumple.",
+    ),
+    "sin_invencion": dict(
+        no_cumple_si="Menciona servicios, instalaciones, reformas, nombres, cargos o detalles de "
+        "la estancia que el cliente no ha mencionado, o le atribuye comentarios que no hizo "
+        "(«su comentario sobre el aparcamiento» si no habló del aparcamiento).",
+    ),
+}
+CRITERIOS_V2 = tuple(replace(c, **_V2.get(c.id, {})) for c in CRITERIOS)
+RUBRICS = {"v1": CRITERIOS, "v2": CRITERIOS_V2}
 
-def rubric_markdown() -> str:
+
+def rubric_markdown(version: str = "v2") -> str:
+    criterios = RUBRICS[version]
     L = [
-        "# Rúbrica del juez",
+        f"# Rúbrica del juez ({version})",
         "",
         "Generado desde `src/caso_uso_llm/evals/rubric.py` (fuente única). No editar a mano.",
         "",
@@ -105,7 +141,7 @@ def rubric_markdown() -> str:
         "| Criterio | Pregunta (sí = cumple) | No cumple si… | Ejemplo que falla |",
         "|---|---|---|---|",
     ]
-    for c in CRITERIOS:
+    for c in criterios:
         L.append(
             f"| **{c.nombre}** (`{c.id}`) | {c.pregunta} | {c.no_cumple_si} | {c.ejemplo_falla} |"
         )
