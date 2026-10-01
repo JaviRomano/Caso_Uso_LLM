@@ -174,7 +174,10 @@ def main() -> None:
                             "regex_vs_judge": regex_vs_judge(judged["v2"])}  # fmt: skip
     log("Sesgo de posición (cada versión del prompt frente a la anterior, en los dos órdenes)")
     versions = list(p4)
-    pos = [position_bias(p4, cache, a, b) for a, b in zip(versions, versions[1:], strict=False)]
+    # Cada versión frente a la anterior y, además, la última frente a todas las anteriores
+    pairs = list(zip(versions, versions[1:], strict=False))
+    pairs += [(v, versions[-1]) for v in versions[:-2]]
+    pos = [position_bias(p4, cache, a, b) for a, b in pairs]
     export_calibration(p4)
     (EVALS / "rubric.md").write_text(rubric_markdown(LATEST), encoding="utf-8", newline="\n")
     out = {"judge": JUDGE_MODEL, "rubrics": results, "position": pos}

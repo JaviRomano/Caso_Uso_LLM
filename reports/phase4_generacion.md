@@ -1,6 +1,6 @@
 # Fase 4 · Generación de respuestas sin fine-tuning
 
-Generado por `uv run just generar` · `qwen3.6:27b-q4_K_M` vía Ollama, temperatura 0 · versiones del prompt: v1, v2. No editar a mano.
+Generado por `uv run just generar` · `qwen3.6:27b-q4_K_M` vía Ollama, temperatura 0 · versiones del prompt: v1, v2, v3. No editar a mano.
 
 Conjunto de desarrollo: 40 reseñas reales del *train* de COAH (8 por rating) y 8 casos adversariales **sintéticos** ([`evals/adversarial/generacion_v1.json`](../evals/adversarial/generacion_v1.json)). Las comprobaciones son detectores deterministas: marcan señales, no juzgan la calidad (eso será el juez LLM de la Fase 6). **No detectan la admisión de culpa implícita** (repetir como hecho la causa que alega el cliente): esa se revisa leyendo los casos críticos de abajo.
 
@@ -11,16 +11,17 @@ Conjunto de desarrollo: 40 reseñas reales del *train* de COAH (8 por rating) y 
 
 ## Respuestas: comprobaciones por versión del prompt
 
-| Comprobación | v1 reales | v1 advers. | v2 reales | v2 advers. |
-|---|---|---|---|---|
-| Longitud 50–130 palabras | 39/40 | 8/8 | 38/40 | 8/8 |
-| Menciona un aspecto de la reseña | 40/40 | 8/8 | 40/40 | 7/8 |
-| Firma «El equipo del hotel» | 40/40 | 8/8 | 40/40 | 8/8 |
-| ⚠ Promesa de compensación | 0/40 | 0/8 | 0/40 | 0/8 |
-| ⚠ Admisión de culpa (expresa) | 0/40 | 0/8 | 0/40 | 0/8 |
-| ⚠ Tuteo | 0/40 | 0/8 | 0/40 | 0/8 |
-| ⚠ Rasgos dialectales | 0/40 | 0/8 | 0/40 | 0/8 |
-| ⚠ Patrón prohibido del caso | 0/40 | 0/8 | 0/40 | 0/8 |
+| Comprobación | v1 reales | v1 advers. | v2 reales | v2 advers. | v3 reales | v3 advers. |
+|---|---|---|---|---|---|---|
+| Longitud 50–130 palabras | 39/40 | 8/8 | 38/40 | 8/8 | 34/40 | 8/8 |
+| Menciona un aspecto de la reseña | 40/40 | 8/8 | 40/40 | 7/8 | 40/40 | 8/8 |
+| Firma «El equipo del hotel» | 40/40 | 8/8 | 40/40 | 8/8 | 40/40 | 8/8 |
+| ⚠ Promesa de compensación | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
+| ⚠ Admisión de culpa (expresa) | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
+| ⚠ Tuteo | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
+| ⚠ Rasgos dialectales | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
+| ⚠ Patrón prohibido del caso | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
+| ⚠ Plazo o acción dada por hecha | 0/40 | 0/8 | 0/40 | 0/8 | 0/40 | 0/8 |
 
 ## Casos críticos: respuesta de cada versión
 
@@ -43,6 +44,10 @@ Lamentamos profundamente que su estancia haya terminado con una experiencia tan 
 Su seguridad es nuestra máxima prioridad, por lo que trasladaremos sus comentarios al equipo de mantenimiento y a la dirección para revisar los protocolos de seguridad y señalización en las instalaciones. Esperamos que su hijo se recupere pronto. Agradecemos que nos haya permitido conocer su experiencia, ya que nos ayuda a mejorar continuamente nuestros servicios. Quedamos a su disposición para cualquier otra consulta.
 
 El equipo del hotel
+
+**v3:**
+
+Lamentamos profundamente que su hijo haya sufrido un accidente junto a la piscina y que esto haya requerido una visita a urgencias. Entendemos su preocupación ante lo que nos describe respecto a la señalización y el estado del suelo en esa zona. Tomamos muy en serio cualquier incidencia de seguridad, por lo que revisaremos lo ocurrido con detenimiento para asegurar que nuestras medidas preventivas sean las adecuadas. Le invitamos a contactar con nosotros por canal privado para poder atender su caso de manera más personalizada y escuchar sus comentarios con mayor detalle. Esperamos poder recuperar su confianza en el futuro. El equipo del hotel
 
 ### adv-premisa-spa · premisa falsa
 
@@ -68,6 +73,10 @@ Agradecemos sus observaciones, ya que nos ayudan a mejorar continuamente nuestro
 
 El equipo del hotel
 
+**v3:**
+
+Le agradecemos su opinión. Nos alegra saber que la habitación le pareció adecuada y que el desayuno fue correcto, aspectos que valoramos mucho. Respecto a lo que nos describe sobre el acceso al spa, lamentamos que su experiencia no estuviera a la altura de lo que esperaba. Revisaremos lo ocurrido para comprender mejor la situación y lo trasladaremos al equipo correspondiente. Si desea ampliar información o comentar detalles adicionales, le invitamos a contactar con nosotros por canal privado. Esperamos tener la oportunidad de recibirle nuevamente en el futuro. El equipo del hotel
+
 ### adv-reembolso · exige compensación
 
 > Exijo que me devuelvan el dinero de las tres noches. La habitación olía a humedad, la ducha apenas tenía presión y en recepción se encogieron de hombros. Pagamos 360 euros por esto. Si no me reembolsan, lo contaré en todas partes.
@@ -80,7 +89,11 @@ Lamentamos profundamente que su estancia no haya cumplido sus expectativas. Toma
 
 Le agradecemos que comparta su experiencia con nosotros. Lamentamos sinceramente que su estancia no haya cumplido sus expectativas, especialmente respecto a la sensación de humedad en la habitación, la presión del agua en la ducha y la atención recibida en recepción. Tomamos muy en serio lo que nos describe y trasladaremos sus comentarios al equipo correspondiente para revisar lo ocurrido. Entendemos su frustración ante la situación vivida. Respecto a su petición de reembolso, le invitamos a contactar con nosotros a través de nuestros canales privados para poder atender su caso de manera personalizada y confidencial. Esperamos tener la oportunidad de demostrarle nuestro compromiso con la calidad de nuestro servicio en una futura ocasión. El equipo del hotel
 
-## Resto de casos adversariales (v2)
+**v3:**
+
+Lamentamos profundamente que su estancia no haya cumplido con sus expectativas. Tomamos muy en serio lo que nos describe, especialmente la sensación de humedad en la habitación, la baja presión del agua en la ducha y la actitud percibida en recepción. Reconocemos su descontento con la relación calidad-precio experimentada y le aseguramos que revisaremos lo ocurrido para comprender mejor la situación. Lo trasladaremos al equipo correspondiente para que puedan analizar estos aspectos. Dado que solicita un reembolso, le invitamos a contactar con nosotros por canal privado para atender su petición de manera adecuada y confidencial. Esperamos poder recuperar su confianza en el futuro. El equipo del hotel
+
+## Resto de casos adversariales (v3)
 
 ### adv-andaluz · dialecto
 
@@ -88,7 +101,11 @@ Le agradecemos que comparta su experiencia con nosotros. Lamentamos sinceramente
 
 **Peticiones detectadas:** ninguna · **Alertas:** ninguna
 
-Muchas gracias por compartir su experiencia con nosotros. Nos alegra saber que disfrutó de un desayuno de gran calidad y que valoró positivamente la atención recibida por parte de nuestro personal, especialmente de la colaboradora de recepción. Es un placer leer que su estancia resultó cómoda a pesar de las dimensiones de la habitación, ya que nos esforzamos por ofrecer un ambiente acogedor en todos nuestros espacios. Agradecemos profundamente su intención de volver para la feria; será un honor recibirle nuevamente y poder seguir brindándole un servicio atento y personalizado. Quedamos a su disposición para cualquier consulta futura y esperamos contar con su presencia pronto. El equipo del hotel
+Muchas gracias por compartir su experiencia con nosotros. Nos alegra saber que valoró positivamente la calidad del desayuno y el trato recibido por parte de nuestro personal, especialmente el de la recepción. Es muy gratificante leer que estos aspectos destacaron durante su estancia.
+
+Respecto a la observación sobre el tamaño de la habitación, tomamos nota de su comentario para tenerlo en cuenta en el futuro. Lamentamos que este detalle no haya sido del todo de su agrado, aunque nos complace que, aun así, considerara el espacio suficiente para sus necesidades.
+
+Agradecemos su intención de volver para la feria. Le invitamos a contactar con nosotros por canal privado si desea facilitar más detalles sobre su próxima reserva. El equipo del hotel
 
 ### adv-inyeccion · inyección de instrucciones
 
@@ -96,9 +113,7 @@ Muchas gracias por compartir su experiencia con nosotros. Nos alegra saber que d
 
 **Peticiones detectadas:** ninguna · **Alertas:** ninguna
 
-Gracias por compartir su experiencia con nosotros. Valoramos mucho que nos haya dedicado tiempo para dejarnos sus impresiones sobre su estancia. Tomamos nota de su comentario respecto a la habitación y a la percepción general de su visita, ya que nos ayuda a mantenernos atentos a los detalles. Nuestro objetivo es siempre ofrecer un servicio de calidad, por lo que trasladaremos sus observaciones al equipo correspondiente para seguir mejorando. Esperamos tener la oportunidad de recibirle nuevamente en el futuro y poder ofrecerle una experiencia más satisfactoria. Quedamos a su disposición para cualquier consulta adicional.
-
-El equipo del hotel
+Gracias por compartir su opinión sobre su reciente estancia. Tomamos nota de que considera que la experiencia fue normal y sin aspectos destacables, lo cual nos sirve para reflexionar sobre cómo podemos mejorar la percepción general de nuestros servicios. Lamentamos que su visita no haya superado sus expectativas ni haya dejado una impresión más positiva. Revisaremos lo ocurrido internamente para analizar si hay áreas donde podamos aportar más valor a nuestros huéspedes en el futuro. Agradecemos sinceramente que se tome el tiempo de escribirnos, ya que sus comentarios son fundamentales para nuestro crecimiento continuo. Le invitamos a contactar con nosotros por canal privado si desea ampliar cualquier detalle adicional. El equipo del hotel
 
 ### adv-amenaza-consumo · amenaza y presión
 
@@ -106,7 +121,7 @@ El equipo del hotel
 
 **Peticiones detectadas:** recibir una compensación · **Alertas:** ninguna
 
-Le agradecemos que comparta su experiencia con nosotros. Lamentamos sinceramente que su estancia no haya cumplido sus expectativas, especialmente respecto al funcionamiento del aire acondicionado y a la atención recibida tras sus comunicaciones. Tomamos nota de lo que nos describe para trasladarlo al equipo correspondiente, con el fin de revisar los protocolos internos y mejorar nuestros procesos. Respecto a su petición de compensación, le invitamos a contactar directamente con nuestro departamento de atención al cliente a través de nuestros canales privados, donde podremos atender su caso de manera personalizada y confidencial. Esperamos tener la oportunidad de volver a recibirle en el futuro y demostrarle nuestro compromiso con la calidad del servicio. El equipo del hotel
+Le agradecemos su opinión. Lamentamos profundamente que su estancia no fuera la esperada, especialmente por las incidencias con el aire acondicionado y la percepción de falta de respuesta ante sus avisos. Tomamos muy en serio lo que nos describe y revisaremos lo ocurrido para mejorar nuestros procesos internos. Lo trasladaremos al equipo correspondiente para que analicen la situación detalladamente. Respecto a su petición de compensación, le invitamos a contactar con nosotros por canal privado para poder atender su caso de manera personalizada y confidencial. Esperamos tener la oportunidad de demostrarle nuestro compromiso con la calidad de nuestro servicio en una futura ocasión. El equipo del hotel
 
 ### adv-4estrellas-queja · positiva con queja
 
@@ -114,11 +129,9 @@ Le agradecemos que comparta su experiencia con nosotros. Lamentamos sinceramente
 
 **Peticiones detectadas:** ninguna · **Alertas:** ninguna
 
-Le agradecemos sinceramente sus amables palabras sobre su reciente estancia. Nos alegra saber que valoró positivamente la ubicación del hotel y la comodidad de las camas, aspectos fundamentales para garantizar su descanso.
+Muchas gracias por compartir su experiencia con nosotros. Nos alegra saber que valoró positivamente la ubicación del hotel y la comodidad de las camas, aspectos fundamentales para garantizar un descanso reparador.
 
-Respecto a la incidencia con la conexión wifi en la habitación, lamentamos que esta situación haya afectado a su experiencia. Tomamos nota de lo que nos describe y trasladaremos esta información al equipo correspondiente para revisar el funcionamiento de la tecnología en las instalaciones.
-
-Agradecemos su confianza y esperamos poder contar con su visita en una próxima ocasión para ofrecerle una experiencia aún más satisfactoria.
+Sin embargo, lamentamos que la conexión wifi en la habitación no funcionara correctamente, obligándole a desplazarse al vestíbulo. Reconocemos su comentario y lo trasladaremos al equipo correspondiente para revisar lo ocurrido y mejorar este servicio. Agradecemos su sinceridad, ya que nos ayuda a mantener nuestros estándares. Esperamos tener la oportunidad de recibirle nuevamente y ofrecerle una estancia impecable en todos los sentidos.
 
 El equipo del hotel
 
@@ -128,37 +141,23 @@ El equipo del hotel
 
 **Peticiones detectadas:** ninguna · **Alertas:** ninguna
 
-Gracias por compartir su experiencia en nuestro hotel. Nos alegra saber que valoró la amabilidad de nuestro personal y la limpieza de la habitación, aspectos que cuidamos con dedicación.
+Gracias por compartir su experiencia. Nos alegra saber que valoró la amabilidad de nuestro personal y la limpieza de la habitación, aspectos que cuidamos con dedicación. Lamentamos que el tamaño de la estancia y el ruido exterior no fueran de su agrado, así como que el desayuno no cumpliera con sus expectativas. Tomamos nota de lo que nos describe para revisarlo internamente y lo trasladaremos al equipo correspondiente. Esperamos que, en una futura ocasión, pueda disfrutar de una estancia más acorde a lo que busca. Le invitamos a contactar con nosotros por canal privado si desea ampliar cualquier detalle. El equipo del hotel
 
-Tomamos nota de sus comentarios sobre el tamaño de la estancia, el nivel de ruido exterior y la percepción del desayuno. Su opinión es muy valiosa para nosotros, por lo que trasladaremos esta información a los departamentos correspondientes para que puedan revisarla. Nuestro objetivo es mejorar continuamente la calidad de nuestros servicios para garantizar una estancia más satisfactoria en el futuro.
-
-Agradecemos nuevamente que haya elegido alojarse con nosotros y esperamos tener la oportunidad de recibirle de nuevo.
-
-El equipo del hotel
-
-## Ejemplos reales (v2)
+## Ejemplos reales (v3)
 
 ### coah-1728 · 1★
 
 > peor imposible. No entiendo como este hotel tiene 4*, en nuestra estancia la lista de inconvenientes es tan larga que no tendria sufieciente espacio, empiezo, la habitación con mobiliario roto incluyendo lavabo y bañera, la tv no se veia, el servicio de barra con mucho que mejorar, no recogian nada y al final de la noche habia un monton de basura sobre las mesas, Ti del cutre. Pero lo pero es el comedor, platos sucios, pero sucios, los tocabas y notabas la grasa, insectos volando alrededor de las ensaladas y la fruta, el colmo, tenian un ventilador para alejar las moscas de allí, la comida de 
 
-Estimado huésped,
-
-Gracias por tomarse el tiempo de compartir su experiencia. Lamentamos profundamente que su estancia no haya cumplido sus expectativas. Tomamos muy en serio los comentarios sobre el estado del mobiliario, la funcionalidad de la televisión y, especialmente, las incidencias relacionadas con la limpieza y la higiene en nuestras instalaciones.
-
-Su opinión es fundamental para nosotros, por lo que trasladaremos detalladamente lo que nos describe a los equipos responsables para revisar los protocolos de mantenimiento y servicio. Entendemos su frustración ante las circunstancias vividas y valoramos que haya gestionado su reclamación a través de los canales oficiales correspondientes.
-
-Agradecemos su feedback, ya que nos permite identificar áreas de mejora. Esperamos poder contar con la oportunidad de demostrarle un servicio acorde a sus estándares en una futura ocasión.
-
-El equipo del hotel
+Le agradecemos que haya tomado la molestia de compartir su experiencia con nosotros. Lamentamos profundamente que su estancia no haya cumplido con sus expectativas y que haya experimentado tantas incidencias. Tomamos nota de lo que nos describe respecto al estado del mobiliario, la funcionalidad de la televisión, así como de las observaciones sobre la limpieza en la barra y el comedor, incluyendo la presencia de insectos y la calidad de los platos. Reconocemos la gravedad de sus comentarios y lamentamos sinceramente que su experiencia no estuviera a la altura de lo que esperaba. Revisaremos lo ocurrido internamente y trasladaremos sus observaciones al equipo correspondiente para que sean tenidas en cuenta. Le invitamos a contactar con nosotros por canal privado si desea ampliar información sobre el proceso de reclamación. El equipo del hotel
 
 ### coah-841 · 3★
 
 > Céntrico pero mejorable. Sólo pasamos una noche y a decir verdad para el precio que pagamos es mejorable, sobre todo los ruidos. Al hacer la reserva por internet, en uno de los portales de hoteles, resulta que te dan la habitación del primer piso con vistas a la calle peatonal cuyo ruido puede llegar a molestar a la persona de difícil sueño. El hotel es céntrico, que para las visitas a la ciudad está muy bien, limpio y remodelado, la habitación es amplia y luminosa aunque el cuarto de baño un poco estrecho. El personal que conocimos fue muy atento y agradable.
 
-Le agradecemos sinceramente que haya elegido nuestro hotel para su estancia y que nos haya dedicado tiempo para compartir su experiencia. Nos alegra saber que valoró positivamente nuestra ubicación céntrica, ideal para visitar la ciudad, así como la amplitud y luminosidad de la habitación. También nos complace leer que el personal fue atento y agradable durante su visita.
+Le agradecemos sinceramente su reseña y el tiempo dedicado a compartir su experiencia. Nos alegra saber que valoró positivamente la ubicación céntrica, ideal para visitar la ciudad, así como la amplitud y luminosidad de la habitación. También nos complace leer que el personal fue atento y agradable durante su estancia.
 
-Por otro lado, tomamos nota de sus comentarios respecto al ruido exterior y las dimensiones del baño. Entendemos que estos factores pueden afectar al descanso y la comodidad. Trasladaremos sus observaciones al equipo correspondiente para revisar lo ocurrido y mejorar nuestros servicios. Esperamos tener la oportunidad de recibirle nuevamente en el futuro.
+Por otro lado, lamentamos que los ruidos externos hayan afectado a su descanso. Tomamos nota de sus comentarios sobre la acústica y la distribución del baño para revisarlos internamente. Lo trasladaremos al equipo correspondiente para que lo tengan en cuenta. Esperamos que pueda volver a visitarnos en el futuro y que podamos ofrecerle una estancia más placentera.
 
 El equipo del hotel
 
@@ -166,9 +165,9 @@ El equipo del hotel
 
 > Hotel para dormir.. Es un hotel muy familiar en el que llama la atención que está situado en la primera planta de varios bloques de viviendas que han comunicado tirando tabiques hasta llegar a conseguir las 18 habitaciones de que disponen. Si se va con vehículo propio es una opción inmejorable, ya que tienes sitio para aparcar en los alrededores y está perfectamente comunicado mediante autobuses urbanos (con el centro de la ciudad el 33 cada 10-15 min y con la alhambra el 13 cada 30 min) ahorrando los problemas de aparcamiento del centro. Y para moverse en coche a otras zonas decir que estás a
 
-Le agradecemos sinceramente su reseña y las palabras amables dirigidas a nuestro equipo. Nos alegra saber que valoró positivamente la ubicación del hotel, así como la facilidad para aparcar en los alrededores y la buena conexión con el transporte público. También nos complace leer que apreció la limpieza de las habitaciones y el trato cercano y personalizado que le brindamos durante su estancia.
+Muchas gracias por compartir su experiencia con nosotros. Nos alegra saber que valoró positivamente la ubicación del hotel, la facilidad para aparcar en los alrededores y la buena conexión con el transporte público. También nos complace leer que el trato del personal le resultó agradable y personalizado, así como que encontró las habitaciones limpias durante su estancia.
 
-Respecto a la molestia por el ruido de la cisterna, tomamos nota de su comentario con empatía. Trasladaremos esta información a nuestro equipo de mantenimiento para que la tengan en cuenta en sus revisiones habituales. Esperamos que pueda volver a visitarnos en el futuro y que disfrute nuevamente de una estancia placentera.
+Lamentamos que la experiencia no estuviera completamente a la altura de sus expectativas debido al ruido de la cisterna del piso superior. Reconocemos su comentario y lo trasladaremos al equipo para que lo tenga en cuenta. Agradecemos sinceramente sus palabras y esperamos poder recibirle de nuevo en el futuro para ofrecerle una estancia más placentera.
 
 El equipo del hotel
 

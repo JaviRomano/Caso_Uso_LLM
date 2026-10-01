@@ -60,7 +60,12 @@ Escribe la respuesta siguiendo estas reglas:
 9. Entre 50 y 130 palabras. Sin asunto, sin listas. Firma solo como "El equipo del hotel"."""
 
 # v3: generada desde la especificación única (spec.py), la misma que genera la rúbrica v3 del juez.
-RESPONSE_PROMPTS = {"v1": RESPONSE_SYSTEM, "v2": RESPONSE_SYSTEM_V2, "v3": generator_prompt()}
+RESPONSE_PROMPTS = {
+    "v1": RESPONSE_SYSTEM,
+    "v2": RESPONSE_SYSTEM_V2,
+    "v3": generator_prompt("v3"),
+    "v4": generator_prompt("v4"),
+}
 
 
 def response_user(review: str, analysis: dict) -> str:

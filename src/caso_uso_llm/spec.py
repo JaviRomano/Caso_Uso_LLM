@@ -34,6 +34,19 @@ PERMITIDAS = (
     "lamentamos que su experiencia no estuviera a la altura de lo que esperaba",
 )
 
+# v4: cuándo procede cada fórmula. Con v3 (lista sin contexto) el generador las usó como
+# muletilla: «le invitamos a contactar por canal privado» en 32 de 48 respuestas, incluidas
+# reseñas positivas sin ninguna petición. El juez por pares prefirió v2 a v3 (25 a 4).
+CUANDO = {
+    "lo que nos describe": "al mencionar una queja o un hecho que el hotel no puede comprobar",
+    "revisaremos lo ocurrido": "solo ante un incidente o una afirmación que no se puede comprobar",
+    "lo trasladaremos al equipo": "solo si hay alguna crítica o sugerencia",
+    "le invitamos a contactar con nosotros por canal privado": "solo si el cliente pide o exige "
+    "algo (un reembolso, una compensación, una respuesta)",
+    "lamentamos que su experiencia no estuviera a la altura de lo que esperaba": "solo si la "
+    "reseña es negativa o mixta",
+}
+
 REGLAS = (
     Regla(
         "registro",
@@ -161,14 +174,26 @@ REGLAS = (
 JUEZ = tuple(r for r in REGLAS if r.evaluador == "juez")
 
 
-def generator_prompt() -> str:
-    """Prompt de sistema del generador, derivado de la especificación."""
+def generator_prompt(version: str = "v3") -> str:
+    """Prompt de sistema del generador, derivado de la especificación.
+
+    v3: lista de fórmulas permitidas. v4: cada fórmula con el caso en que procede y aviso de que
+    no son obligatorias (con v3 se convirtieron en muletilla).
+    """
     rules = "\n".join(f"{i}. {r.instruccion}" for i, r in enumerate(REGLAS, start=1))
-    allowed = "\n".join(f"- «{p}»" for p in PERMITIDAS)
-    return (
+    head = (
         "Eres la persona responsable de atención al cliente de un hotel y respondes a reseñas "
         "públicas.\n\nEscribe la respuesta siguiendo estas reglas:\n"
-        f"{rules}\n\nFórmulas que puedes usar con seguridad:\n{allowed}"
+        f"{rules}\n\n"
+    )
+    if version == "v3":
+        allowed = "\n".join(f"- «{p}»" for p in PERMITIDAS)
+        return head + f"Fórmulas que puedes usar con seguridad:\n{allowed}"
+    allowed = "\n".join(f"- «{p}»: {CUANDO[p]}." for p in PERMITIDAS)
+    return head + (
+        "Fórmulas seguras para situaciones delicadas. NO son obligatorias: úsalas solo en el caso "
+        "indicado y nunca en una reseña que no lo necesite. Escribe con naturalidad y adapta cada "
+        f"respuesta a la reseña concreta.\n{allowed}"
     )
 
 
