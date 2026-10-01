@@ -41,3 +41,7 @@ baseline:
 # Fase 3: fine-tuning de RoBERTa-BNE (solo WSL2). Ej.: just train --options B,C --seeds 42
 train *ARGS:
     python -m caso_uso_llm.classify.finetune {{ARGS}}
+
+# Fase 3b: evaluación realista (estrés, SFU, cobertura vs error) del ensamble A (solo WSL2)
+realista:
+    python -m caso_uso_llm.classify.realistic
