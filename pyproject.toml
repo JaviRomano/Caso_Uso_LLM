@@ -2,7 +2,6 @@
 name = "caso-uso-llm"
 version = "0.2.0"
 description = "Clasificación de sentimiento y respuesta automática a reseñas de hotel con LLMs locales."
-readme = "CLAUDE.md"
 requires-python = ">=3.12,<3.13"
 # Dependencias mínimas: cada fase añade las suyas con `uv add` cuando las necesite.
 dependencies = [

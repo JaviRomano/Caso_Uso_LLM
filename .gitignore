@@ -21,5 +21,9 @@ data/processed/
 data/raw/sinai/
 data/raw/**/.cache/
 
+# Documentos de trabajo locales (plan, auditoría y guía de estudio): no se publican
+CLAUDE.md
+STACK_ESTUDIO.md
+
 # Progreso de cada ejecución (se sobrescribe)
 logs/

@@ -1,3 +1,11 @@
+# Analisis de Sentimiento NLP - Resenas Hoteleras
+
+Resumen: pipeline propio de NLP que combina dos modelos de lenguaje para analizar 7615 resenas hoteleras en espanol. Un encoder BERT (fine-tuned) clasifica el sentimiento en positivo, negativo o neutral, y un decoder GPT-2 genera una respuesta automatica personalizada segun el sentimiento detectado. Stack: Python, PyTorch, HuggingFace Transformers.
+
+El resto de este documento es el cuaderno de trabajo completo del proyecto: analisis de datos, experimentos, decisiones tomadas y evaluacion de resultados.
+
+---
+
 # Fase 1 - Comprensión y Datos 
 ## El problema en tres líneas
 
