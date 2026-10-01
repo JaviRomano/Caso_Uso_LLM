@@ -20,3 +20,10 @@ data/processed/
 # Datos de terceros: se descargan con `just data-download`; en git solo quedan sus hashes
 data/raw/sinai/
 data/raw/**/.cache/
+
+# Documentos de trabajo locales (plan, auditoría y guía de estudio): no se publican
+CLAUDE.md
+STACK_ESTUDIO.md
+
+# Progreso de cada ejecución (se sobrescribe)
+logs/
