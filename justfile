@@ -49,3 +49,7 @@ realista:
 # Fase 3: referencia zero-shot con el LLM local (Ollama) + prueba de presión (sycophancy)
 zeroshot:
     python -m caso_uso_llm.classify.zeroshot
+
+# Fase 4: aspectos en JSON + respuesta con el LLM local (Ollama), con comprobaciones
+generar:
+    python -m caso_uso_llm.generate.run
