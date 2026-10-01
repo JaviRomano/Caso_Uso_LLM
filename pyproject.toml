@@ -63,6 +63,10 @@ extend-exclude = ["legacy"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.pycodestyle]
+# El formateador parte el código a 100; las líneas de texto de los informes pueden llegar a 120.
+max-line-length = 120
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"

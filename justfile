@@ -53,3 +53,7 @@ zeroshot:
 # Fase 4: aspectos en JSON + respuesta con el LLM local (Ollama), con comprobaciones
 generar *ARGS:
     python -m caso_uso_llm.generate.run {{ARGS}}
+
+# Fase 6 (adelantada): valida el juez (canaries, controles, gold) y evalúa las respuestas de la Fase 4
+juez:
+    python -m caso_uso_llm.evals.run_judge
