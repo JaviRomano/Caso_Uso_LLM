@@ -7,48 +7,48 @@
     44
    ],
    "coah_val": {
-    "f1_mean": 0.7964,
-    "f1_sd": 0.007,
-    "ensemble_f1": 0.8035,
+    "f1_mean": 0.7861,
+    "f1_sd": 0.0079,
+    "ensemble_f1": 0.79,
     "ensemble_ci95": [
-     0.743,
-     0.8561
+     0.7317,
+     0.8445
     ],
     "ensemble_f1_per_class": {
-     "negativo": 0.8974,
-     "neutral": 0.5823,
-     "positivo": 0.9307
+     "negativo": 0.9045,
+     "neutral": 0.5405,
+     "positivo": 0.9251
     },
     "ensemble_confusion": [
      [
-      70,
-      4,
+      71,
+      3,
       1
      ],
      [
       10,
-      23,
-      10
+      20,
+      13
      ],
      [
       1,
-      9,
-      141
+      8,
+      142
      ]
     ]
    },
    "coah_test": {
-    "f1_mean": 0.8222,
-    "f1_sd": 0.0159,
-    "ensemble_f1": 0.8224,
+    "f1_mean": 0.814,
+    "f1_sd": 0.0301,
+    "ensemble_f1": 0.7969,
     "ensemble_ci95": [
-     0.7641,
-     0.8759
+     0.7322,
+     0.8534
     ],
     "ensemble_f1_per_class": {
-     "negativo": 0.9351,
-     "neutral": 0.6076,
-     "positivo": 0.9246
+     "negativo": 0.9231,
+     "neutral": 0.5352,
+     "positivo": 0.9325
     },
     "ensemble_confusion": [
      [
@@ -57,40 +57,40 @@
       0
      ],
      [
-      6,
-      24,
-      13
+      9,
+      19,
+      15
      ],
      [
-      1,
-      9,
-      141
+      0,
+      6,
+      145
      ]
     ]
    },
    "coar_test": {
-    "f1_mean": 0.8196,
-    "f1_sd": 0.0121,
-    "ensemble_f1": 0.8356,
+    "f1_mean": 0.8059,
+    "f1_sd": 0.0053,
+    "ensemble_f1": 0.818,
     "ensemble_ci95": [
-     0.7878,
-     0.8774
+     0.7679,
+     0.8619
     ],
     "ensemble_f1_per_class": {
-     "negativo": 0.9169,
-     "neutral": 0.6078,
-     "positivo": 0.9819
+     "negativo": 0.9128,
+     "neutral": 0.5657,
+     "positivo": 0.9757
     },
     "ensemble_confusion": [
      [
-      138,
+      136,
       15,
-      0
+      2
      ],
      [
-      9,
-      31,
-      9
+      8,
+      28,
+      13
      ],
      [
       1,
@@ -403,12 +403,12 @@
  },
  "comparisons_coah_test": {
   "A_vs_B": {
-   "diff": 0.025,
+   "diff": -0.0005,
    "ci95": [
-    -0.0329,
-    0.0823
+    -0.0537,
+    0.0499
    ],
-   "p_a_better": 0.786
+   "p_a_better": 0.462
   },
   "A_sin_trad_vs_B": {
    "diff": 0.0045,
