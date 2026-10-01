@@ -67,3 +67,16 @@ def test_patron_prohibido_del_caso():
 )
 def test_no_es_promesa(text):
     assert not C.run_checks(text, [{"cita": "x"}])["promise"]
+
+
+@pytest.mark.parametrize(
+    ("text", "flag"),
+    [
+        ("Trasladaremos inmediatamente su comentario.", True),
+        ("Ya hemos solucionado el problema del wifi.", True),
+        ("Lo revisaremos en los próximos días.", True),
+        ("Trasladaremos su comentario al equipo para revisarlo.", False),
+    ],
+)
+def test_plazo(text, flag):
+    assert C.run_checks(text, [{"cita": "x"}])["plazo"] is flag

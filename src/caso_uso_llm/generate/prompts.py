@@ -1,4 +1,6 @@
-"""Prompts de la Fase 4. La guía de estilo es la especificación de lo que se evalúa en checks.py."""
+"""Prompts de la Fase 4. Desde v3, el prompt de respuesta sale de spec.py (especificación única)."""
+
+from caso_uso_llm.spec import generator_prompt
 
 ANALYSIS_SYSTEM = """\
 Eres un analista de reseñas de hoteles. Lee la reseña y devuelve:
@@ -57,7 +59,8 @@ Escribe la respuesta siguiendo estas reglas:
 8. No prometas plazos ni acciones concretas ("inmediatamente", "ya lo hemos solucionado").
 9. Entre 50 y 130 palabras. Sin asunto, sin listas. Firma solo como "El equipo del hotel"."""
 
-RESPONSE_PROMPTS = {"v1": RESPONSE_SYSTEM, "v2": RESPONSE_SYSTEM_V2}
+# v3: generada desde la especificación única (spec.py), la misma que genera la rúbrica v3 del juez.
+RESPONSE_PROMPTS = {"v1": RESPONSE_SYSTEM, "v2": RESPONSE_SYSTEM_V2, "v3": generator_prompt()}
 
 
 def response_user(review: str, analysis: dict) -> str:

@@ -32,7 +32,7 @@ CACHE = RESULTS / "phase4_cache.jsonl"
 ADVERSARIAL = ROOT / "evals" / "adversarial" / "generacion_v1.json"
 REPORT = ROOT / "reports" / "phase4_generacion.md"
 PER_RATING = 8
-ALERTS = ("promise", "liability", "tuteo", "dialect")
+ALERTS = ("promise", "liability", "tuteo", "dialect", "plazo")
 CRITICAL = ("adv-culpa-legal", "adv-premisa-spa", "adv-reembolso")  # se comparan entre versiones
 
 
@@ -150,6 +150,7 @@ CHECKS = (
     ("⚠ Tuteo", lambda r: r["checks"]["tuteo"]),
     ("⚠ Rasgos dialectales", lambda r: r["checks"]["dialect"]),
     ("⚠ Patrón prohibido del caso", lambda r: bool(r["checks"]["case_forbidden"])),
+    ("⚠ Plazo o acción dada por hecha", lambda r: r["checks"].get("plazo", False)),
 )
 
 

@@ -85,8 +85,8 @@ def gold_metrics(cache, version: str) -> dict:
 
 def phase4_responses() -> dict:
     return {
-        v: json.loads((RESULTS / f"phase4_dev_{v}.json").read_text(encoding="utf-8"))
-        for v in ("v1", "v2")
+        p.stem.removeprefix("phase4_dev_"): json.loads(p.read_text(encoding="utf-8"))
+        for p in sorted(RESULTS.glob("phase4_dev_v*.json"))
     }
 
 
@@ -114,46 +114,48 @@ def regex_vs_judge(judged: list[dict]) -> dict:
     return res
 
 
-def position_bias(p4: dict, cache) -> dict:
-    """v1 frente a v2 en los dos órdenes. Consistente = elige la misma respuesta en ambos."""
-    v1 = {r["id"]: r for r in p4["v1"]}
+def position_bias(p4: dict, cache, a: str, b: str) -> dict:
+    """Versión a frente a b en los dos órdenes. Consistente = elige la misma respuesta en ambos."""
+    ra = {r["id"]: r for r in p4[a]}
     counts = Counter()
-    for r2 in p4["v2"]:
-        r1 = v1[r2["id"]]
-        ab = compare(r2["review"], r1["response"], r2["response"], cache)  # A=v1, B=v2
-        ba = compare(r2["review"], r2["response"], r1["response"], cache)  # A=v2, B=v1
-        win_ab = {"A": "v1", "B": "v2"}.get(ab, "empate")
-        win_ba = {"A": "v2", "B": "v1"}.get(ba, "empate")
+    for rb in p4[b]:
+        r1 = ra[rb["id"]]
+        ab = compare(rb["review"], r1["response"], rb["response"], cache)  # A=a, B=b
+        ba = compare(rb["review"], rb["response"], r1["response"], cache)  # A=b, B=a
+        win_ab = {"A": a, "B": b}.get(ab, "empate")
+        win_ba = {"A": b, "B": a}.get(ba, "empate")
         counts["consistente" if win_ab == win_ba else "inconsistente"] += 1
         counts[f"posicion_{ab}"] += 1
         counts[f"posicion_{ba}"] += 1
         if win_ab == win_ba:
             counts[f"gana_{win_ab}"] += 1
-    log(f"   pares consistentes: {counts['consistente']} de {len(p4['v2'])}")
-    return {"counts": dict(counts), "n": len(p4["v2"])}
+    log(f"   {a} vs {b}: {counts['consistente']} pares consistentes de {len(p4[b])}")
+    return {"a": a, "b": b, "counts": dict(counts), "n": len(p4[b])}
 
 
-def export_calibration(p4: dict, judged_v2: list[dict]) -> None:
-    """24 respuestas v2 (8 adversariales + 16 reales) para etiquetar a mano, con el juez al lado."""
-    verdicts = {r["id"]: r["verdict"] for r in judged_v2}
+CALIBRATION_COLS = ["id", "reseña", "respuesta", *(f"humano_{c}" for c in IDS), "notas"]
+
+
+def export_calibration(p4: dict) -> None:
+    """Plantilla A CIEGAS (sin el veredicto del juez): 24 respuestas v2, 8 adversariales + 16 reales.
+
+    Nunca borra trabajo hecho: si el fichero ya tiene etiquetas o notas, se conservan. El cruce con
+    el juez lo hace `just calibrar`, leyendo results/phase6_juez.json.
+    """
+    previous = {}
+    if CALIBRATION.exists():
+        with CALIBRATION.open(encoding="utf-8-sig", newline="") as f:
+            previous = {r["id"]: r for r in csv.DictReader(f, delimiter=";")}
     rows = [r for r in p4["v2"] if r["kind"] == "adversarial"] + [
         r for r in p4["v2"] if r["kind"] == "real"
     ][:16]
     with CALIBRATION.open("w", encoding="utf-8-sig", newline="") as f:
         w = csv.writer(f, delimiter=";")
-        w.writerow(
-            [
-                "id",
-                "reseña",
-                "respuesta",
-                *(f"humano_{c}" for c in IDS),
-                *(f"juez_{c}" for c in IDS),
-            ]
-        )
+        w.writerow(CALIBRATION_COLS)
         for r in rows:
-            v = verdicts[r["id"]]
-            w.writerow([r["id"], r["review"], r["response"], *([""] * len(IDS)),
-                        *("1" if v[c]["cumple"] else "0" for c in IDS)])  # fmt: skip
+            old = previous.get(r["id"], {})
+            kept = [old.get(col, "") for col in CALIBRATION_COLS[3:]]
+            w.writerow([r["id"], r["review"], r["response"], *kept])
 
 
 def main() -> None:
@@ -170,9 +172,10 @@ def main() -> None:
         judged = judge_phase4(cache, version, p4)
         results[version] = {"canaries": can, "gold": gold, "phase4": judged,
                             "regex_vs_judge": regex_vs_judge(judged["v2"])}  # fmt: skip
-    log("Sesgo de posición (pares v1/v2 en los dos órdenes)")
-    pos = position_bias(p4, cache)
-    export_calibration(p4, results[LATEST]["phase4"]["v2"])
+    log("Sesgo de posición (cada versión del prompt frente a la anterior, en los dos órdenes)")
+    versions = list(p4)
+    pos = [position_bias(p4, cache, a, b) for a, b in zip(versions, versions[1:], strict=False)]
+    export_calibration(p4)
     (EVALS / "rubric.md").write_text(rubric_markdown(LATEST), encoding="utf-8", newline="\n")
     out = {"judge": JUDGE_MODEL, "rubrics": results, "position": pos}
     (RESULTS / "phase6_juez.json").write_text(
@@ -223,8 +226,14 @@ def write_report(o: dict) -> None:
         ),
         ("Gold: fallos etiquetados que detecta (recall)", lambda r: _frac(r["gold"]["recall"])),
         ("Gold: suspensos no etiquetados", lambda r: str(r["gold"]["extra_fails"])),
-        ("Fase 4 v1: respuestas que cumplen todo", lambda r: _frac(_all_ok(r["phase4"]["v1"]))),
-        ("Fase 4 v2: respuestas que cumplen todo", lambda r: _frac(_all_ok(r["phase4"]["v2"]))),
+    ]
+    prompt_versions = list(R[versions[-1]]["phase4"])
+    rows += [
+        (
+            f"Fase 4, prompt {pv}: respuestas que cumplen todo",
+            lambda r, pv=pv: _frac(_all_ok(r["phase4"][pv])),
+        )
+        for pv in prompt_versions
     ]
     for label, fn in rows:
         L.append(f"| {label} | " + " | ".join(fn(R[v]) for v in versions) + " |")
@@ -247,10 +256,11 @@ def write_report(o: dict) -> None:
         for r in last["gold"]["rows"]
     ]
     L += ["", f"## 4. Respuestas de la Fase 4 según el juez ({versions[-1]})", "",
-          "| Criterio | v1 reales | v1 advers. | v2 reales | v2 advers. |", "|---|---|---|---|---|"]  # fmt: skip
+          "| Criterio | " + " | ".join(f"{pv} reales | {pv} advers." for pv in prompt_versions) + " |",
+          "|---|" + "---|---|" * len(prompt_versions)]  # fmt: skip
     for cid in IDS:
         cells = []
-        for pv in ("v1", "v2"):
+        for pv in prompt_versions:
             for kind in ("real", "adversarial"):
                 rs = [r for r in last["phase4"][pv] if r["kind"] == kind]
                 cells.append(_pct(sum(r["verdict"][cid]["cumple"] for r in rs), len(rs)))
@@ -261,21 +271,25 @@ def write_report(o: dict) -> None:
         L.append(
             f"| {flag} | {REGEX_MAP[flag]} | {d['ambos']} | {d['solo_regex']} | {d['solo_juez']} |"
         )
-    k = pos["counts"]
+    L += ["", "## 5. Comparación por pares y sesgo de posición", "",
+          "Cada par se juzga dos veces cambiando el orden; solo cuenta como victoria si coincide en los dos.", "",
+          "| Comparación | Consistente | Elige posición A / B / empate | Gana (consistentes) |",
+          "|---|---|---|---|"]  # fmt: skip
+    for p in pos:
+        k, a, b = p["counts"], p["a"], p["b"]
+        L.append(
+            f"| {a} frente a {b} | {_pct(k.get('consistente', 0), p['n'])} | {k.get('posicion_A', 0)} / "
+            f"{k.get('posicion_B', 0)} / {k.get('posicion_empate', 0)} | {b} {k.get(f'gana_{b}', 0)} · "
+            f"{a} {k.get(f'gana_{a}', 0)} · empate {k.get('gana_empate', 0)} |"
+        )
     L += [
-        "",
-        "## 5. Sesgo de posición (comparación por pares v1 frente a v2)",
-        "",
-        f"Cada par se juzga dos veces cambiando el orden. **Consistente: {_pct(k.get('consistente', 0), pos['n'])}**. "
-        f"Elige la posición A {k.get('posicion_A', 0)} veces y la B {k.get('posicion_B', 0)} "
-        f"(empate {k.get('posicion_empate', 0)}) de {2 * pos['n']}. Entre los pares consistentes: gana v2 "
-        f"{k.get('gana_v2', 0)}, gana v1 {k.get('gana_v1', 0)}, empate {k.get('gana_empate', 0)}.",
         "",
         "## 6. Calibración humana (pendiente)",
         "",
-        "Plantilla: [`evals/gold/calibracion_humana.csv`](../evals/gold/calibracion_humana.csv) (24 respuestas v2; "
-        "columnas `humano_*` vacías, 1 = cumple, 0 = no cumple; al lado, el veredicto del juez). No se ha usado para "
-        "ajustar nada: es la prueba independiente del juez.",
+        "Plantilla A CIEGAS: [`evals/gold/calibracion_humana.csv`](../evals/gold/calibracion_humana.csv) "
+        "(24 respuestas "
+        "del prompt v2; columnas `humano_*`: 1 = cumple, 0 = no cumple; `notas` para dudas). No muestra el veredicto "
+        "del juez; `uv run just calibrar` lo cruza después. No se ha usado para ajustar nada.",
     ]
     REPORT.write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
 

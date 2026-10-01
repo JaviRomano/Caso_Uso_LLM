@@ -125,7 +125,26 @@ _V2 = {
     ),
 }
 CRITERIOS_V2 = tuple(replace(c, **_V2.get(c.id, {})) for c in CRITERIOS)
-RUBRICS = {"v1": CRITERIOS, "v2": CRITERIOS_V2}
+
+
+# v3: generada desde la especificación única (spec.py), la misma que genera el prompt v3 del
+# generador. Añade lo PERMITIDO a cada criterio, para que juez y generador lean lo mismo.
+def _from_spec() -> tuple[Criterio, ...]:
+    from caso_uso_llm.spec import JUEZ, judge_no_cumple
+
+    by_id = {r.id: r for r in JUEZ}
+    assert set(by_id) == set(IDS), (
+        "la especificación y la rúbrica deben cubrir los mismos criterios"
+    )
+    return tuple(
+        Criterio(
+            r.id, r.titulo, r.pregunta, judge_no_cumple(r), r.ejemplo_falla, r.evidencia_requerida
+        )
+        for r in (by_id[i] for i in IDS)
+    )
+
+
+RUBRICS = {"v1": CRITERIOS, "v2": CRITERIOS_V2, "v3": _from_spec()}
 
 
 def rubric_markdown(version: str = "v2") -> str:

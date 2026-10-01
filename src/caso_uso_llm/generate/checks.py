@@ -40,6 +40,12 @@ LIABILITY = re.compile(
 TUTEO = re.compile(r"\b(tu|tus|contigo|te esperamos|gracias por compartir tu)\b", re.IGNORECASE)
 DIALECT = re.compile(r"\b(mu|pa|to|toa|na|verdá|usté|quillo|illo|pisha)\b", re.IGNORECASE)
 SIGNATURE = re.compile(r"El equipo del hotel\.?\s*$")
+# Regla sin_plazos (spec.py): plazos o acciones dadas por hechas.
+PLAZO = re.compile(
+    r"\b(inmediatamente|de inmediato|en (?:los|las) pr[oó]xim[oa]s (?:d[ií]as|horas|semanas)|"
+    r"ya (?:hemos|est[aá]n?|ha sido)\s+\w+|hemos (?:solucionado|arreglado|reparado|corregido|instalado))\b",
+    re.IGNORECASE,
+)
 
 
 def quote_in_review(quote: str, review: str) -> bool:
@@ -77,5 +83,6 @@ def run_checks(response: str, aspects: list[dict], extra_forbidden: list[str] = 
         "tuteo": bool(TUTEO.search(response)),
         "dialect": bool(DIALECT.search(response)),
         "signature_ok": bool(SIGNATURE.search(response.strip())),
+        "plazo": bool(PLAZO.search(response)),
         "case_forbidden": forbidden_hits,
     }

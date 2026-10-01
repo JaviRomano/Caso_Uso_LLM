@@ -8,11 +8,13 @@ Uso: uv run just calibrar
 """
 
 import csv
+import json
 
 from sklearn.metrics import cohen_kappa_score
 
+from caso_uso_llm.evals.judge import LATEST
 from caso_uso_llm.evals.rubric import CRITERIOS, IDS
-from caso_uso_llm.paths import ROOT
+from caso_uso_llm.paths import RESULTS, ROOT
 
 CALIBRATION = ROOT / "evals" / "gold" / "calibracion_humana.csv"
 REPORT = ROOT / "reports" / "phase6_calibracion.md"
@@ -27,10 +29,17 @@ def main() -> None:
               "(1 = cumple, 0 = no cumple).")  # fmt: skip
         return
     names = {c.id: c.nombre for c in CRITERIOS}
+    # Veredicto del juez (rúbrica vigente) sobre las respuestas del prompt v2, cruzado por id
+    judged = json.loads((RESULTS / "phase6_juez.json").read_text(encoding="utf-8"))
+    verdicts = {r["id"]: r["verdict"] for r in judged["rubrics"][LATEST]["phase4"]["v2"]}
+    for r in filled:
+        for c in IDS:
+            r[f"juez_{c}"] = "1" if verdicts[r["id"]][c]["cumple"] else "0"
     L = [
         "# Calibración del juez frente a revisión humana",
         "",
-        f"Generado por `uv run just calibrar` · {len(filled)} de {len(rows)} respuestas etiquetadas. "
+        f"Generado por `uv run just calibrar` · rúbrica {LATEST} · {len(filled)} de {len(rows)} "
+        "respuestas etiquetadas. "
         "No editar a mano.",
         "",
         "| Criterio | Acuerdo | Kappa | Humano suspende | Juez suspende | Ambos |",
