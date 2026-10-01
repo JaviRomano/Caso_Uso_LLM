@@ -40,7 +40,7 @@ from caso_uso_llm.classify.datasets import (
     train_set,
 )
 from caso_uso_llm.log import log
-from caso_uso_llm.paths import RESULTS, ROOT, ensure_dirs
+from caso_uso_llm.paths import MODELS, RESULTS, ROOT, ensure_dirs
 from caso_uso_llm.seed import set_seed
 
 # RoBERTa-BNE (PlanTL) se retiró en julio de 2025 y su repo ya no tiene pesos. mRoBERTa es su
@@ -197,7 +197,12 @@ def new_model(dev):
     return model.to(dev)
 
 
-def run(option, seed, df, sets, tokenizer, cfg, dev) -> dict:
+def model_dir(cfg: "Config", option_name: str, seed: int):
+    """Dónde se guardan los pesos de una ejecución (models/ no va a git)."""
+    return MODELS / "mroberta" / cfg.id / f"{option_name}_s{seed}"
+
+
+def run(option, seed, df, sets, tokenizer, cfg, dev, save: bool = False) -> dict:
     set_seed(seed)
     model = new_model(dev)
     stages = {}
@@ -227,6 +232,11 @@ def run(option, seed, df, sets, tokenizer, cfg, dev) -> dict:
         out["metrics"][name] = {"f1_macro": round(M.f1_macro(s["label3"], pred), 4),
                                 "f1_per_class": M.per_class_f1(s["label3"], pred)}  # fmt: skip
         log(f"   {name:<9} F1 macro = {out['metrics'][name]['f1_macro']:.3f}")
+    if save:
+        path = model_dir(cfg, option.name, seed)
+        model.save_pretrained(path)
+        tokenizer.save_pretrained(path)
+        log(f"   Pesos guardados en {path.relative_to(ROOT)}")
     del model
     torch.cuda.empty_cache()
     return out
@@ -340,6 +350,9 @@ def main() -> None:
     ap.add_argument("--seeds", default=",".join(map(str, SEEDS)))
     ap.add_argument("--max-epochs", type=int, default=Config.max_epochs)
     ap.add_argument("--rerun", action="store_true", help="repite ejecuciones ya guardadas")
+    ap.add_argument(
+        "--save", action="store_true", help="guarda los pesos en models/ (~1,1 GB cada uno)"
+    )
     args = ap.parse_args()
 
     cfg = Config(max_epochs=args.max_epochs)
@@ -368,7 +381,7 @@ def main() -> None:
                 log(f"== [{i}/{total}] {option.name} semilla {seed}: ya hecho, se salta")
                 continue
             log(f"== [{i}/{total}] Opción {option.name} ({option.description}) · semilla {seed}")
-            out = run(option, seed, df, sets, tokenizer, cfg, dev)
+            out = run(option, seed, df, sets, tokenizer, cfg, dev, save=args.save)
             out["config"] = asdict(cfg)
             path.write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8", newline="\n")
 
