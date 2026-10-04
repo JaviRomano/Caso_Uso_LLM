@@ -15,6 +15,7 @@ Uso: uv run just juez
 
 import csv
 import json
+import random
 from collections import Counter
 
 from caso_uso_llm.evals.judge import JUDGE_MODEL, LATEST, compare, judge
@@ -133,11 +134,32 @@ def position_bias(p4: dict, cache, a: str, b: str) -> dict:
     return {"a": a, "b": b, "counts": dict(counts), "n": len(p4[b])}
 
 
+CALIBRATION_MAP = (
+    EVALS / "gold" / "calibracion_mapa.json"
+)  # id opaco -> versión:reseña (no abrir al etiquetar)
 CALIBRATION_COLS = ["id", "reseña", "respuesta", *(f"humano_{c}" for c in IDS), "notas"]
 
 
+def calibration_sample(p4: dict) -> list[dict]:
+    """24 respuestas que mezclan versiones del prompt para que HAYA fallos que juzgar.
+
+    Con solo respuestas v2 (la que casi no falla) casi nadie suspende y la kappa no se puede
+    calcular. Mezcla: 8 adversariales de v4 (incluye la piscina que la rúbrica v3 deja pasar),
+    8 reales de v1 (más fallos de culpa y premisa) y 8 reales de v2 sobre otras reseñas. El id
+    lleva la versión ("v1:coah-118"), pero la plantilla se presenta barajada.
+    """
+    real = sorted({r["id"] for r in p4["v1"] if r["kind"] == "real"})
+    picks = [("v4", r["id"]) for r in p4["v4"] if r["kind"] == "adversarial"]
+    picks += [("v1", i) for i in real[:8]] + [("v2", i) for i in real[8:16]]
+    by = {(pv, r["id"]): r for pv in ("v1", "v2", "v4") for r in p4[pv]}
+    sample = [{**by[k], "cal_id": f"{k[0]}:{k[1]}"} for k in picks]
+    random.Random(42).shuffle(sample)  # a ciegas: el orden no delata la versión
+    return sample
+
+
 def export_calibration(p4: dict) -> None:
-    """Plantilla A CIEGAS (sin el veredicto del juez): 24 respuestas v2, 8 adversariales + 16 reales.
+    """Plantilla A CIEGAS: sin el veredicto del juez y con ids opacos (r01…r24) que no delatan la
+    versión del prompt; la correspondencia queda en calibracion_mapa.json.
 
     Nunca borra trabajo hecho: si el fichero ya tiene etiquetas o notas, se conservan. El cruce con
     el juez lo hace `just calibrar`, leyendo results/phase6_juez.json.
@@ -146,16 +168,16 @@ def export_calibration(p4: dict) -> None:
     if CALIBRATION.exists():
         with CALIBRATION.open(encoding="utf-8-sig", newline="") as f:
             previous = {r["id"]: r for r in csv.DictReader(f, delimiter=";")}
-    rows = [r for r in p4["v2"] if r["kind"] == "adversarial"] + [
-        r for r in p4["v2"] if r["kind"] == "real"
-    ][:16]
+    sample = calibration_sample(p4)
+    mapping = {f"r{n:02d}": r["cal_id"] for n, r in enumerate(sample, start=1)}
     with CALIBRATION.open("w", encoding="utf-8-sig", newline="") as f:
         w = csv.writer(f, delimiter=";")
         w.writerow(CALIBRATION_COLS)
-        for r in rows:
-            old = previous.get(r["id"], {})
+        for (opaque, _), r in zip(mapping.items(), sample, strict=True):
+            old = previous.get(opaque, {})
             kept = [old.get(col, "") for col in CALIBRATION_COLS[3:]]
-            w.writerow([r["id"], r["review"], r["response"], *kept])
+            w.writerow([opaque, r["review"], r["response"], *kept])
+    CALIBRATION_MAP.write_text(json.dumps(mapping, indent=1), encoding="utf-8", newline="\n")
 
 
 def main() -> None:
