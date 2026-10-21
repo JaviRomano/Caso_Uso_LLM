@@ -28,3 +28,7 @@ STACK_ESTUDIO.md
 
 # Progreso de cada ejecución (se sobrescribe)
 logs/
+
+# Ajustes del editor y hoja de etiquetado (se regenera con scripts/calibracion_vista.py)
+.vscode/
+evals/gold/calibracion_vista.html

@@ -11,9 +11,9 @@ Es la reconstrucción de un primer intento (en [`legacy/`](legacy/), etiqueta `v
 | 1. Entorno | `uv` + lockfile, rutas absolutas, semillas, tests, GPU AMD con ROCm en WSL2 | Hecho |
 | 2. Datos | Corpus de SINAI en español de España, normalización, deduplicación, split sin fuga | Hecho |
 | 3. Clasificador | Baseline TF-IDF, *fine-tuning* de mRoBERTa, LLM *zero-shot* y evaluación realista | Hecho ([resultados](#resultados-del-clasificador)) |
-| 4. Generación | Respuesta con un LLM local, extracción de aspectos en JSON | Pendiente |
+| 4. Generación | Respuesta con un LLM local, extracción de aspectos en JSON, cuatro versiones del prompt | Hecho, primera iteración ([resultados](#generación-de-respuestas)) |
 | 5. RAG y guardarraíles | Ficha del hotel y políticas; sin compensaciones ni datos inventados; cola de revisión humana | Pendiente |
-| 6. Evaluación | Gold set, juez LLM calibrado y pruebas *anti-sycophancy* | Pendiente |
+| 6. Evaluación | Juez LLM con rúbrica binaria, *canaries*, sesgo de posición y calibración humana | En curso ([resultados](#juez-llm-evaluar-al-evaluador)) |
 
 ## Por qué se rehízo
 
@@ -63,6 +63,37 @@ Lo que enseñó la evaluación ([baseline](reports/phase3_baseline.md), [mRoBERT
 - **Robustez de escritura:** erratas, minúsculas sin tildes o andaluz escrito cambian como mucho el 4,5 % de las predicciones; dejar solo el título, el 17 %.
 - **Elegir entre opciones de entrenamiento es imposible con 269 reseñas de test.** Las diferencias entre usar o no los restaurantes (COAR) quedan dentro del ruido, y en la GPU la misma semilla no da el mismo resultado.
 
+## Generación de respuestas
+
+`qwen3.6:27b` en local (temperatura 0) extrae primero los aspectos de la reseña en JSON, cada uno con una cita literal, y después redacta la respuesta. El conjunto de desarrollo son 40 reseñas reales de COAH (8 por puntuación) y 8 casos adversariales **sintéticos**: premisa falsa, cebo de responsabilidad, petición de reembolso, inyección de instrucciones y dialecto andaluz. Informe: [`reports/phase4_generacion.md`](reports/phase4_generacion.md).
+
+- **El análisis es fiable:** JSON válido en 48/48 casos y 238/238 citas presentes literalmente en la reseña.
+- **Los detectores deterministas no ven los fallos que importan.** Con las cuatro versiones del prompt, ninguna regla marca promesas, culpa expresa, tuteo ni dialecto. Pero leyendo las respuestas aparece la **admisión implícita de culpa**: ante «se resbaló porque el suelo estaba mojado y no había ningún cartel», las versiones v1 y v4 responden dando por cierta la causa («debido a las condiciones del suelo», «la ausencia de señalización en el área mojada»). Ninguna expresión regular lo detecta: hace falta un juez.
+- Los prompts están versionados (v1–v4). v3 y v4 salen de una **especificación única** ([`spec.py`](src/caso_uso_llm/spec.py)) de la que se generan también las reglas del juez, y un test impide que diverjan.
+
+## Juez LLM: evaluar al evaluador
+
+Juez `gemma4:12b` (otra familia que el generador, para evitar la autopreferencia) con una rúbrica de **8 criterios binarios** y una cita literal como evidencia de cada suspenso: aspecto concreto, sin promesas, sin admitir culpa, sin confirmar premisas, sin inventar, sin exagerar, registro (de usted, español estándar) y tono. Informes: [`reports/phase6_juez.md`](reports/phase6_juez.md) y [`reports/phase6_calibracion.md`](reports/phase6_calibracion.md).
+
+| Prueba | Rúbrica v1 | v2 | v3 |
+|---|---|---|---|
+| *Canaries* (respuestas malas a propósito) suspendidos | 19/19 | 19/19 | 19/19 |
+| Controles (respuestas correctas) sin ningún suspenso | 9/11 | 10/11 | 11/11 |
+| Fallos reales del generador detectados (semillas del gold) | 2/5 | 2/5 | 1/5 |
+| Calibración humana · kappa en «sin admitir culpa» | 0,22 | **0,70** | 0,62 |
+| Calibración humana · kappa en «sin promesas» | 0,00 | 0,00 | 0,00 |
+
+Lo que enseñó:
+
+- **Aprobar todos los *canaries* no basta.** El juez suspende 19 de 19 respuestas malas escritas a mano, incluidas las «sutiles», pero solo detecta 1–2 de 5 fallos reales del generador: los *canaries* escritos a mano son más explícitos que los errores de verdad.
+- **Relajar la rúbrica la empeora sin que se note.** La v3 añade fórmulas permitidas: deja limpios todos los controles, pero detecta menos fallos reales.
+- **Sesgo de posición.** Al comparar dos respuestas en los dos órdenes, el juez solo es consistente en el 58–67 % de los pares y elige la primera opción unas dos veces más que la segunda. Por eso cada par se juzga en ambos órdenes y lo inconsistente cuenta como empate.
+- **Calibración frente a una persona:** 24 respuestas de tres versiones del prompt, con identificadores opacos y etiquetadas a ciegas ([guía](evals/gold/guia_calibracion.md)). Con la rúbrica v2, el juez es fiable en «sin admitir culpa» (kappa 0,70), pero **no detecta la promesa encubierta** («esperamos poder resolver esta situación» ante una petición de reembolso). En los otros seis criterios la persona no suspende ninguna respuesta y la kappa no está definida.
+
+> **Límites de la calibración.** 24 respuestas con 4 suspensos humanos no tienen potencia estadística: las kappas son un indicio, no una prueba. Además, las etiquetas humanas se corrigieron después de ver los resultados, a partir de los desacuerdos con un segundo anotador a ciegas (un LLM en un contexto limpio, sin acceso al juez ni a las etiquetas humanas). Las correcciones están anotadas fila a fila, y la primera pasada se conserva en [`calibracion_primera_pasada.csv`](evals/gold/calibracion_primera_pasada.csv).
+
+Conclusión de diseño: el juez sirve como **prueba de regresión** ante cambios de prompt o modelo y para señalar frases sospechosas a quien revisa, no como permiso para publicar sin revisión humana. El siguiente paso es el RAG con fichas de hotel: con la ficha delante, «nos prometieron spa gratis» se puede contrastar con un dato y la *sycophancy* pasa a medirse de forma objetiva.
+
 ## Requisitos
 
 - Python 3.12 y [uv](https://docs.astral.sh/uv/).
@@ -92,6 +123,11 @@ uv run just baseline           # Fase 3: TF-IDF + regresión logística
 uv run just train              # Fase 3: fine-tuning de mRoBERTa (WSL2 + ROCm; --save guarda pesos)
 uv run just realista           # Fase 3: estrés, SFU, AHR y cobertura frente a error (WSL2)
 uv run just zeroshot           # Fase 3: LLM zero-shot y prueba de presión (Ollama)
+uv run just generar            # Fase 4: aspectos y respuestas (--prompt v1|v2|v3|v4)
+uv run just juez               # Fase 6: canaries, controles, gold y comparación por pares
+uv run just calibrar           # Fase 6: kappa del juez frente a las etiquetas humanas
+uv run python scripts/acuerdo_anotadores.py  # acuerdo con el segundo anotador
+uv run python scripts/calibracion_vista.py   # hoja HTML para etiquetar a ciegas
 uv run just                    # lista todas las recetas
 ```
 
@@ -103,8 +139,13 @@ Los scripts muestran su progreso en consola y lo escriben también en `logs/<scr
 src/caso_uso_llm/
   data/        descarga, lectura, normalización (reglas R1–R17), deduplicación y split
   classify/    baseline, fine-tuning, evaluación realista, zero-shot y métricas con IC
+  generate/    prompts versionados, esquema JSON de aspectos y comprobaciones deterministas
+  evals/       juez, rúbricas versionadas y calibración
+  spec.py      especificación única de la que salen el prompt y la rúbrica
   paths.py     rutas absolutas · seed.py semillas · log.py progreso
-tests/         normalización, deduplicación, split e invariantes de los datos generados
+evals/         casos adversariales, canaries, gold y etiquetas de calibración
+scripts/       utilidades (hoja de etiquetado, acuerdo entre anotadores, GPU)
+tests/         normalización, deduplicación, split, invariantes de los datos y coherencia prompt-rúbrica
 reports/       informes generados por los scripts (no se editan a mano)
 results/       resultados en JSON (incluidas las predicciones, para regenerar informes)
 data/raw/      datos crudos inmutables, verificados por hash
