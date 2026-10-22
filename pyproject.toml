@@ -25,6 +25,11 @@ dev = [
     "ruff>=0.6",
     "rust-just>=1.36",
 ]
+# Solo en Windows: torch para CPU, para clasificar con mRoBERTa en el pipeline (Fase 5).
+serve = [
+    "torch>=2.13 ; sys_platform == 'win32'",
+    "transformers>=5.0 ; sys_platform == 'win32'",
+]
 # Solo en WSL2 (Linux): PyTorch compilado para ROCm. En Windows se ignora.
 train = [
     "accelerate>=1.10 ; sys_platform == 'linux'",
@@ -35,9 +40,9 @@ train = [
 ]
 
 [tool.uv]
-# "train" va incluido: si no, `uv run` desinstala torch en WSL2. En Windows sus paquetes
-# están marcados solo para Linux, así que no se instala nada.
-default-groups = ["dev", "train"]
+# "train" y "serve" van incluidos: si no, `uv run` desinstala torch. Cada uno marca sus
+# paquetes para una sola plataforma (train: Linux con ROCm; serve: Windows con CPU).
+default-groups = ["dev", "train", "serve"]
 # Windows (datos, inferencia con Ollama, evals) y Linux (WSL2, entrenamiento con ROCm).
 environments = ["sys_platform == 'win32'", "sys_platform == 'linux'"]
 

@@ -77,3 +77,7 @@ gpu-ollama *ARGS:
 # Fase 5: juez con ficha (rúbrica v2f) sobre v4, v5 y v6, con puerta de canaries y pares
 rag-juez:
     python -m caso_uso_llm.rag.judge_rag
+
+# Fase 5: pipeline completo (clasificador CPU + RAG + generador + guardarraíles + juez) y cola de revisión
+pipeline *ARGS:
+    python -m caso_uso_llm.pipeline {{ARGS}}
