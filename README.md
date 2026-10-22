@@ -12,7 +12,7 @@ Es la reconstrucción de un primer intento (en [`legacy/`](legacy/), etiqueta `v
 | 2. Datos | Corpus de SINAI en español de España, normalización, deduplicación, split sin fuga | Hecho |
 | 3. Clasificador | Baseline TF-IDF, *fine-tuning* de mRoBERTa, LLM *zero-shot* y evaluación realista | Hecho ([resultados](#resultados-del-clasificador)) |
 | 4. Generación | Respuesta con un LLM local, extracción de aspectos en JSON, cuatro versiones del prompt | Hecho, primera iteración ([resultados](#generación-de-respuestas)) |
-| 5. RAG y guardarraíles | Ficha del hotel y políticas; sin compensaciones ni datos inventados; cola de revisión humana | Pendiente |
+| 5. RAG y guardarraíles | Ficha del hotel, políticas y respuestas aprobadas recuperadas; juez con ficha; comprobaciones contra la ficha | Hecho, primera iteración ([resultados](#rag-ficha-políticas-y-respuestas-aprobadas)); cola de revisión humana pendiente |
 | 6. Evaluación | Juez LLM con rúbrica binaria, *canaries*, sesgo de posición y calibración humana | En curso ([resultados](#juez-llm-evaluar-al-evaluador)) |
 
 ## Por qué se rehízo
@@ -92,12 +92,48 @@ Lo que enseñó:
 
 > **Límites de la calibración.** 24 respuestas con 4 suspensos humanos no tienen potencia estadística: las kappas son un indicio, no una prueba. Además, las etiquetas humanas se corrigieron después de ver los resultados, a partir de los desacuerdos con un segundo anotador a ciegas (un LLM en un contexto limpio, sin acceso al juez ni a las etiquetas humanas). Las correcciones están anotadas fila a fila, y la primera pasada se conserva en [`calibracion_primera_pasada.csv`](evals/gold/calibracion_primera_pasada.csv).
 
-Conclusión de diseño: el juez sirve como **prueba de regresión** ante cambios de prompt o modelo y para señalar frases sospechosas a quien revisa, no como permiso para publicar sin revisión humana. El siguiente paso es el RAG con fichas de hotel: con la ficha delante, «nos prometieron spa gratis» se puede contrastar con un dato y la *sycophancy* pasa a medirse de forma objetiva.
+Conclusión de diseño: el juez sirve como **prueba de regresión** ante cambios de prompt o modelo y para señalar frases sospechosas a quien revisa, no como permiso para publicar sin revisión humana. Sin ficha del hotel, además, «nos prometieron spa gratis» no se puede contrastar con nada: eso lo resuelve el RAG.
+
+## RAG: ficha, políticas y respuestas aprobadas
+
+La reseña llega con su hotel, así que **la ficha no se busca**: entra completa en el prompt. Lo que se recupera por búsqueda son las **políticas** que aplican a la reseña (compensaciones, incidentes, reclamaciones…) y **respuestas aprobadas** a reseñas parecidas, como ejemplos. La base de conocimiento es **sintética** ([`kb/`](kb/)): 8 fichas de hoteles ficticios, 18 políticas y 16 respuestas aprobadas, revisadas a mano. Informes: [recuperación](reports/phase5_rag.md), [generación](reports/phase5_generacion.md) y [juez](reports/phase5_juez.md).
+
+**Recuperación** (30 consultas etiquetadas; recall@3 con IC 95 %). BM25 y `bge-m3` vía Ollama, en memoria y fusionados con RRF; con unas decenas de documentos, una base vectorial no aporta nada.
+
+| Índice | BM25 | Densa (bge-m3) | Híbrida (RRF) |
+|---|---|---|---|
+| Políticas (17) | 0,66 (0,49–0,80) | 0,74 (0,60–0,87) | **0,80** (0,68–0,92) |
+| Respuestas aprobadas (16) | 0,64 (0,46–0,80) | **0,91** (0,82–0,98) | 0,82 (0,68–0,93) |
+
+**Generación con contexto.** Los prompts con RAG (v5, v6) son el prompt v4 más un bloque sobre cómo usar el contexto, y un test garantiza que no hay otra diferencia: así se mide el efecto del RAG y no el de otro prompt. Además de los casos adversariales de la Fase 4, hay 6 casos **en los que la ficha contradice o matiza al cliente** (lo que de verdad pone a prueba la *sycophancy*: dice que no había carteles y la ficha dice que sí; le prometieron un aparcamiento que no existe).
+
+Juez con ficha (rúbrica `v2g`), 54 respuestas por versión:
+
+| | v4 (sin contexto) | v5 (RAG) | v6 (RAG corregido) |
+|---|---|---|---|
+| Suspensos en «no admite culpa» | 6 | 2 | **0** |
+| Suspensos en «no confirma ni niega» | 3 | **0** | 1 |
+| Ficha contra cliente: cumplen todos los criterios | 3/6 | **6/6** | 5/6 |
+| Reseñas reales: cumplen todos los criterios | 38/40 | 38/40 | **40/40** |
+
+Por pares, en los dos órdenes: v6 gana a v4 22 a 6 (26 empates) y v5 gana a v6 14 a 6 (34 empates).
+
+Lo que enseñó:
+
+- **El contexto elimina la culpa implícita.** Sin ficha, el modelo da por ciertas las causas («la ausencia de señalización», «la falta de respuesta ante sus avisos»); con políticas explícitas sobre incidentes, deja de hacerlo. Y no usa la ficha para llevar la contraria al cliente: ante «no había carteles», no responde «sí los había».
+- **Cada parche del prompt tiene efectos secundarios.** v6 corrigió lo que se le pidió (nombrar «nuestra ficha», dar un precio) y, sin que nadie lo pidiera, empezó a dar por cierta «la falta de información visible» en otro caso. Con temperatura 0 no es azar: es el prompt. Por eso cada cambio pasa por el juez.
+- **El juez también hay que probarlo con ficha.** La primera rúbrica con ficha (v2f) suspendía la fórmula correcta «lamentamos la confusión que nos describe» y no superó su puerta (9/10). Al corregirla (v2g) se añadió antes un *canary* **real**, una respuesta del propio generador que confirma la premisa de forma sutil, para que la corrección no relajara al juez: supera los 12/12.
+- **Lo que el juez sigue sin ver:** la promesa encubierta («esperamos poder resolver esta situación» ante una petición de reembolso).
+
+> **Límites.** La base de conocimiento, los casos adversariales, las etiquetas de relevancia y los *canaries* son sintéticos y escritos para el proyecto; los casos de ficha contra cliente son 6. La rúbrica v2g se corrigió después de ver un resultado (mitigado con un *canary* real añadido antes de repetir). Ninguna cifra de esta sección se ha medido con reseñas y respuestas reales de un hotel.
+
+**Incidente: el modelo corría en la CPU sin avisar.** Una actualización automática de Ollama borró el paquete de soporte AMD (ROCm), que en Windows se instala aparte, y Ollama pasó a la CPU sin ningún error: cada respuesta del modelo de 27B tardaba unos 130 s en vez de 3,5 s. Desde entonces, los scripts que usan el LLM comprueban al arrancar que el modelo está entero en la GPU y fallan si no ([`ollama_gpu.py`](src/caso_uso_llm/ollama_gpu.py)).
 
 ## Requisitos
 
 - Python 3.12 y [uv](https://docs.astral.sh/uv/).
-- Para el LLM: [Ollama](https://ollama.com) con `qwen3.6:27b-q4_K_M` (generador y referencia *zero-shot*) y `gemma4:12b-it-qat` (juez de las evaluaciones).
+- Para el LLM: [Ollama](https://ollama.com) con `qwen3.6:27b-q4_K_M` (generador y referencia *zero-shot*), `gemma4:12b-it-qat` (juez de las evaluaciones) y `bge-m3` (embeddings del RAG).
+- **Ollama con GPU AMD en Windows:** el instalador solo trae CPU y NVIDIA. El soporte AMD es `ollama-windows-amd64-rocm.zip` **de la misma versión**, extraído en la carpeta de Ollama; cada actualización lo deja desfasado o lo borra, así que conviene desactivar la actualización automática. Comprobación: `uv run just gpu-ollama`.
 - Para entrenar: GPU con PyTorch. El proyecto usa una **AMD RX 7900 XTX con ROCm 7.2 en WSL2**; el grupo `train` instala torch para ROCm solo en Linux. Datos, baseline y tests funcionan en Windows sin GPU.
 
 <details>
@@ -126,6 +162,10 @@ uv run just zeroshot           # Fase 3: LLM zero-shot y prueba de presión (Oll
 uv run just generar            # Fase 4: aspectos y respuestas (--prompt v1|v2|v3|v4)
 uv run just juez               # Fase 6: canaries, controles, gold y comparación por pares
 uv run just calibrar           # Fase 6: kappa del juez frente a las etiquetas humanas
+uv run just rag                # Fase 5: recuperación (BM25, bge-m3, híbrida) con recall@k y MRR
+uv run just rag-generar        # Fase 5: respuestas con contexto (--prompt v5|v6) frente a v4
+uv run just rag-juez           # Fase 5: juez con ficha, puerta de canaries y pares
+uv run just gpu-ollama         # comprueba que Ollama tiene el modelo entero en la GPU
 uv run python scripts/acuerdo_anotadores.py  # acuerdo con el segundo anotador
 uv run python scripts/calibracion_vista.py   # hoja HTML para etiquetar a ciegas
 uv run just                    # lista todas las recetas
@@ -140,10 +180,13 @@ src/caso_uso_llm/
   data/        descarga, lectura, normalización (reglas R1–R17), deduplicación y split
   classify/    baseline, fine-tuning, evaluación realista, zero-shot y métricas con IC
   generate/    prompts versionados, esquema JSON de aspectos y comprobaciones deterministas
-  evals/       juez, rúbricas versionadas y calibración
+  evals/       juez, rúbricas versionadas (con y sin ficha) y calibración
+  rag/         base de conocimiento, recuperación híbrida, generación con contexto y su juez
   spec.py      especificación única de la que salen el prompt y la rúbrica
+  ollama_gpu.py  falla si Ollama no tiene el modelo entero en la GPU
   paths.py     rutas absolutas · seed.py semillas · log.py progreso
-evals/         casos adversariales, canaries, gold y etiquetas de calibración
+kb/            base de conocimiento sintética: fichas de hotel, políticas y respuestas aprobadas
+evals/         casos adversariales, canaries, gold, consultas de recuperación y etiquetas de calibración
 scripts/       utilidades (hoja de etiquetado, acuerdo entre anotadores, GPU)
 tests/         normalización, deduplicación, split, invariantes de los datos y coherencia prompt-rúbrica
 reports/       informes generados por los scripts (no se editan a mano)
