@@ -27,6 +27,7 @@ dev = [
 ]
 # Solo en Windows: torch para CPU, para clasificar con mRoBERTa en el pipeline (Fase 5).
 serve = [
+    "gradio>=5 ; sys_platform == 'win32'",
     "torch>=2.13 ; sys_platform == 'win32'",
     "transformers>=5.0 ; sys_platform == 'win32'",
 ]

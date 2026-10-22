@@ -6,8 +6,10 @@ reseña + hotel → [1] normalización y PII → [2] sentimiento y confianza (mR
 → [7] «publicable» o «revisión humana», con los motivos.
 
 Va a revisión humana si se cumple CUALQUIERA de estas condiciones:
-- la reseña es negativa, o la confianza del clasificador es menor que el umbral elegido en
-  validación (0,85; results/phase3b_realista.json);
+- la reseña es negativa o neutral (REVIEW_LABELS), o la confianza del clasificador es menor que
+  el umbral elegido en validación (0,85; results/phase3b_realista.json). Las neutrales van siempre
+  a revisión desde la primera demostración: las tres que se publicaban rozaban el umbral (0,851)
+  y el neutral es la clase más débil del clasificador (F1 0,549 en AHR, Fase 3);
 - el cliente pide algo (reembolso, compensación, respuesta…): solo una persona puede decidir;
 - el análisis no es un JSON válido;
 - salta alguna comprobación determinista (promesa, culpa expresa, tuteo, plazo, importe, dato
@@ -58,6 +60,7 @@ THRESHOLD = json.loads((RESULTS / "phase3b_realista.json").read_text(encoding="u
 QUEUE = RESULTS / "pipeline_cola.json"
 REPORT = ROOT / "reports" / "phase5_pipeline.md"
 AHR_PER_RATING = 8
+REVIEW_LABELS = ("negativo", "neutral")  # sentimientos que nunca se publican sin revisión
 
 # Comprobaciones deterministas que mandan la respuesta a revisión (nombre legible -> función).
 ALERTS = {
@@ -79,14 +82,18 @@ def ficha(hotel: str | None) -> str:
     return kb.ficha_texto(hotel) if hotel else "No disponible."
 
 
-def run(items: list[dict]) -> list[dict]:
-    """items: dicts con id, text y opcionalmente title, hotel y meta (se copia tal cual)."""
+def run(items: list[dict], classifier: SentimentEnsemble | None = None) -> list[dict]:
+    """items: dicts con id, text y opcionalmente title, hotel y meta (se copia tal cual).
+
+    `classifier`: ensamble ya cargado (la app lo carga una vez; tarda ~25 s).
+    """
     log(f"{len(items)} reseñas · umbral de confianza {THRESHOLD} · prompt {PROMPT} · juez {RUBRIC}")
     out = [{**it, "hotel": it.get("hotel") or None, "reasons": []} for it in items]
 
     log("[2] Sentimiento (mRoBERTa, 3 semillas, CPU)")
     texts = [prepare(it["text"], it.get("title", "")) for it in out]
-    for it, text, p in zip(out, texts, SentimentEnsemble().predict(texts), strict=True):
+    classifier = classifier or SentimentEnsemble()
+    for it, text, p in zip(out, texts, classifier.predict(texts), strict=True):
         it.update(review=text, sentiment=p.label, confidence=p.confidence, probs=p.probs)
 
     log("[4] Recuperación (políticas híbrida, ejemplos densa)")
@@ -132,8 +139,8 @@ def route(it: dict) -> list[str]:
     if it["response"] is None:
         return []
     r = []
-    if it["sentiment"] == "negativo":
-        r.append("reseña negativa")
+    if it["sentiment"] in REVIEW_LABELS:
+        r.append({"negativo": "reseña negativa", "neutral": "reseña neutral"}[it["sentiment"]])
     if it["confidence"] < THRESHOLD:
         r.append(f"confianza {it['confidence']:.2f} < {THRESHOLD}")
     if it["analysis"]["peticiones"]:

@@ -81,3 +81,7 @@ rag-juez:
 # Fase 5: pipeline completo (clasificador CPU + RAG + generador + guardarraíles + juez) y cola de revisión
 pipeline *ARGS:
     python -m caso_uso_llm.pipeline {{ARGS}}
+
+# Demo en Gradio: responder una reseña y revisar la cola humana (http://127.0.0.1:7860)
+app:
+    python -m caso_uso_llm.app

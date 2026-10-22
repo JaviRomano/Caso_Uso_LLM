@@ -30,6 +30,10 @@ def test_negativa_va_siempre_a_revision_aunque_todo_lo_demas_este_bien():
     assert route(item(sentiment="negativo")) == ["reseña negativa"]
 
 
+def test_neutral_va_siempre_a_revision():
+    assert route(item(sentiment="neutral")) == ["reseña neutral"]
+
+
 def test_confianza_bajo_el_umbral_va_a_revision():
     reasons = route(item(confidence=THRESHOLD - 0.01))
     assert len(reasons) == 1 and reason_kind(reasons[0]) == f"confianza < {THRESHOLD}"
