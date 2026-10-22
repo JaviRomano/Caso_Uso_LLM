@@ -14,8 +14,9 @@ It is a rebuild of a first attempt (in [`legacy/`](legacy/), tag `v1-original`) 
 | 2. Data | SINAI corpora in Spanish from Spain, normalisation, deduplication, leak-free split | Done |
 | 3. Classifier | TF-IDF baseline, mRoBERTa fine-tuning, zero-shot LLM and realistic evaluation | Done ([results](#classifier-results)) |
 | 4. Generation | Reply with a local LLM, aspect extraction as JSON, four prompt versions | Done, first iteration ([results](#reply-generation)) |
-| 5. RAG and guardrails | Hotel fact sheet, retrieved policies and approved replies; judge with the fact sheet; checks against the fact sheet | Done, first iteration ([results](#rag-hotel-fact-sheet-policies-and-approved-replies)); human review queue pending |
+| 5. RAG and guardrails | Hotel fact sheet, retrieved policies and approved replies; judge with the fact sheet; checks against the fact sheet; human review queue | Done, first iteration ([RAG](#rag-hotel-fact-sheet-policies-and-approved-replies), [pipeline](#full-pipeline-and-demo)) |
 | 6. Evaluation | LLM judge with a binary rubric, canaries, position bias and human calibration | In progress ([results](#llm-judge-evaluating-the-evaluator)) |
+| 8. Service | End-to-end pipeline (CLI and CSV batch) and Gradio demo with a review queue | Done ([demo](#full-pipeline-and-demo)) |
 
 ## Why it was rebuilt
 
@@ -118,6 +119,11 @@ Judge with the fact sheet (rubric `v2g`), 54 replies per version:
 | Fact sheet vs. guest: pass every criterion | 3/6 | **6/6** | 5/6 |
 | Real reviews: pass every criterion | 38/40 | 38/40 | **40/40** |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/rag_en_dark.png">
+  <img alt="Bar chart: LLM-judge fails per prompt version. Admits blame or a cause: v4 6, v5 2, v6 0. Confirms or denies what it cannot verify: v4 3, v5 0, v6 1." src="docs/img/rag_en_light.png" width="720">
+</picture>
+
 Pairwise, in both orders: v6 beats v4 22 to 6 (26 ties) and v5 beats v6 14 to 6 (34 ties).
 
 What it taught:
@@ -131,12 +137,33 @@ What it taught:
 
 **Incident: the model was running on the CPU without warning.** An automatic Ollama update removed the AMD support package (ROCm), which on Windows is installed separately, and Ollama fell back to the CPU with no error: each reply from the 27B model took about 130 s instead of 3.5 s. Since then, the scripts that use the LLM check at start-up that the model is fully on the GPU and fail otherwise ([`ollama_gpu.py`](src/caso_uso_llm/ollama_gpu.py)).
 
+## Full pipeline and demo
+
+[`pipeline.py`](src/caso_uso_llm/pipeline.py) chains every step: normalisation and PII masking → sentiment with the production classifier (3-seed mRoBERTa ensemble, on CPU) → aspects → RAG → reply (prompt v6) → deterministic checks and the judge with the fact sheet → **publish or send to a person**, with the reasons. A reply goes to human review if **any** of these holds: the review is negative or neutral, the classifier's confidence is below 0.85 (threshold chosen on validation), the guest asks for something (a refund, compensation…), a deterministic check fires, or the judge fails a criterion. Report: [`reports/phase5_pipeline.md`](reports/phase5_pipeline.md).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/pipeline_en_dark.png">
+  <img alt="Stacked bar chart: published vs. human review. Synthetic 1 vs 13; AHR 1, 2 and 3 stars 0 vs 8; AHR 4 stars 5 vs 3; AHR 5 stars 7 vs 1." src="docs/img/pipeline_en_light.png" width="720">
+</picture>
+
+- **Demonstration on 54 reviews** (14 synthetic cases + 40 real AHR reviews never used for training or prompt development): 13 published, all positive, and 41 sent to review. The classifier gets 37/40 of the AHR reviews right.
+- **Neutral reviews always go to a person.** In the first run the three neutral reviews that would have been published sat right on the threshold (confidence 0.851), and neutral is the classifier's weakest class.
+- **Reading the published replies:** none admits blame, promises anything or confirms a premise. Two or three have details a person would fix and the judge does not see: repeating the guest's regional word ("jugo" instead of "zumo"), justifying a price rise, a slightly promotional sentence.
+- **Cost:** about 80 s per new review locally, because the 27B generator and the 12B judge do not fit in VRAM together and Ollama swaps them. In batch mode the pipeline runs in stages (classify all, retrieve all, generate all, judge all) to avoid that.
+
+The Gradio demo (`uv run just app`) shows each step for one review and has a review queue where a person approves, edits or discards each draft; every decision is stored for later analysis. The hotels and their fact sheets are fictitious.
+
+<img alt="Demo: a review about slipping by the pool at a fictitious hotel goes to human review; the draft neither admits the cause nor denies the guest, and the judge passes all 8 criteria." src="docs/img/demo_respuesta.png" width="820">
+
+<img alt="Demo: review queue with the reason for each review and the editable draft, with Approve and Discard buttons." src="docs/img/demo_cola.png" width="820">
+
 ## Requirements
 
 - Python 3.12 and [uv](https://docs.astral.sh/uv/).
 - For the LLM: [Ollama](https://ollama.com) with `qwen3.6:27b-q4_K_M` (generator and zero-shot baseline), `gemma4:12b-it-qat` (evaluation judge) and `bge-m3` (RAG embeddings).
 - **Ollama with an AMD GPU on Windows:** the installer only ships CPU and NVIDIA support. AMD support is `ollama-windows-amd64-rocm.zip` **of the same version**, extracted into the Ollama folder; every update leaves it outdated or removes it, so it is worth disabling automatic updates. Check: `uv run just gpu-ollama`.
 - For training: a GPU with PyTorch. The project uses an **AMD RX 7900 XTX with ROCm 7.2 on WSL2**; the `train` group installs ROCm torch on Linux only. Data, baseline and tests run on Windows without a GPU.
+- For the pipeline and the demo (Windows): the `serve` group installs CPU torch, transformers and Gradio. The classifier weights are not in the repository: train them with `uv run just train --options A --save` and copy `models/mroberta/` next to the code.
 
 <details>
 <summary>ROCm on WSL2 (what it took for torch to see the GPU)</summary>
@@ -168,8 +195,11 @@ uv run just rag                # Phase 5: retrieval (BM25, bge-m3, hybrid) with 
 uv run just rag-generar        # Phase 5: replies with context (--prompt v5|v6) vs. v4
 uv run just rag-juez           # Phase 5: judge with fact sheet, canary gate and pairs
 uv run just gpu-ollama         # checks that Ollama has the whole model on the GPU
+uv run just pipeline           # full pipeline on the demo set (--csv file.csv for your own reviews)
+uv run just app                # Gradio demo with review queue (http://127.0.0.1:7860)
 uv run python scripts/acuerdo_anotadores.py  # agreement with the second annotator
 uv run python scripts/calibracion_vista.py   # HTML sheet for blind labelling
+uv run python scripts/figuras.py             # README charts from the versioned results
 uv run just                    # lists every recipe
 ```
 
@@ -184,13 +214,15 @@ src/caso_uso_llm/
   generate/    versioned prompts, JSON aspect schema and deterministic checks
   evals/       judge, versioned rubrics (with and without fact sheet) and calibration
   rag/         knowledge base, hybrid retrieval, generation with context and its judge
+  pipeline.py  end-to-end pipeline and routing to the review queue · app.py Gradio demo
   spec.py      single specification that produces the prompt and the rubric
   ollama_gpu.py  fails if Ollama does not have the whole model on the GPU
   paths.py     absolute paths · seed.py seeds · log.py progress
 kb/            synthetic knowledge base: hotel fact sheets, policies and approved replies
 evals/         adversarial cases, canaries, gold, retrieval queries and calibration labels
-scripts/       utilities (labelling sheet, inter-annotator agreement, GPU)
-tests/         normalisation, deduplication, split, data invariants and prompt-rubric consistency
+scripts/       utilities (labelling sheet, inter-annotator agreement, GPU, charts, screenshots)
+docs/img/      README charts and demo screenshots
+tests/         normalisation, deduplication, split, data invariants, prompt-rubric consistency and routing
 reports/       reports generated by the scripts (not edited by hand)
 results/       results as JSON (including predictions, to regenerate reports)
 data/raw/      immutable raw data, verified by hash
@@ -225,8 +257,9 @@ Es la reconstrucción de un primer intento (en [`legacy/`](legacy/), etiqueta `v
 | 2. Datos | Corpus de SINAI en español de España, normalización, deduplicación, split sin fuga | Hecho |
 | 3. Clasificador | Baseline TF-IDF, *fine-tuning* de mRoBERTa, LLM *zero-shot* y evaluación realista | Hecho ([resultados](#resultados-del-clasificador)) |
 | 4. Generación | Respuesta con un LLM local, extracción de aspectos en JSON, cuatro versiones del prompt | Hecho, primera iteración ([resultados](#generación-de-respuestas)) |
-| 5. RAG y guardarraíles | Ficha del hotel, políticas y respuestas aprobadas recuperadas; juez con ficha; comprobaciones contra la ficha | Hecho, primera iteración ([resultados](#rag-ficha-políticas-y-respuestas-aprobadas)); cola de revisión humana pendiente |
+| 5. RAG y guardarraíles | Ficha del hotel, políticas y respuestas aprobadas recuperadas; juez con ficha; comprobaciones contra la ficha; cola de revisión humana | Hecho, primera iteración ([RAG](#rag-ficha-políticas-y-respuestas-aprobadas), [pipeline](#pipeline-completo-y-demo)) |
 | 6. Evaluación | Juez LLM con rúbrica binaria, *canaries*, sesgo de posición y calibración humana | En curso ([resultados](#juez-llm-evaluar-al-evaluador)) |
+| 8. Servicio | Pipeline completo (línea de comandos y lotes con CSV) y demo en Gradio con cola de revisión | Hecho ([demo](#pipeline-completo-y-demo)) |
 
 ## Por qué se rehízo
 
@@ -329,6 +362,11 @@ Juez con ficha (rúbrica `v2g`), 54 respuestas por versión:
 | Ficha contra cliente: cumplen todos los criterios | 3/6 | **6/6** | 5/6 |
 | Reseñas reales: cumplen todos los criterios | 38/40 | 38/40 | **40/40** |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/rag_es_dark.png">
+  <img alt="Gráfica de barras: suspensos del juez por versión del prompt. Admite culpa o una causa: v4 6, v5 2, v6 0. Confirma o niega lo que no puede comprobar: v4 3, v5 0, v6 1." src="docs/img/rag_es_light.png" width="720">
+</picture>
+
 Por pares, en los dos órdenes: v6 gana a v4 22 a 6 (26 empates) y v5 gana a v6 14 a 6 (34 empates).
 
 Lo que enseñó:
@@ -342,12 +380,33 @@ Lo que enseñó:
 
 **Incidente: el modelo corría en la CPU sin avisar.** Una actualización automática de Ollama borró el paquete de soporte AMD (ROCm), que en Windows se instala aparte, y Ollama pasó a la CPU sin ningún error: cada respuesta del modelo de 27B tardaba unos 130 s en vez de 3,5 s. Desde entonces, los scripts que usan el LLM comprueban al arrancar que el modelo está entero en la GPU y fallan si no ([`ollama_gpu.py`](src/caso_uso_llm/ollama_gpu.py)).
 
+## Pipeline completo y demo
+
+[`pipeline.py`](src/caso_uso_llm/pipeline.py) encadena todos los pasos: normalización y enmascarado de datos personales → sentimiento con el clasificador de producción (ensamble de 3 semillas de mRoBERTa, en CPU) → aspectos → RAG → respuesta (prompt v6) → comprobaciones deterministas y juez con ficha → **publicar o pasar a una persona**, con los motivos. Una respuesta va a revisión humana si se cumple **cualquiera** de estas condiciones: la reseña es negativa o neutral, la confianza del clasificador es menor que 0,85 (umbral elegido en validación), el cliente pide algo (un reembolso, una compensación…), salta una comprobación determinista o el juez suspende algún criterio. Informe: [`reports/phase5_pipeline.md`](reports/phase5_pipeline.md).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/pipeline_es_dark.png">
+  <img alt="Gráfica de barras apiladas: publicables frente a revisión humana. Sintéticos 1 frente a 13; AHR 1, 2 y 3 estrellas 0 frente a 8; AHR 4 estrellas 5 frente a 3; AHR 5 estrellas 7 frente a 1." src="docs/img/pipeline_es_light.png" width="720">
+</picture>
+
+- **Demostración con 54 reseñas** (14 casos sintéticos y 40 reseñas reales del AHR, que no se usaron para entrenar ni para desarrollar los prompts): 13 publicables, todas positivas, y 41 a revisión. El clasificador acierta 37 de las 40 del AHR.
+- **Las neutrales van siempre a una persona.** En la primera ejecución, las tres neutrales que se habrían publicado rozaban el umbral (confianza 0,851), y el neutral es la clase más débil del clasificador.
+- **Leyendo las respuestas publicables:** ninguna admite culpa, promete nada ni confirma una premisa. Dos o tres tienen detalles que una persona corregiría y el juez no ve: repetir la palabra regional del cliente («jugo» en lugar de «zumo»), justificar una subida de precios o una frase con tono comercial.
+- **Coste:** unos 80 s por reseña nueva en local, porque el generador de 27B y el juez de 12B no caben juntos en la VRAM y Ollama los alterna. Por lotes, el pipeline va por etapas (clasificar todo, recuperar todo, generar todo, juzgar todo) para evitarlo.
+
+La demo en Gradio (`uv run just app`) muestra cada paso para una reseña y tiene una cola de revisión donde una persona aprueba, edita o descarta cada borrador; cada decisión se guarda para analizarla después. Los hoteles y sus fichas son ficticios.
+
+<img alt="Demo: una reseña sobre un resbalón junto a la piscina de un hotel ficticio va a revisión humana; el borrador no admite la causa ni niega al cliente, y el juez aprueba los 8 criterios." src="docs/img/demo_respuesta.png" width="820">
+
+<img alt="Demo: cola de revisión con los motivos de cada reseña y el borrador editable, con los botones Aprobar y Descartar." src="docs/img/demo_cola.png" width="820">
+
 ## Requisitos
 
 - Python 3.12 y [uv](https://docs.astral.sh/uv/).
 - Para el LLM: [Ollama](https://ollama.com) con `qwen3.6:27b-q4_K_M` (generador y referencia *zero-shot*), `gemma4:12b-it-qat` (juez de las evaluaciones) y `bge-m3` (embeddings del RAG).
 - **Ollama con GPU AMD en Windows:** el instalador solo trae CPU y NVIDIA. El soporte AMD es `ollama-windows-amd64-rocm.zip` **de la misma versión**, extraído en la carpeta de Ollama; cada actualización lo deja desfasado o lo borra, así que conviene desactivar la actualización automática. Comprobación: `uv run just gpu-ollama`.
 - Para entrenar: GPU con PyTorch. El proyecto usa una **AMD RX 7900 XTX con ROCm 7.2 en WSL2**; el grupo `train` instala torch para ROCm solo en Linux. Datos, baseline y tests funcionan en Windows sin GPU.
+- Para el pipeline y la demo (Windows): el grupo `serve` instala torch para CPU, transformers y Gradio. Los pesos del clasificador no están en el repositorio: se entrenan con `uv run just train --options A --save` y se copia `models/mroberta/` junto al código.
 
 <details>
 <summary>ROCm en WSL2 (lo que hizo falta para que torch viera la GPU)</summary>
@@ -379,8 +438,11 @@ uv run just rag                # Fase 5: recuperación (BM25, bge-m3, híbrida) 
 uv run just rag-generar        # Fase 5: respuestas con contexto (--prompt v5|v6) frente a v4
 uv run just rag-juez           # Fase 5: juez con ficha, puerta de canaries y pares
 uv run just gpu-ollama         # comprueba que Ollama tiene el modelo entero en la GPU
+uv run just pipeline           # pipeline completo con el conjunto de demostración (--csv fichero.csv para tus reseñas)
+uv run just app                # demo en Gradio con cola de revisión (http://127.0.0.1:7860)
 uv run python scripts/acuerdo_anotadores.py  # acuerdo con el segundo anotador
 uv run python scripts/calibracion_vista.py   # hoja HTML para etiquetar a ciegas
+uv run python scripts/figuras.py             # gráficas del README a partir de los resultados versionados
 uv run just                    # lista todas las recetas
 ```
 
@@ -395,13 +457,15 @@ src/caso_uso_llm/
   generate/    prompts versionados, esquema JSON de aspectos y comprobaciones deterministas
   evals/       juez, rúbricas versionadas (con y sin ficha) y calibración
   rag/         base de conocimiento, recuperación híbrida, generación con contexto y su juez
+  pipeline.py  pipeline completo y enrutado a la cola de revisión · app.py demo en Gradio
   spec.py      especificación única de la que salen el prompt y la rúbrica
   ollama_gpu.py  falla si Ollama no tiene el modelo entero en la GPU
   paths.py     rutas absolutas · seed.py semillas · log.py progreso
 kb/            base de conocimiento sintética: fichas de hotel, políticas y respuestas aprobadas
 evals/         casos adversariales, canaries, gold, consultas de recuperación y etiquetas de calibración
-scripts/       utilidades (hoja de etiquetado, acuerdo entre anotadores, GPU)
-tests/         normalización, deduplicación, split, invariantes de los datos y coherencia prompt-rúbrica
+scripts/       utilidades (hoja de etiquetado, acuerdo entre anotadores, GPU, gráficas, capturas)
+docs/img/      gráficas del README y capturas de la demo
+tests/         normalización, deduplicación, split, invariantes de los datos, coherencia prompt-rúbrica y enrutado
 reports/       informes generados por los scripts (no se editan a mano)
 results/       resultados en JSON (incluidas las predicciones, para regenerar informes)
 data/raw/      datos crudos inmutables, verificados por hash
