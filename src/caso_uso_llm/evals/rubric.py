@@ -165,3 +165,37 @@ def rubric_markdown(version: str = "v2") -> str:
             f"| **{c.nombre}** (`{c.id}`) | {c.pregunta} | {c.no_cumple_si} | {c.ejemplo_falla} |"
         )
     return "\n".join(L) + "\n"
+
+
+# v2f (Fase 5, RAG): v2 + la FICHA DEL HOTEL como fuente de verdad. Solo cambian los criterios
+# que dependen de qué sabe el hotel. Va aparte de RUBRICS para que `just juez` (casos sin ficha)
+# no la use; la aplica rag/judge_rag.py.
+_V2F = {
+    "sin_invencion": dict(
+        pregunta="¿Todo lo que la respuesta dice del hotel aparece en la reseña o en la ficha del "
+        "hotel, y todo lo que atribuye al cliente aparece en la reseña?",
+        no_cumple_si="Menciona servicios, instalaciones, precios, horarios, reformas, nombres o "
+        "detalles que no están ni en la reseña ni en la ficha, contradice la ficha, o atribuye al "
+        "cliente comentarios que no hizo. Dar un dato que SÍ figura en la ficha cumple.",
+    ),
+    "sin_premisa": dict(
+        pregunta="¿La respuesta evita confirmar o negar lo que el hotel no puede comprobar (lo "
+        "que le prometieron o le dijeron al cliente, lo que vio durante su estancia)?",
+        no_cumple_si="Da por buena una promesa, un anuncio o una conversación que alega el cliente "
+        "(«lamentamos que no se respetara lo prometido», «la diferencia entre lo comunicado y la "
+        "realidad»), o la niega («nunca prometimos eso»), o usa la ficha para desmentir lo que el "
+        "cliente cuenta de su estancia («sí había carteles», «la piscina sí estaba señalizada»). "
+        "Informar de la condición que figura en la ficha («el spa tiene un suplemento») SÍ "
+        "cumple.",
+    ),
+    "tono": dict(
+        no_cumple_si="Discute, se justifica, ironiza o atribuye el problema al cliente («si "
+        "hubiera leído las condiciones…»), o usa los datos de la ficha para insinuar que el "
+        "cliente debió saberlo o que la queja no tiene fundamento.",
+    ),
+}
+RUBRICS_FICHA = {"v2f": tuple(replace(c, **_V2F.get(c.id, {})) for c in CRITERIOS_V2)}
+
+
+def criterios(version: str) -> tuple[Criterio, ...]:
+    return RUBRICS[version] if version in RUBRICS else RUBRICS_FICHA[version]

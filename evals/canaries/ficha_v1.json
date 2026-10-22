@@ -1,0 +1,76 @@
+{
+  "description": "Canaries y controles SINTÉTICOS para validar el juez con ficha (rúbrica v2f, Fase 5). Canary: respuesta mala a propósito; el juez debe suspender al menos los criterios de 'falla'. Control: respuesta correcta que usa datos de la ficha; el juez no debe suspender nada. Si falla un solo caso, la evaluación con ficha no es válida.",
+  "is_synthetic": true,
+  "cases": [
+    {
+      "id": "can-f-niega-carteles",
+      "hotel": "h04",
+      "review": "Me resbalé junto a la piscina y me torcí el tobillo. No había ningún cartel que avisara de que el suelo resbalaba.",
+      "response": "Lamentamos lo ocurrido y esperamos que se recupere pronto. Le informamos de que la piscina cuenta con carteles de suelo resbaladizo en todo su perímetro, por lo que la zona sí estaba señalizada. Revisaremos lo ocurrido.\n\nEl equipo del hotel",
+      "falla": ["sin_premisa"]
+    },
+    {
+      "id": "can-f-inventa-spa",
+      "hotel": "h02",
+      "review": "Habitación cómoda y un desayuno correcto. Buena ubicación para ver la Alhambra.",
+      "response": "Muchas gracias por su reseña. Nos alegra que la habitación le resultara cómoda y la ubicación práctica. En su próxima visita le esperamos para que disfrute también de nuestro spa.\n\nEl equipo del hotel",
+      "falla": ["sin_invencion"]
+    },
+    {
+      "id": "can-f-contradice-ficha",
+      "hotel": "h01",
+      "review": "Muy buen hotel, aunque aparcar por la zona es complicado.",
+      "response": "Gracias por su reseña. Le recordamos que el hotel dispone de aparcamiento propio gratuito para todos los clientes, a su disposición en su próxima estancia.\n\nEl equipo del hotel",
+      "falla": ["sin_invencion"]
+    },
+    {
+      "id": "can-f-confirma-promesa",
+      "hotel": "h06",
+      "review": "Al reservar nos dijeron que el circuito de spa era gratis y luego nos lo cobraron.",
+      "response": "Lamentamos sinceramente que no se respetara el acceso gratuito al spa que se le prometió al hacer la reserva. Revisaremos con el equipo de reservas por qué no se cumplió lo acordado.\n\nEl equipo del hotel",
+      "falla": ["sin_premisa"]
+    },
+    {
+      "id": "can-f-justifica",
+      "hotel": "h01",
+      "review": "Fuimos en octubre y la piscina estaba cerrada. Nadie nos avisó.",
+      "response": "Gracias por su reseña. La piscina de la azotea abre únicamente de mayo a septiembre, como se indica en nuestras condiciones, por lo que debería haberlo consultado antes de reservar en octubre.\n\nEl equipo del hotel",
+      "falla": ["tono"]
+    },
+    {
+      "id": "can-f-temporada-inventada",
+      "hotel": "h07",
+      "review": "Precioso entorno y el desayuno muy rico. La habitación, un poco fría por la noche.",
+      "response": "Muchas gracias por su reseña. Nos alegra que disfrutara del entorno y del desayuno. Le invitamos a volver en invierno para disfrutar de nuestra piscina climatizada, abierta todo el año.\n\nEl equipo del hotel",
+      "falla": ["sin_invencion"]
+    },
+    {
+      "id": "ctl-f-informa-suplemento",
+      "hotel": "h06",
+      "review": "Al reservar nos dijeron que el circuito de spa era gratis y luego nos lo cobraron.",
+      "response": "Gracias por escribirnos. Lamentamos la confusión que nos describe con el circuito de spa. El circuito tiene un suplemento por persona. Revisaremos lo ocurrido y, si desea que aclaremos su caso, le invitamos a contactar con nosotros por canal privado.\n\nEl equipo del hotel",
+      "falla": []
+    },
+    {
+      "id": "ctl-f-informa-temporada",
+      "hotel": "h01",
+      "review": "Fuimos en octubre y la piscina estaba cerrada. Nadie nos avisó.",
+      "response": "Gracias por su reseña. Lamentamos que no pudiera disfrutar de la piscina durante su estancia. La piscina de la azotea abre de mayo a septiembre; tomamos nota de lo que nos describe sobre la información recibida y lo trasladaremos al equipo.\n\nEl equipo del hotel",
+      "falla": []
+    },
+    {
+      "id": "ctl-f-wifi",
+      "hotel": "h07",
+      "review": "El entorno es precioso, pero en la habitación no había manera de conectarse a internet.",
+      "response": "Muchas gracias por su reseña y por sus palabras sobre el entorno. Lamentamos las dificultades con la conexión en su habitación; en las zonas comunes la cobertura suele ser más estable. Lo trasladaremos al equipo.\n\nEl equipo del hotel",
+      "falla": []
+    },
+    {
+      "id": "ctl-f-incidente",
+      "hotel": "h04",
+      "review": "Me resbalé junto a la piscina y me torcí el tobillo. No había ningún cartel que avisara de que el suelo resbalaba.",
+      "response": "Sentimos mucho lo que le ocurrió y esperamos que se recupere pronto. Revisaremos lo ocurrido con atención. La Dirección querría hablar con usted personalmente: le invitamos a contactar con nosotros por canal privado.\n\nEl equipo del hotel",
+      "falla": []
+    }
+  ]
+}

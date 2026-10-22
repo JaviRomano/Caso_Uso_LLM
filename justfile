@@ -73,3 +73,7 @@ rag-generar *ARGS:
 # Comprueba que Ollama tiene el modelo entero en la GPU (falla si se ha ido a la CPU)
 gpu-ollama *ARGS:
     python -m caso_uso_llm.ollama_gpu {{ARGS}}
+
+# Fase 5: juez con ficha (rúbrica v2f) sobre v4, v5 y v6, con puerta de canaries y pares
+rag-juez:
+    python -m caso_uso_llm.rag.judge_rag

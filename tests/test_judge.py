@@ -43,3 +43,21 @@ def test_rubricas_mismos_criterios_y_v2_cambia_la_culpa():
     v2 = {c.id: c for c in RUBRICS["v2"]}
     assert "SÍ cumple" in v2["sin_culpa"].no_cumple_si and v1["sin_culpa"] != v2["sin_culpa"]
     assert J.system_prompt("v1") != J.system_prompt("v2")
+
+
+def test_rubrica_con_ficha_solo_cambia_los_criterios_que_dependen_de_la_ficha():
+    from caso_uso_llm.evals.rubric import RUBRICS, RUBRICS_FICHA
+
+    v2, v2f = RUBRICS["v2"], RUBRICS_FICHA["v2f"]
+    assert [c.id for c in v2f] == [c.id for c in v2]
+    changed = {a.id for a, b in zip(v2, v2f, strict=True) if a != b}
+    assert changed == {"sin_invencion", "sin_premisa", "tono"}
+    assert "v2f" not in RUBRICS  # `just juez` (casos sin ficha) no debe usarla
+
+
+def test_juez_sin_ficha_mantiene_el_mensaje_de_siempre():
+    from caso_uso_llm.evals.judge import _ficha_block, system_prompt
+
+    assert _ficha_block(None) == ""
+    assert "FICHA DEL HOTEL" not in system_prompt("v2")
+    assert "FICHA DEL HOTEL" in system_prompt("v2f")
