@@ -20,7 +20,7 @@ from caso_uso_llm.generate.checks import quote_in_review
 JUDGE_MODEL = "gemma4:12b-it-qat"
 OPTIONS = {"temperature": 0, "seed": 42, "num_ctx": 8192}
 LATEST = list(RUBRICS)[-1]
-FICHA_VERSIONS = ("v2f",)
+FICHA_VERSIONS = ("v2f", "v2g")
 
 
 def system_prompt(version: str) -> str:

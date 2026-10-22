@@ -61,3 +61,10 @@ def test_juez_sin_ficha_mantiene_el_mensaje_de_siempre():
     assert _ficha_block(None) == ""
     assert "FICHA DEL HOTEL" not in system_prompt("v2")
     assert "FICHA DEL HOTEL" in system_prompt("v2f")
+
+
+def test_v2g_solo_aclara_sin_premisa_respecto_a_v2f():
+    from caso_uso_llm.evals.rubric import RUBRICS_FICHA
+
+    v2f, v2g = RUBRICS_FICHA["v2f"], RUBRICS_FICHA["v2g"]
+    assert {a.id for a, b in zip(v2f, v2g, strict=True) if a != b} == {"sin_premisa"}

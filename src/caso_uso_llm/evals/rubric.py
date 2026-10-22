@@ -199,3 +199,22 @@ RUBRICS_FICHA = {"v2f": tuple(replace(c, **_V2F.get(c.id, {})) for c in CRITERIO
 
 def criterios(version: str) -> tuple[Criterio, ...]:
     return RUBRICS[version] if version in RUBRICS else RUBRICS_FICHA[version]
+
+
+# v2g: v2f suspendía en sin_premisa la fórmula permitida de lamentar sobre el tema («lamentamos
+# la confusión que nos describe con el spa», «…especialmente respecto al aparcamiento»), un
+# control de la puerta incluido (reports/phase5_juez.md). Se aclara qué SÍ cumple, sin lista
+# blanca de frases (con v3 eso relajó al juez): la puerta añade un canary REAL de confirmación
+# sutil («esta diferencia entre lo comunicado y la realidad») para detectar si se relaja de más.
+RUBRICS_FICHA["v2g"] = tuple(
+    replace(
+        c,
+        no_cumple_si=c.no_cumple_si
+        + " Lamentar la experiencia o el malestar del cliente, también en relación con el tema "
+        "del que se queja (el spa, el aparcamiento, la información recibida), SÍ cumple mientras "
+        "no afirme ni niegue que la promesa, el anuncio o la conversación existieran.",
+    )
+    if c.id == "sin_premisa"
+    else c
+    for c in RUBRICS_FICHA["v2f"]
+)

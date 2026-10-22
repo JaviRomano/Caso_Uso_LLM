@@ -21,8 +21,8 @@ from caso_uso_llm.paths import EVALS, RESULTS, ROOT
 from caso_uso_llm.rag import kb
 from caso_uso_llm.rag.generate_rag import BASE, results_path
 
-RUBRIC = "v2f"
-CANARIES = EVALS / "canaries" / "ficha_v1.json"
+RUBRIC = "v2g"  # v2f no superó la puerta (commit d257360)
+CANARIES = EVALS / "canaries" / "ficha_v2.json"
 CACHE = RESULTS / "phase6_judge_cache.jsonl"  # la misma caché que el juez de la Fase 6
 OUT = RESULTS / "phase5_juez.json"
 REPORT = ROOT / "reports" / "phase5_juez.md"
@@ -102,7 +102,7 @@ def write_report(g: dict, cases: list[dict]) -> None:
         "# Fase 5 · Juez con ficha: v4 (sin contexto) frente a v5 y v6 (RAG)",
         "",
         f"Generado por `uv run just rag-juez` · juez `{JUDGE_MODEL}`, rúbrica `{RUBRIC}` (v2 + la "
-        "ficha del hotel como fuente de verdad), temperatura 0. No editar a mano.",
+        "ficha del hotel como fuente de verdad; v2f no superó la puerta), temperatura 0. No editar a mano.",
         "",
         "## 1. Puerta: canaries y controles de ficha",
         "",

@@ -41,7 +41,7 @@
     "ok": true,
     "evidencia": {
      "sin_invencion": "aparcamiento propio gratuito",
-     "tono": "Le recordamos que el hotel dispone de aparcamiento propio gratuito"
+     "tono": "Le recordamos que el hotel dispone de aparcamiento propio gratuito para todos los clientes, a su disposición en su próxima estancia."
     }
    },
    {
@@ -50,12 +50,10 @@
      "sin_premisa"
     ],
     "juez": [
-     "sin_culpa",
      "sin_premisa"
     ],
     "ok": true,
     "evidencia": {
-     "sin_culpa": "por qué no se cumplió lo acordado",
      "sin_premisa": "Lamentamos sinceramente que no se respetara el acceso gratuito al spa que se le prometió al hacer la reserva."
     }
    },
@@ -88,13 +86,9 @@
    {
     "id": "ctl-f-informa-suplemento",
     "esperado": [],
-    "juez": [
-     "sin_premisa"
-    ],
-    "ok": false,
-    "evidencia": {
-     "sin_premisa": "Lamentamos la confusión que nos describe con el circuito de spa."
-    }
+    "juez": [],
+    "ok": true,
+    "evidencia": {}
    },
    {
     "id": "ctl-f-informa-temporada",
@@ -116,9 +110,31 @@
     "juez": [],
     "ok": true,
     "evidencia": {}
+   },
+   {
+    "id": "can-f-real-diferencia-comunicado",
+    "esperado": [
+     "sin_premisa"
+    ],
+    "juez": [
+     "sin_culpa",
+     "sin_premisa"
+    ],
+    "ok": true,
+    "evidencia": {
+     "sin_culpa": "una situación que dista de ser la que buscamos ofrecer",
+     "sin_premisa": "Lamentamos sinceramente que su estancia no estuviera a la altura de lo que esperaba, especialmente en relación con la información recibida sobre el aparcamiento."
+    }
+   },
+   {
+    "id": "ctl-f-lamenta-tema",
+    "esperado": [],
+    "juez": [],
+    "ok": true,
+    "evidencia": {}
    }
   ],
-  "valid": false
+  "valid": true
  },
  "cases": [
   {
@@ -144,8 +160,8 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "",
-      "cumple": true,
+      "evidencia": "aspectos que no se ajustan a nuestros estándares",
+      "cumple": false,
       "evidencia_inventada": false
      },
      "sin_premisa": {
@@ -993,7 +1009,7 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "lamentamos que no se hubieran cumplido sus expectativas en este sentido",
+      "evidencia": "",
       "cumple": true,
       "evidencia_inventada": false
      },
@@ -1067,8 +1083,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Lamentamos que su estancia no estuviera a la altura de lo que esperaba",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -1151,8 +1167,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Entendemos su frustración con la información recibida",
-      "cumple": false,
+      "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba. Entendemos su frustración con la información recibida y la sensación de que la estancia no cumplió sus expectativas.",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -2286,8 +2302,8 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "lamentamos profundamente que su estancia no estuviera a la altura de lo que esperaba, especialmente por las incidencias con la puerta y la limpieza del apartamento inicial",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_premisa": {
@@ -2328,8 +2344,8 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "",
-      "cumple": true,
+      "evidencia": "Reconocemos su malestar ante la situación vivida y la respuesta recibida. Lo trasladaremos al equipo para revisar lo ocurrido y mejorar nuestros procesos.",
+      "cumple": false,
       "evidencia_inventada": false
      },
      "sin_premisa": {
@@ -2370,7 +2386,7 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "Reconocemos la molestia que esto causó a usted y a sus hijos.",
+      "evidencia": "",
       "cumple": true,
       "evidencia_inventada": false
      },
@@ -5958,7 +5974,7 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "Lamentamos que la experiencia no estuviera a la altura de lo que esperaba en ese aspecto concreto.",
+      "evidencia": "",
       "cumple": true,
       "evidencia_inventada": false
      },
@@ -6423,7 +6439,7 @@
      },
      "sin_premisa": {
       "evidencia": "lamentamos que su estancia no estuviera a la altura de lo que esperaba debido a la situación con el acceso al spa",
-      "cumple": false,
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -6464,8 +6480,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba, especialmente respecto a la información recibida sobre el acceso al spa.",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -6506,8 +6522,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba, especialmente respecto al acceso al spa.",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -6570,8 +6586,8 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "",
-      "cumple": true,
+      "evidencia": "Revisaremos lo ocurrido para asegurar que nuestras medidas de seguridad sean las adecuadas en todo momento.",
+      "cumple": false,
       "evidencia_inventada": false
      },
      "sin_premisa": {
@@ -7029,8 +7045,8 @@
       "evidencia_inventada": false
      },
      "sin_culpa": {
-      "evidencia": "especialmente por las incidencias con el aire acondicionado y la falta de respuesta ante sus avisos",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_premisa": {
@@ -7689,7 +7705,7 @@
      },
      "sin_premisa": {
       "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba.",
-      "cumple": false,
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -7731,7 +7747,7 @@
      },
      "sin_premisa": {
       "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba, especialmente respecto a la disponibilidad del spa.",
-      "cumple": false,
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -7841,7 +7857,7 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Revisaremos lo ocurrido respecto a la información que se le facilitó por teléfono, ya que no podemos comprobar los detalles de esa conversación desde aquí.",
+      "evidencia": "",
       "cumple": true,
       "evidencia_inventada": false
      },
@@ -7884,7 +7900,7 @@
      },
      "sin_premisa": {
       "evidencia": "Lamentamos sinceramente que su estancia no estuviera a la altura de lo que esperaba, especialmente en relación con la disponibilidad de aparcamiento.",
-      "cumple": false,
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -8036,8 +8052,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "",
-      "cumple": true,
+      "evidencia": "Entendemos su descontento al encontrar la piscina de la azotea cerrada durante su estancia en octubre, así como la falta de información visible al respecto.",
+      "cumple": false,
       "evidencia_inventada": false
      },
      "sin_invencion": {
@@ -8342,8 +8358,8 @@
       "evidencia_inventada": false
      },
      "sin_premisa": {
-      "evidencia": "Lamentamos que su experiencia no estuviera a la altura de lo que esperaba.",
-      "cumple": false,
+      "evidencia": "",
+      "cumple": true,
       "evidencia_inventada": false
      },
      "sin_invencion": {
