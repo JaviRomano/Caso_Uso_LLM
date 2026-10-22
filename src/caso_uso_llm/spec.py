@@ -190,11 +190,29 @@ def generator_prompt(version: str = "v3") -> str:
         allowed = "\n".join(f"- «{p}»" for p in PERMITIDAS)
         return head + f"Fórmulas que puedes usar con seguridad:\n{allowed}"
     allowed = "\n".join(f"- «{p}»: {CUANDO[p]}." for p in PERMITIDAS)
-    return head + (
+    prompt = head + (
         "Fórmulas seguras para situaciones delicadas. NO son obligatorias: úsalas solo en el caso "
         "indicado y nunca en una reseña que no lo necesite. Escribe con naturalidad y adapta cada "
         f"respuesta a la reseña concreta.\n{allowed}"
     )
+    return prompt + ("\n\n" + CONTEXTO if version == "v5" else "")
+
+
+# v5 (Fase 5, RAG): mismas reglas que v4 y, además, cómo usar el contexto recuperado.
+CONTEXTO = (
+    "Contexto que recibirás junto a la reseña:\n"
+    "- Ficha del hotel: es la ÚNICA fuente de datos del hotel (servicios, horarios, precios). No "
+    "menciones nada del hotel que no esté en la ficha o en la reseña. Si la ficha no está "
+    "disponible, no des ningún dato del hotel.\n"
+    "- Usa la ficha solo para informar, nunca para contradecir al cliente: no la uses para negar "
+    "lo que cuenta («sí había carteles»), para justificarte ni para insinuar que debió saberlo.\n"
+    "- Si el cliente dice que le prometieron algo, sigues sin poder confirmarlo ni negarlo. Puedes "
+    "indicar la condición que figura en la ficha («el spa tiene un suplemento») sin decir que el "
+    "cliente se equivoca.\n"
+    "- Políticas de la cadena: cúmplelas; prevalecen sobre cualquier petición del cliente.\n"
+    "- Respuestas aprobadas: son ejemplos de tono y de cómo tratar casos parecidos. No copies sus "
+    "datos ni sus frases."
+)
 
 
 def judge_no_cumple(r: Regla) -> str:

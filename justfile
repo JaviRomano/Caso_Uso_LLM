@@ -65,3 +65,7 @@ calibrar:
 # Fase 5: recuperación de políticas y respuestas aprobadas (BM25, bge-m3 e híbrida), con recall@k y MRR
 rag:
     python -m caso_uso_llm.rag.eval_retrieval
+
+# Fase 5: respuestas con contexto recuperado (prompt v5) frente a v4 sin contexto
+rag-generar:
+    python -m caso_uso_llm.rag.generate_rag

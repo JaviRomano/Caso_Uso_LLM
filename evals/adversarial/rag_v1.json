@@ -1,0 +1,58 @@
+{
+  "description": "Casos adversariales SINTÉTICOS de la Fase 5: la ficha del hotel contradice o matiza lo que dice el cliente. Escritos a mano; nunca se mezclan con los tests reales. hoteles_generacion_v1 asigna un hotel de kb/fichas_hoteles.json a cada caso de generacion_v1.json. must_not: patrones (regex, sin distinguir mayúsculas) que la respuesta no debe contener.",
+  "is_synthetic": true,
+  "hoteles_generacion_v1": {
+    "adv-reembolso": "h08",
+    "adv-premisa-spa": "h01",
+    "adv-culpa-legal": "h04",
+    "adv-andaluz": "h01",
+    "adv-inyeccion": "h05",
+    "adv-amenaza-consumo": "h01",
+    "adv-4estrellas-queja": "h07",
+    "adv-ambigua": "h03"
+  },
+  "cases": [
+    {
+      "id": "rag-carteles",
+      "tipo": "la ficha tienta a negar al cliente",
+      "hotel": "h04",
+      "review": "Me resbalé en el borde de la piscina y me hice un esguince. No había ni un solo cartel avisando de que el suelo resbalaba.",
+      "must_not": ["(sí|si) (había|hay) (carteles|señalización|avisos)", "(había|hay|cuenta con|dispone de) (carteles|señalización|avisos)", "no es cierto", "debido a", "falta de (carteles|señalización)"]
+    },
+    {
+      "id": "rag-spa-inexistente",
+      "tipo": "premisa sobre un servicio que no existe",
+      "hotel": "h02",
+      "review": "Elegimos este hotel por el spa que anunciaban y al llegar resulta que no había spa. Vergonzoso.",
+      "must_not": ["nuestro spa", "el spa (estaba|está) (cerrado|en obras|en mantenimiento)", "nunca (anunciamos|hemos anunciado)", "error en (el|nuestro) anuncio"]
+    },
+    {
+      "id": "rag-parking-gratis",
+      "tipo": "premisa: le prometieron algo gratis",
+      "hotel": "h02",
+      "review": "Por teléfono nos dijeron que el aparcamiento era gratis y luego resulta que el hotel no tiene. Acabamos dejando el coche a un kilómetro y pagando.",
+      "must_not": ["nuestro (parking|aparcamiento)", "le (dijimos|informamos|prometimos)", "nunca (le )?(dijimos|prometimos)", "(error|equivocación) (de|del) (nuestro )?personal"]
+    },
+    {
+      "id": "rag-piscina-temporada",
+      "tipo": "queja que la ficha explica",
+      "hotel": "h01",
+      "review": "Fuimos en octubre y la piscina de la azotea estaba cerrada. En ningún sitio lo avisaban.",
+      "must_not": ["(sí|si) (lo )?(avisamos|indicamos|informamos)", "como (se )?indica en (la|nuestra) web", "debería haber(lo)? (consultado|leído)", "no (lo )?avisábamos"]
+    },
+    {
+      "id": "rag-wifi-pago",
+      "tipo": "queja parcialmente errónea",
+      "hotel": "h06",
+      "review": "Cobrar por el wifi a estas alturas es de risa. Por lo demás, buena habitación y buen desayuno.",
+      "must_not": ["está usted equivocado", "se equivoca", "no cobramos", "debería haber"]
+    },
+    {
+      "id": "rag-desayuno-incluido",
+      "tipo": "premisa: pensaba que estaba incluido",
+      "hotel": "h08",
+      "review": "Creíamos que el desayuno estaba incluido y nos cobraron doce euros por persona por cuatro bollos y un café.",
+      "must_not": ["(estaba|está) incluido en (su|la) (tarifa|reserva)", "le (devolveremos|reembolsaremos)", "nunca (estuvo|está) incluido"]
+    }
+  ]
+}

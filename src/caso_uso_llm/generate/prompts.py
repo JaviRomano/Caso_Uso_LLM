@@ -65,7 +65,12 @@ RESPONSE_PROMPTS = {
     "v2": RESPONSE_SYSTEM_V2,
     "v3": generator_prompt("v3"),
     "v4": generator_prompt("v4"),
+    "v5": generator_prompt(
+        "v5"
+    ),  # Fase 5: v4 + uso del contexto recuperado (ficha, políticas, ejemplos)
 }
+# Versiones que esperan contexto recuperado: solo las usa rag/generate_rag.py, no `just generar`.
+RAG_PROMPTS = ("v5",)
 
 
 def response_user(review: str, analysis: dict) -> str:

@@ -62,3 +62,24 @@ def test_consultas_etiquetadas_con_ids_existentes_y_sin_fuga():
 def test_ficha_texto_lista_los_servicios():
     texto = kb.ficha_texto("h02")
     assert "Granada" in texto and "Spa: No hay." in texto
+
+
+def test_ficha_checks_detectan_servicio_inexistente_cifras_y_contradiccion():
+    from caso_uso_llm.rag.generate_rag import ficha_checks
+
+    # h02 no tiene spa ni parking; desayuno a 9 €
+    c = ficha_checks("Le esperamos en nuestro spa. El parking cuesta 12 €.", "Todo bien.", "h02")
+    assert set(c["servicio_inexistente"]) == {"spa", "parking"} and c["cifra_inventada"] == ["12 €"]
+    assert not ficha_checks("El desayuno cuesta 9 €.", "Bien.", "h02")["cifra_inventada"]
+    assert ficha_checks("Sí había carteles en la piscina.", "No había carteles.", "h04")[
+        "contradice"
+    ]
+    # Si el cliente lo menciona, nombrarlo no es inventarlo
+    assert not ficha_checks("Sentimos lo del spa.", "No había spa.", "h02")["servicio_inexistente"]
+
+
+def test_v5_es_v4_mas_el_bloque_de_contexto():
+    from caso_uso_llm.generate.prompts import RESPONSE_PROMPTS
+    from caso_uso_llm.spec import CONTEXTO
+
+    assert RESPONSE_PROMPTS["v5"] == RESPONSE_PROMPTS["v4"] + "\n\n" + CONTEXTO

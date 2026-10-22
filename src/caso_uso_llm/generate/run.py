@@ -20,7 +20,12 @@ from pydantic import ValidationError
 
 from caso_uso_llm.classify.datasets import load
 from caso_uso_llm.generate import checks as C
-from caso_uso_llm.generate.prompts import ANALYSIS_SYSTEM, RESPONSE_PROMPTS, response_user
+from caso_uso_llm.generate.prompts import (
+    ANALYSIS_SYSTEM,
+    RAG_PROMPTS,
+    RESPONSE_PROMPTS,
+    response_user,
+)
 from caso_uso_llm.generate.schema import Analisis
 from caso_uso_llm.log import log
 from caso_uso_llm.paths import RESULTS, ROOT
@@ -85,37 +90,49 @@ def chat(system: str, user: str, schema: dict | None = None) -> str:
     return r.message.content
 
 
+def analyze(review: str, cache: Cache) -> tuple[dict | None, str]:
+    """Aspectos en JSON validados con el esquema; (None, error) si el JSON no es válido."""
+    schema = Analisis.model_json_schema()
+    raw = cache.get_or_call(
+        {"model": MODEL, "opts": OPTIONS, "sys": ANALYSIS_SYSTEM, "review": review,
+         "schema": schema},
+        lambda: chat(ANALYSIS_SYSTEM, review, schema),
+    )  # fmt: skip
+    try:
+        analysis = Analisis.model_validate_json(raw).model_dump(mode="json")
+    except ValidationError as e:
+        return None, str(e)[:300]
+    for a in analysis["aspectos"]:
+        a["cita_literal"] = C.quote_in_review(a["cita"], review)
+    return analysis, ""
+
+
+def respond(system: str, user: str, cache: Cache) -> str:
+    return cache.get_or_call(
+        {"model": MODEL, "opts": OPTIONS, "sys": system, "user": user},
+        lambda: chat(system, user),
+    ).strip()
+
+
 def process(row: pd.Series, cache: Cache, response_system: str) -> dict:
     out = {"id": row["id"], "kind": row["kind"], "rating": row["rating"], "review": row["review"]}
     if row["kind"] == "adversarial":
         out["adv_type"] = row["adv_type"]
-    schema = Analisis.model_json_schema()
-    raw = cache.get_or_call(
-        {"model": MODEL, "opts": OPTIONS, "sys": ANALYSIS_SYSTEM, "review": row["review"],
-         "schema": schema},
-        lambda: chat(ANALYSIS_SYSTEM, row["review"], schema),
-    )  # fmt: skip
-    try:
-        analysis = Analisis.model_validate_json(raw).model_dump(mode="json")
-        out["analysis_valid"] = True
-    except ValidationError as e:
-        out.update(analysis_valid=False, analysis_error=str(e)[:300])
+    analysis, error = analyze(row["review"], cache)
+    if analysis is None:
+        out.update(analysis_valid=False, analysis_error=error)
         return out
-    for a in analysis["aspectos"]:
-        a["cita_literal"] = C.quote_in_review(a["cita"], row["review"])
+    out["analysis_valid"] = True
     out["analysis"] = analysis
-    user = response_user(row["review"], analysis)
-    out["response"] = cache.get_or_call(
-        {"model": MODEL, "opts": OPTIONS, "sys": response_system, "user": user},
-        lambda: chat(response_system, user),
-    ).strip()
+    out["response"] = respond(response_system, response_user(row["review"], analysis), cache)
     out["checks"] = C.run_checks(out["response"], analysis["aspectos"], list(row["must_not"]))
     return out
 
 
 def main(seed: int = DEFAULT_SEED) -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prompt", default=list(RESPONSE_PROMPTS)[-1], choices=list(RESPONSE_PROMPTS))
+    versions = [v for v in RESPONSE_PROMPTS if v not in RAG_PROMPTS]
+    ap.add_argument("--prompt", default=versions[-1], choices=versions)
     version = ap.parse_args().prompt
     dev = dev_set(seed)
     n_real, n_adv = (dev.kind == "real").sum(), (dev.kind == "adversarial").sum()
@@ -160,7 +177,7 @@ def _rate(rows: list[dict], fn) -> str:
 
 def write_report() -> None:
     runs = {v: json.loads(results_path(v).read_text(encoding="utf-8"))
-            for v in RESPONSE_PROMPTS if results_path(v).exists()}  # fmt: skip
+            for v in RESPONSE_PROMPTS if v not in RAG_PROMPTS and results_path(v).exists()}  # fmt: skip
     latest = list(runs)[-1]
     res = runs[latest]
     valid = [r for r in res if r["analysis_valid"]]
