@@ -1,0 +1,3042 @@
+{
+ "embed_model": "bge-m3",
+ "n_queries": 30,
+ "indices": {
+  "politicas": {
+   "n_docs": 17,
+   "n_queries": 30,
+   "methods": {
+    "bm25": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-reubicacion",
+       "pol-instrucciones",
+       "pol-ruido"
+      ],
+      "recall@1": 0.3333333333333333,
+      "recall@3": 0.6666666666666666,
+      "recall@5": 0.6666666666666666,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-servicios",
+       "pol-elogios",
+       "pol-ruido",
+       "pol-compensaciones"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-incidentes",
+       "pol-servicios",
+       "pol-compensaciones",
+       "pol-mascotas",
+       "pol-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "pol-elogios",
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-incidentes",
+       "pol-elogios",
+       "pol-reubicacion",
+       "pol-personal",
+       "pol-limpieza"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-acusaciones",
+       "pol-mascotas",
+       "pol-reembolsos"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "pol-reclamaciones-oficiales",
+       "pol-compensaciones",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-reclamaciones-oficiales",
+       "pol-averias",
+       "pol-compensaciones",
+       "pol-personal",
+       "pol-limpieza"
+      ],
+      "recall@1": 0.3333333333333333,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "pol-averias",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-instrucciones",
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-compensaciones"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "pol-ruido",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-limpieza",
+       "pol-precio",
+       "pol-compensaciones"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "pol-reembolsos",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-limpieza",
+       "pol-reclamaciones-oficiales",
+       "pol-reembolsos",
+       "pol-precio"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.5,
+      "mrr": 0.25
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "pol-incidentes",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "pol-reembolsos"
+      ],
+      "top5": [
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-limpieza",
+       "pol-reclamaciones-oficiales",
+       "pol-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "pol-limpieza"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.125
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-limpieza",
+       "pol-reubicacion",
+       "pol-instrucciones",
+       "pol-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.2
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "pol-personal",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-reclamaciones-oficiales",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.1111111111111111
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-personal",
+       "pol-elogios",
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-reembolsos"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-limpieza",
+       "pol-averias",
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-limpieza",
+       "pol-reclamaciones-oficiales",
+       "pol-reembolsos",
+       "pol-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "pol-reclamaciones-oficiales"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-reclamaciones-oficiales",
+       "pol-servicios",
+       "pol-reembolsos",
+       "pol-objetos-perdidos"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.16666666666666666
+     },
+     {
+      "id": "q12",
+      "relevant": [
+       "pol-mascotas"
+      ],
+      "top5": [
+       "pol-mascotas",
+       "pol-personal",
+       "pol-averias",
+       "pol-limpieza",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "pol-salud-alergias"
+      ],
+      "top5": [
+       "pol-servicios",
+       "pol-mascotas",
+       "pol-precio",
+       "pol-salud-alergias",
+       "pol-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.25
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "pol-reubicacion"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-averias",
+       "pol-ruido",
+       "pol-servicios",
+       "pol-mascotas"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "pol-objetos-perdidos"
+      ],
+      "top5": [
+       "pol-objetos-perdidos",
+       "pol-personal",
+       "pol-averias",
+       "pol-compensaciones",
+       "pol-reembolsos"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "pol-precio"
+      ],
+      "top5": [
+       "pol-precio",
+       "pol-ruido",
+       "pol-elogios",
+       "pol-compensaciones",
+       "pol-servicios"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-objetos-perdidos",
+       "pol-acusaciones",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q18",
+      "relevant": [
+       "pol-acusaciones"
+      ],
+      "top5": [
+       "pol-acusaciones",
+       "pol-servicios",
+       "pol-mascotas",
+       "pol-precio",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-salud-alergias",
+       "pol-compensaciones",
+       "pol-incidentes",
+       "pol-servicios",
+       "pol-mascotas"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.07142857142857142
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-incidentes",
+       "pol-objetos-perdidos",
+       "pol-mascotas"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.125
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-ruido",
+       "pol-averias",
+       "pol-reembolsos"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-incidentes",
+       "pol-reclamaciones-oficiales",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     }
+    ],
+    "densa": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-precio",
+       "pol-reubicacion",
+       "pol-limpieza",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.16666666666666666
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-servicios",
+       "pol-reubicacion",
+       "pol-precio",
+       "pol-ruido",
+       "pol-compensaciones"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-incidentes",
+       "pol-precio"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.25
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "pol-elogios",
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-elogios",
+       "pol-precio",
+       "pol-salud-alergias",
+       "pol-servicios",
+       "pol-ruido"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-elogios",
+       "pol-compensaciones",
+       "pol-reubicacion",
+       "pol-servicios"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "pol-reclamaciones-oficiales",
+       "pol-compensaciones",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-reclamaciones-oficiales",
+       "pol-limpieza",
+       "pol-ruido",
+       "pol-incidentes"
+      ],
+      "recall@1": 0.3333333333333333,
+      "recall@3": 0.6666666666666666,
+      "recall@5": 0.6666666666666666,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "pol-averias",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-precio",
+       "pol-limpieza"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "pol-ruido",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-precio",
+       "pol-reubicacion",
+       "pol-servicios",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "pol-reembolsos",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-reembolsos",
+       "pol-precio",
+       "pol-ruido",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 0.5
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "pol-incidentes",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-incidentes",
+       "pol-limpieza",
+       "pol-averias",
+       "pol-objetos-perdidos",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "pol-reembolsos"
+      ],
+      "top5": [
+       "pol-objetos-perdidos",
+       "pol-reembolsos",
+       "pol-reubicacion",
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "pol-limpieza"
+      ],
+      "top5": [
+       "pol-limpieza",
+       "pol-averias",
+       "pol-ruido",
+       "pol-salud-alergias",
+       "pol-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-precio",
+       "pol-elogios",
+       "pol-personal"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "pol-personal",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-personal",
+       "pol-elogios",
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-limpieza"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-limpieza",
+       "pol-precio",
+       "pol-objetos-perdidos"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.08333333333333333
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-reubicacion",
+       "pol-limpieza",
+       "pol-ruido",
+       "pol-incidentes"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-limpieza",
+       "pol-ruido",
+       "pol-averias",
+       "pol-reubicacion",
+       "pol-objetos-perdidos"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "pol-reclamaciones-oficiales"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-reembolsos",
+       "pol-objetos-perdidos",
+       "pol-incidentes",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.08333333333333333
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-precio",
+       "pol-servicios",
+       "pol-compensaciones",
+       "pol-ruido",
+       "pol-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q12",
+      "relevant": [
+       "pol-mascotas"
+      ],
+      "top5": [
+       "pol-mascotas",
+       "pol-reubicacion",
+       "pol-objetos-perdidos",
+       "pol-ruido",
+       "pol-averias"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "pol-salud-alergias"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-salud-alergias",
+       "pol-precio",
+       "pol-mascotas"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "pol-reubicacion"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-precio",
+       "pol-averias",
+       "pol-servicios"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "pol-objetos-perdidos"
+      ],
+      "top5": [
+       "pol-objetos-perdidos",
+       "pol-incidentes",
+       "pol-reubicacion",
+       "pol-averias",
+       "pol-limpieza"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "pol-precio"
+      ],
+      "top5": [
+       "pol-precio",
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-servicios",
+       "pol-averias"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-elogios",
+       "pol-compensaciones",
+       "pol-precio",
+       "pol-instrucciones",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q18",
+      "relevant": [
+       "pol-acusaciones"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-precio",
+       "pol-servicios",
+       "pol-acusaciones",
+       "pol-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.25
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-precio",
+       "pol-elogios",
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-elogios",
+       "pol-personal",
+       "pol-limpieza",
+       "pol-precio",
+       "pol-compensaciones"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-precio",
+       "pol-servicios",
+       "pol-averias"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-objetos-perdidos",
+       "pol-incidentes",
+       "pol-ruido",
+       "pol-limpieza",
+       "pol-averias"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     }
+    ],
+    "hibrida": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-compensaciones",
+       "pol-reembolsos",
+       "pol-instrucciones"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.3333333333333333,
+      "recall@5": 0.6666666666666666,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-servicios",
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-averias"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-incidentes",
+       "pol-averias",
+       "pol-servicios",
+       "pol-reubicacion",
+       "pol-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "pol-elogios",
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-elogios",
+       "pol-reubicacion",
+       "pol-personal",
+       "pol-ruido",
+       "pol-incidentes"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-instrucciones",
+       "pol-compensaciones",
+       "pol-elogios",
+       "pol-acusaciones",
+       "pol-reembolsos"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "pol-reclamaciones-oficiales",
+       "pol-compensaciones",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-reclamaciones-oficiales",
+       "pol-averias",
+       "pol-limpieza",
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "recall@1": 0.3333333333333333,
+      "recall@3": 0.6666666666666666,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "pol-averias",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-limpieza",
+       "pol-instrucciones"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "pol-ruido",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-reubicacion",
+       "pol-precio",
+       "pol-limpieza",
+       "pol-elogios"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "pol-reembolsos",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-reembolsos",
+       "pol-precio",
+       "pol-ruido",
+       "pol-instrucciones",
+       "pol-reubicacion"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "pol-incidentes",
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-incidentes",
+       "pol-limpieza",
+       "pol-reclamaciones-oficiales",
+       "pol-ruido"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "pol-reembolsos"
+      ],
+      "top5": [
+       "pol-reembolsos",
+       "pol-ruido",
+       "pol-precio",
+       "pol-incidentes",
+       "pol-objetos-perdidos"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "pol-limpieza"
+      ],
+      "top5": [
+       "pol-limpieza",
+       "pol-averias",
+       "pol-instrucciones",
+       "pol-ruido",
+       "pol-reclamaciones-oficiales"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-limpieza",
+       "pol-averias"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "pol-personal",
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-personal",
+       "pol-ruido",
+       "pol-elogios",
+       "pol-incidentes"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "pol-personal"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-ruido",
+       "pol-instrucciones",
+       "pol-personal",
+       "pol-limpieza"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.25
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-averias",
+       "pol-limpieza",
+       "pol-incidentes",
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "pol-averias"
+      ],
+      "top5": [
+       "pol-limpieza",
+       "pol-averias",
+       "pol-ruido",
+       "pol-precio",
+       "pol-mascotas"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "pol-reclamaciones-oficiales"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-reembolsos",
+       "pol-objetos-perdidos",
+       "pol-servicios",
+       "pol-salud-alergias"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.14285714285714285
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "pol-servicios"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-servicios",
+       "pol-reembolsos",
+       "pol-instrucciones",
+       "pol-incidentes"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q12",
+      "relevant": [
+       "pol-mascotas"
+      ],
+      "top5": [
+       "pol-mascotas",
+       "pol-averias",
+       "pol-personal",
+       "pol-ruido",
+       "pol-limpieza"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "pol-salud-alergias"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-mascotas",
+       "pol-salud-alergias",
+       "pol-precio",
+       "pol-servicios"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "pol-reubicacion"
+      ],
+      "top5": [
+       "pol-reubicacion",
+       "pol-ruido",
+       "pol-averias",
+       "pol-precio",
+       "pol-servicios"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "pol-objetos-perdidos"
+      ],
+      "top5": [
+       "pol-objetos-perdidos",
+       "pol-averias",
+       "pol-incidentes",
+       "pol-personal",
+       "pol-compensaciones"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "pol-precio"
+      ],
+      "top5": [
+       "pol-precio",
+       "pol-ruido",
+       "pol-servicios",
+       "pol-compensaciones",
+       "pol-reubicacion"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "pol-instrucciones",
+       "pol-compensaciones"
+      ],
+      "top5": [
+       "pol-compensaciones",
+       "pol-instrucciones",
+       "pol-precio",
+       "pol-servicios",
+       "pol-acusaciones"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q18",
+      "relevant": [
+       "pol-acusaciones"
+      ],
+      "top5": [
+       "pol-acusaciones",
+       "pol-servicios",
+       "pol-precio",
+       "pol-reubicacion",
+       "pol-mascotas"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-salud-alergias",
+       "pol-precio",
+       "pol-servicios",
+       "pol-compensaciones",
+       "pol-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.14285714285714285
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "pol-elogios"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-elogios",
+       "pol-incidentes",
+       "pol-precio"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "pol-compensaciones",
+       "pol-ruido"
+      ],
+      "top5": [
+       "pol-ruido",
+       "pol-compensaciones",
+       "pol-instrucciones",
+       "pol-averias",
+       "pol-servicios"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "pol-incidentes"
+      ],
+      "top5": [
+       "pol-incidentes",
+       "pol-compensaciones",
+       "pol-ruido",
+       "pol-limpieza",
+       "pol-servicios"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     }
+    ]
+   }
+  },
+  "respuestas": {
+   "n_docs": 16,
+   "n_queries": 28,
+   "methods": {
+    "bm25": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-reembolso",
+       "resp-wifi",
+       "resp-trato",
+       "resp-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-reubicacion",
+       "resp-spa-incluido",
+       "resp-dialecto",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-caida",
+       "resp-wifi",
+       "resp-reubicacion",
+       "resp-correcto",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-dialecto",
+       "resp-correcto",
+       "resp-elogio",
+       "resp-trato",
+       "resp-wifi"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-correcto",
+       "resp-instrucciones",
+       "resp-objeto",
+       "resp-reembolso"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-wifi",
+       "resp-reubicacion",
+       "resp-caida",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-wifi",
+       "resp-reubicacion",
+       "resp-ruido",
+       "resp-caida",
+       "resp-objeto"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "resp-correcto",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-ruido",
+       "resp-elogio",
+       "resp-alergia",
+       "resp-instrucciones"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-instrucciones",
+       "resp-reembolso",
+       "resp-wifi",
+       "resp-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-wifi",
+       "resp-reubicacion",
+       "resp-caida"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "resp-limpieza"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.16666666666666666
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-precio",
+       "resp-trato",
+       "resp-alergia",
+       "resp-objeto"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.1
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "resp-elogio",
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.1111111111111111
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "resp-trato"
+      ],
+      "top5": [
+       "resp-dialecto",
+       "resp-precio",
+       "resp-trato",
+       "resp-correcto",
+       "resp-alergia"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-caida",
+       "resp-ruido",
+       "resp-aire-consumo",
+       "resp-wifi",
+       "resp-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-alergia",
+       "resp-reubicacion",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.14285714285714285
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-spa-incluido",
+       "resp-reubicacion",
+       "resp-reembolso",
+       "resp-caida"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "resp-alergia"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-precio",
+       "resp-dialecto",
+       "resp-wifi",
+       "resp-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.06666666666666667
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "resp-reubicacion"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-correcto",
+       "resp-wifi",
+       "resp-ruido",
+       "resp-caida"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "resp-objeto"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-objeto",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "resp-precio"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-ruido",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.06666666666666667
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-correcto",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.07692307692307693
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "resp-elogio"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.1
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "resp-correcto"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-correcto",
+       "resp-precio",
+       "resp-dialecto",
+       "resp-reembolso"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "resp-reembolso",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-trato",
+       "resp-correcto",
+       "resp-alergia",
+       "resp-reembolso"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.5,
+      "mrr": 0.2
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-elogio",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     }
+    ],
+    "densa": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-precio",
+       "resp-spa-incluido",
+       "resp-limpieza",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-reubicacion",
+       "resp-correcto",
+       "resp-limpieza",
+       "resp-wifi"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-caida",
+       "resp-spa-incluido",
+       "resp-reubicacion",
+       "resp-aire-consumo",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-elogio",
+       "resp-dialecto",
+       "resp-wifi",
+       "resp-instrucciones"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-instrucciones",
+       "resp-trato",
+       "resp-precio",
+       "resp-correcto",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-reembolso",
+       "resp-objeto",
+       "resp-limpieza",
+       "resp-reubicacion"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-wifi",
+       "resp-elogio",
+       "resp-ruido",
+       "resp-dialecto"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "resp-correcto",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-ruido",
+       "resp-instrucciones",
+       "resp-elogio",
+       "resp-wifi"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-reembolso",
+       "resp-reubicacion",
+       "resp-precio",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-caida",
+       "resp-alergia",
+       "resp-aire-consumo",
+       "resp-reembolso"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-objeto",
+       "resp-spa-incluido",
+       "resp-trato"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "resp-limpieza"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-reembolso",
+       "resp-ruido",
+       "resp-reubicacion",
+       "resp-objeto"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-ruido",
+       "resp-instrucciones",
+       "resp-elogio",
+       "resp-reubicacion",
+       "resp-limpieza"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "resp-elogio",
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-instrucciones",
+       "resp-elogio",
+       "resp-dialecto",
+       "resp-wifi",
+       "resp-trato"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "resp-trato"
+      ],
+      "top5": [
+       "resp-trato",
+       "resp-ruido",
+       "resp-reubicacion",
+       "resp-precio",
+       "resp-limpieza"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-reubicacion",
+       "resp-limpieza",
+       "resp-trato",
+       "resp-objeto"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-caida",
+       "resp-reembolso",
+       "resp-limpieza",
+       "resp-objeto"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-aire-consumo",
+       "resp-reembolso",
+       "resp-spa-incluido",
+       "resp-trato"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-spa-incluido",
+       "resp-precio",
+       "resp-trato",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "resp-alergia"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-trato",
+       "resp-reubicacion",
+       "resp-correcto",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.14285714285714285
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "resp-reubicacion"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-trato",
+       "resp-spa-incluido",
+       "resp-ruido",
+       "resp-wifi"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "resp-objeto"
+      ],
+      "top5": [
+       "resp-objeto",
+       "resp-reembolso",
+       "resp-caida",
+       "resp-wifi",
+       "resp-limpieza"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "resp-precio"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-reubicacion",
+       "resp-ruido",
+       "resp-correcto",
+       "resp-trato"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-instrucciones",
+       "resp-correcto",
+       "resp-elogio",
+       "resp-reubicacion",
+       "resp-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "resp-elogio"
+      ],
+      "top5": [
+       "resp-elogio",
+       "resp-correcto",
+       "resp-instrucciones",
+       "resp-wifi",
+       "resp-dialecto"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "resp-correcto"
+      ],
+      "top5": [
+       "resp-dialecto",
+       "resp-instrucciones",
+       "resp-correcto",
+       "resp-aire-consumo",
+       "resp-elogio"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "resp-reembolso",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-trato",
+       "resp-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-elogio",
+       "resp-caida",
+       "resp-limpieza",
+       "resp-reubicacion"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     }
+    ],
+    "hibrida": [
+     {
+      "id": "adv-reembolso",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-precio",
+       "resp-ruido",
+       "resp-trato",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-premisa-spa",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-correcto",
+       "resp-reubicacion",
+       "resp-wifi",
+       "resp-precio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-culpa-legal",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-caida",
+       "resp-reubicacion",
+       "resp-spa-incluido",
+       "resp-wifi",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-andaluz",
+      "relevant": [
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-dialecto",
+       "resp-elogio",
+       "resp-wifi",
+       "resp-trato"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "adv-inyeccion",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-instrucciones",
+       "resp-precio",
+       "resp-correcto",
+       "resp-trato",
+       "resp-objeto"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-amenaza-consumo",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-reubicacion",
+       "resp-objeto",
+       "resp-reembolso",
+       "resp-caida"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-4estrellas-queja",
+      "relevant": [
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-wifi",
+       "resp-correcto",
+       "resp-ruido",
+       "resp-reubicacion",
+       "resp-elogio"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "adv-ambigua",
+      "relevant": [
+       "resp-correcto",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-ruido",
+       "resp-elogio",
+       "resp-instrucciones",
+       "resp-wifi"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q01",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-spa-incluido",
+       "resp-reembolso",
+       "resp-reubicacion",
+       "resp-instrucciones",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q02",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-limpieza",
+       "resp-caida",
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q03",
+      "relevant": [
+       "resp-reembolso"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-reubicacion",
+       "resp-wifi",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q04",
+      "relevant": [
+       "resp-limpieza"
+      ],
+      "top5": [
+       "resp-reembolso",
+       "resp-limpieza",
+       "resp-caida",
+       "resp-ruido",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q05",
+      "relevant": [
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-instrucciones",
+       "resp-precio",
+       "resp-ruido",
+       "resp-objeto",
+       "resp-trato"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q06",
+      "relevant": [
+       "resp-elogio",
+       "resp-dialecto"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-wifi",
+       "resp-elogio",
+       "resp-instrucciones",
+       "resp-trato"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q07",
+      "relevant": [
+       "resp-trato"
+      ],
+      "top5": [
+       "resp-trato",
+       "resp-precio",
+       "resp-reembolso",
+       "resp-dialecto",
+       "resp-ruido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q08",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-aire-consumo",
+       "resp-limpieza",
+       "resp-caida",
+       "resp-reembolso",
+       "resp-trato"
+      ],
+      "recall@1": 0.5,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 1.0
+     },
+     {
+      "id": "q09",
+      "relevant": [
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "top5": [
+       "resp-caida",
+       "resp-aire-consumo",
+       "resp-reembolso",
+       "resp-wifi",
+       "resp-ruido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q10",
+      "relevant": [
+       "resp-aire-consumo"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-spa-incluido",
+       "resp-alergia"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q11",
+      "relevant": [
+       "resp-spa-incluido"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-precio",
+       "resp-spa-incluido",
+       "resp-aire-consumo",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q13",
+      "relevant": [
+       "resp-alergia"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-reubicacion",
+       "resp-wifi",
+       "resp-precio",
+       "resp-limpieza"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.08333333333333333
+     },
+     {
+      "id": "q14",
+      "relevant": [
+       "resp-reubicacion"
+      ],
+      "top5": [
+       "resp-reubicacion",
+       "resp-wifi",
+       "resp-ruido",
+       "resp-correcto",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q15",
+      "relevant": [
+       "resp-objeto"
+      ],
+      "top5": [
+       "resp-objeto",
+       "resp-reembolso",
+       "resp-limpieza",
+       "resp-caida",
+       "resp-wifi"
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0
+     },
+     {
+      "id": "q16",
+      "relevant": [
+       "resp-precio"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-ruido",
+       "resp-spa-incluido",
+       "resp-reembolso",
+       "resp-wifi"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.14285714285714285
+     },
+     {
+      "id": "q17",
+      "relevant": [
+       "resp-instrucciones"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-precio",
+       "resp-reembolso",
+       "resp-spa-incluido",
+       "resp-instrucciones"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 1.0,
+      "mrr": 0.2
+     },
+     {
+      "id": "q19",
+      "relevant": [
+       "resp-elogio"
+      ],
+      "top5": [
+       "resp-correcto",
+       "resp-wifi",
+       "resp-elogio",
+       "resp-reembolso",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q20",
+      "relevant": [
+       "resp-correcto"
+      ],
+      "top5": [
+       "resp-dialecto",
+       "resp-correcto",
+       "resp-limpieza",
+       "resp-precio",
+       "resp-aire-consumo"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5
+     },
+     {
+      "id": "q21",
+      "relevant": [
+       "resp-reembolso",
+       "resp-ruido"
+      ],
+      "top5": [
+       "resp-precio",
+       "resp-trato",
+       "resp-reembolso",
+       "resp-aire-consumo",
+       "resp-spa-incluido"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "mrr": 0.3333333333333333
+     },
+     {
+      "id": "q22",
+      "relevant": [
+       "resp-caida"
+      ],
+      "top5": [
+       "resp-elogio",
+       "resp-spa-incluido",
+       "resp-caida",
+       "resp-reembolso",
+       "resp-limpieza"
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333
+     }
+    ]
+   }
+  }
+ }
+}

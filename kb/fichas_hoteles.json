@@ -1,0 +1,134 @@
+{
+  "description": "Fichas de hoteles FICTICIOS para la Fase 5 (RAG). Escritas a mano; no describen establecimientos reales. La ficha se selecciona por id del hotel (la reseña llega con su hotel), no por búsqueda. Algunas están diseñadas para contradecir premisas de los casos adversariales (spa, piscina, wifi).",
+  "is_synthetic": true,
+  "hoteles": [
+    {
+      "id": "h01",
+      "nombre": "Hotel Albero Sevilla",
+      "ciudad": "Sevilla",
+      "categoria": 4,
+      "servicios": {
+        "wifi": "Gratuito en todo el hotel.",
+        "piscina": "Exterior en la azotea, de mayo a septiembre, de 10:00 a 20:00. Sin socorrista; señalización de suelo resbaladizo en los accesos.",
+        "spa": "Sí, con suplemento de 25 € por persona y sesión de 90 minutos. No está incluido en ninguna tarifa.",
+        "desayuno": "Bufé de 7:30 a 10:30, incluido solo en las tarifas con desayuno.",
+        "parking": "Concertado a 200 m, 22 € al día.",
+        "aire_acondicionado": "Individual en todas las habitaciones.",
+        "mascotas": "No se admiten.",
+        "accesibilidad": "Dos habitaciones adaptadas y ascensor."
+      }
+    },
+    {
+      "id": "h02",
+      "nombre": "Hotel Mirador de la Alhambra",
+      "ciudad": "Granada",
+      "categoria": 3,
+      "servicios": {
+        "wifi": "Gratuito en zonas comunes; en las habitaciones de la tercera planta la cobertura es limitada.",
+        "piscina": "No hay.",
+        "spa": "No hay.",
+        "desayuno": "Continental de 8:00 a 10:30, 9 € por persona.",
+        "parking": "No hay.",
+        "aire_acondicionado": "Sí, centralizado.",
+        "mascotas": "Perros de hasta 10 kg, con suplemento de 15 € por noche.",
+        "accesibilidad": "Sin habitaciones adaptadas; edificio histórico con escalones en la entrada."
+      }
+    },
+    {
+      "id": "h03",
+      "nombre": "Hotel Caleta Cádiz",
+      "ciudad": "Cádiz",
+      "categoria": 3,
+      "servicios": {
+        "wifi": "Gratuito en todo el hotel.",
+        "piscina": "No hay; la playa está a 300 m.",
+        "spa": "No hay.",
+        "desayuno": "Incluido en todas las tarifas, de 8:00 a 11:00.",
+        "parking": "No hay.",
+        "aire_acondicionado": "Sí.",
+        "mascotas": "No se admiten.",
+        "accesibilidad": "Ascensor; sin habitaciones adaptadas."
+      }
+    },
+    {
+      "id": "h04",
+      "nombre": "Hotel Costa Serena Marbella",
+      "ciudad": "Marbella",
+      "categoria": 4,
+      "servicios": {
+        "wifi": "Gratuito en todo el hotel.",
+        "piscina": "Exterior de adultos e infantil, todo el año climatizada, de 9:00 a 21:00. Socorrista en temporada alta (junio-septiembre). Carteles de suelo resbaladizo en el perímetro.",
+        "spa": "Sí, acceso incluido para clientes con tarifa «Bienestar»; con el resto de tarifas, 30 € por persona y día.",
+        "desayuno": "Bufé de 7:00 a 11:00.",
+        "parking": "Propio, 18 € al día.",
+        "aire_acondicionado": "Individual.",
+        "mascotas": "No se admiten.",
+        "accesibilidad": "Cuatro habitaciones adaptadas, grúa de acceso a la piscina."
+      }
+    },
+    {
+      "id": "h05",
+      "nombre": "Hostal Puerta de Córdoba",
+      "ciudad": "Córdoba",
+      "categoria": 2,
+      "servicios": {
+        "wifi": "Gratuito en todo el edificio.",
+        "piscina": "No hay.",
+        "spa": "No hay.",
+        "desayuno": "No se sirve desayuno.",
+        "parking": "No hay.",
+        "aire_acondicionado": "Sí, en todas las habitaciones.",
+        "mascotas": "Se admiten sin suplemento.",
+        "accesibilidad": "Sin ascensor."
+      }
+    },
+    {
+      "id": "h06",
+      "nombre": "Hotel Puerto Almería",
+      "ciudad": "Almería",
+      "categoria": 4,
+      "servicios": {
+        "wifi": "Gratuito; red de alta velocidad con suplemento de 5 € al día.",
+        "piscina": "Interior climatizada, de 8:00 a 22:00, sin socorrista. Normas de uso y aviso de suelo resbaladizo a la entrada.",
+        "spa": "Circuito de spa con suplemento de 20 € por persona.",
+        "desayuno": "Bufé de 7:00 a 10:30.",
+        "parking": "Propio, 15 € al día.",
+        "aire_acondicionado": "Individual.",
+        "mascotas": "No se admiten.",
+        "accesibilidad": "Dos habitaciones adaptadas."
+      }
+    },
+    {
+      "id": "h07",
+      "nombre": "Hotel Sierra de Cazorla",
+      "ciudad": "Cazorla",
+      "categoria": 3,
+      "servicios": {
+        "wifi": "Gratuito en zonas comunes; en las habitaciones la cobertura es irregular por los muros de piedra.",
+        "piscina": "Exterior, de junio a septiembre, de 11:00 a 19:00, sin socorrista.",
+        "spa": "No hay.",
+        "desayuno": "Incluido, de 8:00 a 10:00.",
+        "parking": "Gratuito, al aire libre.",
+        "aire_acondicionado": "No hay; las habitaciones tienen ventilador de techo y calefacción.",
+        "mascotas": "Se admiten con suplemento de 10 € por noche.",
+        "accesibilidad": "Una habitación adaptada en planta baja."
+      }
+    },
+    {
+      "id": "h08",
+      "nombre": "Hotel Huelva Centro",
+      "ciudad": "Huelva",
+      "categoria": 3,
+      "servicios": {
+        "wifi": "Gratuito en todo el hotel.",
+        "piscina": "No hay.",
+        "spa": "No hay.",
+        "desayuno": "Bufé de 7:00 a 10:00, 12 € por persona.",
+        "parking": "Público a 100 m, de pago.",
+        "aire_acondicionado": "Centralizado; funciona de mayo a octubre.",
+        "mascotas": "No se admiten.",
+        "accesibilidad": "Ascensor y una habitación adaptada."
+      }
+    }
+  ]
+}

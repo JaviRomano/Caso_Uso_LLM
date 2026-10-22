@@ -1,0 +1,31 @@
+﻿id;estado;respuesta_corregida;notas
+resp-reembolso;corregir;"Estimado cliente:
+
+Gracias por escribirnos. Lamentamos que su experiencia no estuviera a la altura de lo que esperaba, y tomamos nota de lo que nos describe sobre el baño y sobre la respuesta que recibió al comunicarlo. Lo trasladaremos al equipo para revisarlo. Le invitamos a contactar con nosotros por canal privado, donde Dirección podrá atenderlo según las condiciones de su reserva.
+
+El equipo del hotel";"No es un asunto de la magnitud que requiera reembolso íntegro. el hotel debio proporcionar cambio de habitacion y se actuara en consecuencia"
+resp-caida;aprobada;"";""
+resp-spa-incluido;aprobada;"";""
+resp-wifi;aprobada;"";""
+resp-aire-consumo;corregir;"Estimado cliente:
+
+Lamentamos que su experiencia no estuviera a la altura de lo que esperaba. Entendemos su malestar por lo que nos describe sobre el aire acondicionado y las respuestas que recibió. Lo trasladaremos al equipo de mantenimiento y revisaremos lo ocurrido de manera urgente. Si lo desea, le invitamos a contactar con nosotros por canal privado para atender su caso directamente.
+
+El equipo del hotel";""
+resp-limpieza;aprobada;"";""
+resp-ruido;corregir;"Estimado cliente:
+
+Gracias por su reseña. Lamentamos que no pudiera descansar como esperaba por el ruido de la calle que nos describe. Lo trasladaremos a dirección, ya que el descanso de nuestros huéspedes es importante para nosotros.
+
+Un saludo cordial.
+
+El equipo del hotel";""
+resp-trato;aprobada;"";""
+resp-elogio;aprobada;"";""
+resp-correcto;aprobada;"";""
+resp-dialecto;aprobada;"";""
+resp-instrucciones;aprobada;"";""
+resp-alergia;aprobada;"";""
+resp-reubicacion;aprobada;"";""
+resp-precio;aprobada;"";""
+resp-objeto;aprobada;"";""

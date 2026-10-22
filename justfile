@@ -61,3 +61,7 @@ juez:
 # Calibración del juez: kappa por criterio cuando se rellenan las columnas humano_* del CSV
 calibrar:
     python -m caso_uso_llm.evals.calibrate
+
+# Fase 5: recuperación de políticas y respuestas aprobadas (BM25, bge-m3 e híbrida), con recall@k y MRR
+rag:
+    python -m caso_uso_llm.rag.eval_retrieval

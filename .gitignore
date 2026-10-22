@@ -32,3 +32,4 @@ logs/
 # Ajustes del editor y hoja de etiquetado (se regenera con scripts/calibracion_vista.py)
 .vscode/
 evals/gold/calibracion_vista.html
+kb/revision.html
