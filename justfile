@@ -67,5 +67,5 @@ rag:
     python -m caso_uso_llm.rag.eval_retrieval
 
 # Fase 5: respuestas con contexto recuperado (prompt v5) frente a v4 sin contexto
-rag-generar:
-    python -m caso_uso_llm.rag.generate_rag
+rag-generar *ARGS:
+    python -m caso_uso_llm.rag.generate_rag {{ARGS}}

@@ -195,11 +195,11 @@ def generator_prompt(version: str = "v3") -> str:
         "indicado y nunca en una reseña que no lo necesite. Escribe con naturalidad y adapta cada "
         f"respuesta a la reseña concreta.\n{allowed}"
     )
-    return prompt + ("\n\n" + CONTEXTO if version == "v5" else "")
+    return prompt + ("\n\n" + CONTEXTOS[version] if version in CONTEXTOS else "")
 
 
 # v5 (Fase 5, RAG): mismas reglas que v4 y, además, cómo usar el contexto recuperado.
-CONTEXTO = (
+_CONTEXTO_V5 = (
     "Contexto que recibirás junto a la reseña:\n"
     "- Ficha del hotel: es la ÚNICA fuente de datos del hotel (servicios, horarios, precios). No "
     "menciones nada del hotel que no esté en la ficha o en la reseña. Si la ficha no está "
@@ -213,6 +213,21 @@ CONTEXTO = (
     "- Respuestas aprobadas: son ejemplos de tono y de cómo tratar casos parecidos. No copies sus "
     "datos ni sus frases."
 )
+
+# v6: corrige lo que se vio leyendo v5 (reports/phase5_generacion.md): nombró la fuente interna
+# («en nuestra ficha…»), dio un precio pese a pol-precio, usó la ficha como explicación de una
+# queja («debido a los muros de piedra…») y anunció mejoras («seguiremos trabajando en…»).
+_CONTEXTO_V6 = _CONTEXTO_V5 + (
+    "\n- Habla siempre como el hotel: nunca menciones la ficha, las políticas ni los ejemplos "
+    "(no digas «según nuestra ficha» ni «según nuestra información»).\n"
+    "- No des importes ni precios en la respuesta pública: basta con la condición («tiene un "
+    "suplemento», «no está incluido en todas las tarifas»).\n"
+    "- No uses la ficha para explicar la causa de una queja (evita «debido a…»): puedes mencionar "
+    "una limitación conocida, sin presentarla como justificación.\n"
+    "- No anuncies mejoras ni trabajos futuros («seguiremos trabajando para mejorar…»)."
+)
+
+CONTEXTOS = {"v5": _CONTEXTO_V5, "v6": _CONTEXTO_V6}
 
 
 def judge_no_cumple(r: Regla) -> str:

@@ -13,13 +13,13 @@ def test_el_juez_evalua_exactamente_los_criterios_de_la_rubrica():
     assert [c.id for c in RUBRICS["v3"]] == list(IDS)
 
 
-@pytest.mark.parametrize("version", ["v3", "v4", "v5"])
+@pytest.mark.parametrize("version", ["v3", "v4", "v5", "v6"])
 def test_cada_regla_aparece_en_el_prompt_del_generador(version):
     for r in REGLAS:
         assert r.instruccion in RESPONSE_PROMPTS[version], r.id
 
 
-@pytest.mark.parametrize("version", ["v3", "v4", "v5"])
+@pytest.mark.parametrize("version", ["v3", "v4", "v5", "v6"])
 def test_las_formulas_permitidas_las_leen_generador_y_juez(version):
     generator, judge = RESPONSE_PROMPTS[version], system_prompt("v3")
     for phrase in PERMITIDAS:

@@ -120,8 +120,9 @@ class BM25:
 class Embedder:
     """Embeddings de Ollama con caché en disco (clave: modelo + texto)."""
 
-    def __init__(self, model: str = EMBED_MODEL):
+    def __init__(self, model: str = EMBED_MODEL, keep_alive: int | None = None):
         self.model = model
+        self.keep_alive = keep_alive  # 0: Ollama descarga el modelo tras cada llamada
         self.path = DATA_INTERIM / f"embeddings_{model}.jsonl"
         self.cache: dict[str, list[float]] = {}
         if self.path.exists():
@@ -137,7 +138,9 @@ class Embedder:
         if missing:
             import ollama
 
-            vecs = ollama.embed(model=self.model, input=missing).embeddings
+            vecs = ollama.embed(
+                model=self.model, input=missing, keep_alive=self.keep_alive
+            ).embeddings
             self.path.parent.mkdir(parents=True, exist_ok=True)
             with self.path.open("a", encoding="utf-8", newline="\n") as f:
                 for t, v in zip(missing, vecs, strict=True):

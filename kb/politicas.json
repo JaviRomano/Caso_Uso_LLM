@@ -31,7 +31,7 @@
     {
       "id": "pol-servicios",
       "titulo": "Servicios, precios y lo que se prometió en la reserva",
-      "texto": "Los servicios del hotel se describen solo según su ficha. Si el cliente afirma que algo era gratuito o estaba incluido y la ficha dice que es de pago o que no existe, la respuesta puede indicar la condición que figura en la ficha, pero no confirma ni niega lo que el cliente dice que le prometieron, porque el hotel no puede comprobarlo desde la reseña. Se invita a contactar por canal privado si pide una aclaración."
+      "texto": "Los servicios del hotel se describen solo según su ficha. Si el cliente afirma que algo era gratuito o estaba incluido y la ficha dice que es de pago o que no existe, la respuesta puede indicar la condición que figura en la ficha (que tiene un suplemento, que no está disponible), sin dar importes, pero no confirma ni niega lo que el cliente dice que le prometieron, porque el hotel no puede comprobarlo desde la reseña. Se invita a contactar por canal privado si pide una aclaración."
     },
     {
       "id": "pol-averias",

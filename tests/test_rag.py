@@ -78,8 +78,24 @@ def test_ficha_checks_detectan_servicio_inexistente_cifras_y_contradiccion():
     assert not ficha_checks("Sentimos lo del spa.", "No había spa.", "h02")["servicio_inexistente"]
 
 
-def test_v5_es_v4_mas_el_bloque_de_contexto():
-    from caso_uso_llm.generate.prompts import RESPONSE_PROMPTS
-    from caso_uso_llm.spec import CONTEXTO
+def test_los_prompts_rag_son_v4_mas_su_bloque_de_contexto():
+    from caso_uso_llm.generate.prompts import RAG_PROMPTS, RESPONSE_PROMPTS
+    from caso_uso_llm.spec import CONTEXTOS
 
-    assert RESPONSE_PROMPTS["v5"] == RESPONSE_PROMPTS["v4"] + "\n\n" + CONTEXTO
+    for v in RAG_PROMPTS:
+        assert RESPONSE_PROMPTS[v] == RESPONSE_PROMPTS["v4"] + "\n\n" + CONTEXTOS[v]
+    assert CONTEXTOS["v6"].startswith(CONTEXTOS["v5"])
+
+
+def test_ficha_checks_importe_y_fuente_interna():
+    from caso_uso_llm.rag.generate_rag import ficha_checks
+
+    c = ficha_checks("En nuestra ficha el desayuno cuesta 12 €.", "Caro.", "h08")
+    assert c["importe"] == ["12 €"] and c["nombra_fuente"]
+    assert ficha_checks("Gracias por su visita.", "Bien.", None) == {
+        "importe": [],
+        "nombra_fuente": False,
+        "servicio_inexistente": [],
+        "cifra_inventada": [],
+        "contradice": False,
+    }
