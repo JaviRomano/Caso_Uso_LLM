@@ -69,3 +69,7 @@ rag:
 # Fase 5: respuestas con contexto recuperado (prompt v5) frente a v4 sin contexto
 rag-generar *ARGS:
     python -m caso_uso_llm.rag.generate_rag {{ARGS}}
+
+# Comprueba que Ollama tiene el modelo entero en la GPU (falla si se ha ido a la CPU)
+gpu-ollama *ARGS:
+    python -m caso_uso_llm.ollama_gpu {{ARGS}}

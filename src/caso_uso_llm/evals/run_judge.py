@@ -22,6 +22,7 @@ from caso_uso_llm.evals.judge import JUDGE_MODEL, LATEST, compare, judge
 from caso_uso_llm.evals.rubric import CRITERIOS, IDS, RUBRICS, rubric_markdown
 from caso_uso_llm.generate.run import Cache
 from caso_uso_llm.log import log
+from caso_uso_llm.ollama_gpu import require_gpu
 from caso_uso_llm.paths import RESULTS, ROOT
 
 EVALS = ROOT / "evals"
@@ -181,6 +182,7 @@ def export_calibration(p4: dict) -> None:
 
 
 def main() -> None:
+    require_gpu(JUDGE_MODEL)
     cache = Cache(CACHE)
     p4 = phase4_responses()
     results = {}

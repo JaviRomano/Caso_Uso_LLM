@@ -32,6 +32,7 @@ from caso_uso_llm.generate import checks as C
 from caso_uso_llm.generate.prompts import RAG_PROMPTS, RESPONSE_PROMPTS, response_user
 from caso_uso_llm.generate.run import CACHE, MODEL, Cache, analyze, dev_set, respond
 from caso_uso_llm.log import log
+from caso_uso_llm.ollama_gpu import require_gpu
 from caso_uso_llm.paths import EVALS, RESULTS, ROOT
 from caso_uso_llm.rag import kb
 from caso_uso_llm.rag.retrieve import Embedder, Retriever
@@ -143,6 +144,7 @@ def main(seed: int = DEFAULT_SEED) -> None:
     log(f"Modelo {MODEL} · {BASE} sin contexto frente a {version} con contexto · {len(df)} reseñas")
     context = retrieve_all(df)
     log(f"Contexto recuperado para {len(context)} reseñas; empieza la generación")
+    require_gpu(MODEL)  # después de recuperar: bge-m3 ya se ha descargado de la GPU
     cache = Cache(CACHE)
     out = []
     for i, row in df.iterrows():

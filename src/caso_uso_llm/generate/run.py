@@ -28,6 +28,7 @@ from caso_uso_llm.generate.prompts import (
 )
 from caso_uso_llm.generate.schema import Analisis
 from caso_uso_llm.log import log
+from caso_uso_llm.ollama_gpu import require_gpu
 from caso_uso_llm.paths import RESULTS, ROOT
 from caso_uso_llm.seed import DEFAULT_SEED
 
@@ -137,6 +138,7 @@ def main(seed: int = DEFAULT_SEED) -> None:
     dev = dev_set(seed)
     n_real, n_adv = (dev.kind == "real").sum(), (dev.kind == "adversarial").sum()
     log(f"Modelo {MODEL} · prompt {version} · {n_real} reales + {n_adv} adversariales")
+    require_gpu(MODEL)
     cache = Cache(CACHE)
     results = []
     for i, row in dev.iterrows():

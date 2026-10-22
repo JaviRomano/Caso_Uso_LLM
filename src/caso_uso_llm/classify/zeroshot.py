@@ -22,6 +22,7 @@ from caso_uso_llm.classify import metrics as M
 from caso_uso_llm.classify.datasets import LABELS, ahr_sample, eval_sets, load, load_ahr_ood
 from caso_uso_llm.classify.stress import load_sfu_hoteles
 from caso_uso_llm.log import log
+from caso_uso_llm.ollama_gpu import require_gpu
 from caso_uso_llm.paths import DATA_PROCESSED, RESULTS, ROOT
 from caso_uso_llm.seed import DEFAULT_SEED
 
@@ -184,6 +185,7 @@ def evaluate_ahr(cache: dict[str, str], seed: int) -> dict | None:
 
 def main(seed: int = DEFAULT_SEED) -> None:
     log(f"Modelo {MODEL} vía Ollama · opciones {OPTIONS}")
+    require_gpu(MODEL)
     df = load()
     test = eval_sets(df)["coah_test"]
     sfu = load_sfu_hoteles()
