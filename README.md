@@ -1,6 +1,6 @@
 # Hotel reviews: sentiment and replies with local LLMs
 
-[![CI](https://github.com/JaviRomano/Caso_Uso_LLM/actions/workflows/ci.yml/badge.svg)](https://github.com/JaviRomano/Caso_Uso_LLM/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/JaviRomano/Spanish-hotel-review-LLM/actions/workflows/ci.yml/badge.svg)](https://github.com/JaviRomano/Spanish-hotel-review-LLM/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **English** · [Español](#reseñas-de-hotel-sentimiento-y-respuesta-con-llms-locales)
 
@@ -250,7 +250,7 @@ The code of the first attempt is in [`legacy/`](legacy/) as audited (tag `v1-ori
 
 # Reseñas de hotel: sentimiento y respuesta con LLMs locales
 
-[![CI](https://github.com/JaviRomano/Caso_Uso_LLM/actions/workflows/ci.yml/badge.svg)](https://github.com/JaviRomano/Caso_Uso_LLM/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/JaviRomano/Spanish-hotel-review-LLM/actions/workflows/ci.yml/badge.svg)](https://github.com/JaviRomano/Spanish-hotel-review-LLM/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [English](#hotel-reviews-sentiment-and-replies-with-local-llms) · **Español**
 
