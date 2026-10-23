@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      # Solo el grupo dev: sin torch (ROCm pesa varios GB) ni datos de terceros. Los tests que
+      # necesitan datos descargados, datos procesados o torch se saltan solos.
+      - run: uv sync --locked --no-default-groups --group dev
+      - run: uv run --no-sync ruff check .
+      - run: uv run --no-sync ruff format --check .
+      - run: uv run --no-sync pytest -rs

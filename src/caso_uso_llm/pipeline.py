@@ -27,11 +27,11 @@ Uso: uv run just pipeline                         # demostración: casos sintét
 import argparse
 import json
 from collections import Counter
+from typing import TYPE_CHECKING
 
 import pandas as pd
 
 from caso_uso_llm.classify.datasets import load_ahr_ood
-from caso_uso_llm.classify.infer import SentimentEnsemble, prepare
 from caso_uso_llm.evals.judge import JUDGE_MODEL, judge
 from caso_uso_llm.evals.rubric import IDS, criterios
 from caso_uso_llm.generate import checks as C
@@ -50,6 +50,9 @@ from caso_uso_llm.rag.generate_rag import (
 )
 from caso_uso_llm.rag.retrieve import Embedder, Retriever
 from caso_uso_llm.seed import DEFAULT_SEED
+
+if TYPE_CHECKING:  # torch solo hace falta al clasificar, no para enrutar (CI sin torch)
+    from caso_uso_llm.classify.infer import SentimentEnsemble
 
 PROMPT = "v6"
 RUBRIC = "v2g"
@@ -82,7 +85,7 @@ def ficha(hotel: str | None) -> str:
     return kb.ficha_texto(hotel) if hotel else "No disponible."
 
 
-def run(items: list[dict], classifier: SentimentEnsemble | None = None) -> list[dict]:
+def run(items: list[dict], classifier: "SentimentEnsemble | None" = None) -> list[dict]:
     """items: dicts con id, text y opcionalmente title, hotel y meta (se copia tal cual).
 
     `classifier`: ensamble ya cargado (la app lo carga una vez; tarda ~25 s).
@@ -91,6 +94,8 @@ def run(items: list[dict], classifier: SentimentEnsemble | None = None) -> list[
     out = [{**it, "hotel": it.get("hotel") or None, "reasons": []} for it in items]
 
     log("[2] Sentimiento (mRoBERTa, 3 semillas, CPU)")
+    from caso_uso_llm.classify.infer import SentimentEnsemble, prepare
+
     texts = [prepare(it["text"], it.get("title", "")) for it in out]
     classifier = classifier or SentimentEnsemble()
     for it, text, p in zip(out, texts, classifier.predict(texts), strict=True):
